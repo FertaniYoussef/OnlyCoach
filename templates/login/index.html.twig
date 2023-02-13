@@ -1,0 +1,201 @@
+<!doctype html>
+<html class="h-full bg-white">
+<head >
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    <title>Login</title>
+
+    <style>
+
+        body {
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        .wave,
+        .wave::before,
+        .wave::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 250vw;
+            height: 250vw;
+            margin-left: -125vw;
+            transform-origin: 50% 50%;
+            background-color: transparent;
+            border-radius: 38% 42%;
+            box-shadow: inset 0 0 10vw rgba(255,0,255,0.8);
+            animation: spin 60s infinite linear;
+            mix-blend-mode: multiply;
+        }
+
+        .wave::before {
+            width: 105%;
+            height: 95%;
+            margin-top: -125vw;
+            transform-origin: 49% 51%;
+            border-radius: 40% 38%;
+            box-shadow: inset 0 0 10vw rgba(255,255,0,0.8);
+            animation: spin 64s infinite linear;
+        }
+
+        .wave::after {
+            width: 102%;
+            height: 98%;
+            margin-top: -125vw;
+            transform-origin: 51% 49%;
+            border-radius: 48% 42%;
+            box-shadow: inset 0 0 10vw rgba(0,255,255,0.8);
+            animation: spin 56s infinite linear;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body class="h-full bg-slate-50">
+<div class="wave"></div>
+<nav class="bg-slate-50">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+            <div class="flex">
+                <div class="flex flex-shrink-0 items-center">
+                    <a href="{{ path('app_landing_page') }}"><img class="block h-8 w-auto lg:hidden" src="{{ asset('images/onlycoachlogo.png')}}" alt="Your Company"></a>
+                    <a href="{{ path('app_landing_page') }}"><img class="hidden h-8 w-auto lg:block" src="{{ asset('images/onlycoachlogo.png')}}" alt="Your Company"></a>
+                </div>
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-5 divide-x-[1px] divide-teal-600/40">
+                <a href="{{ path ('app_register') }}" class="rounded-md bg-gray-900 px-4 py-1 text-sm font-semibold leading-7 text-white hover:bg-gray-700">Get started &rarr;</a>
+                <a href="{{ path('app_login') }}" class="pl-3 text-sm font-semibold leading-7 text-gray-800">Sign in</a>
+            </div>
+            <div class="-mr-2 flex items-center sm:hidden">
+                <!-- Mobile menu button -->
+                <button type="button" id="menuButton" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <!--
+                      Icon when menu is closed.
+
+                      Heroicon name: outline/bars-3
+
+                      Menu open: "hidden", Menu closed: "block"
+                    -->
+                    <svg id="openMenuIcon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <!--
+                      Icon when menu is open.
+
+                      Heroicon name: outline/x-mark
+
+                      Menu open: "block", Menu closed: "hidden"
+                    -->
+                    <svg id="closeMenuIcon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" onclick="{ document.getElementById('mobile-menu').classList.add('hidden')}">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div class="hidden sm:hidden" id="mobile-menu">
+        <div class="space-y-1 pt-2 pb-3">
+            <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
+            <a href="{{ path('app_register') }}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Get started</a>
+            <a href="{{ path('app_login') }}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Sign in</a>
+        </div>
+    </div>
+</nav>
+<div class="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-slate-50">
+    <div class="w-full max-w-md space-y-8">
+        <div>
+            <h2 class="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+            <p class="mt-2 text-center text-sm text-gray-600">
+                Or
+                <a href="{{ path('app_register') }}" class="font-medium text-teal-600 hover:text-teal-500">create an account now</a>
+            </p>
+        </div>
+        <form class="mt-8 space-y-6" action="#" method="POST">
+            <input type="hidden" name="remember" value="true">
+            <div class="-space-y-px rounded-md shadow-sm">
+                <div>
+                    <label for="email-address" class="sr-only">Email address</label>
+                    <input id="email-address" name="email" type="email" autocomplete="email" required class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Email address">
+                </div>
+                <div>
+                    <label for="password" class="sr-only">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Password">
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                    <label for="remember-me" class="ml-2 block text-sm text-gray-900">Remember me</label>
+                </div>
+
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-teal-600 hover:text-teal-500">Forgot your password?</a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative flex w-full justify-center rounded-md border border-transparent bg-orange-600 py-2 px-4 text-sm font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <!-- Heroicon name: mini/lock-closed -->
+            <svg class="h-5 w-5 text-orange-500 group-hover:text-orange-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+            </svg>
+          </span>
+                    Sign in
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Debut Footer -->
+<footer class="bg-black relative  lg:block hidden">
+    <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
+
+        <div class="mt-8 md:order-1 md:mt-0">
+            <p class="text-center text-xs leading-5 text-white">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Fin Footer -->
+<script>
+    Button = document.getElementById('menuButton')
+    OpenIcon = document.getElementById('openMenuIcon')
+    CloseIcon = document.getElementById('closeMenuIcon')
+    MenuMobile = document.getElementById('mobile-menu')
+    Button.addEventListener('click', () => {
+        if (OpenIcon.classList.contains('block')) {
+            MenuMobile.classList.remove('hidden')
+            MenuMobile.classList.add('block')
+            OpenIcon.classList.add('hidden')
+            OpenIcon.classList.remove('block')
+            CloseIcon.classList.remove('hidden');
+            CloseIcon.classList.add('block');
+        } else {
+            CloseIcon.classList.remove('block')
+            CloseIcon.classList.add('hidden');
+            OpenIcon.classList.remove('hidden')
+            OpenIcon.classList.add('block')
+            MenuMobile.classList.remove('block');
+            MenuMobile.classList.add('hidden');
+        }
+    });
+</script>
+
+</body>
+</head>
