@@ -1,0 +1,283 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body class="bg-slate-50">
+
+<!-- Navigation -->
+
+<nav class="bg-gradient-to-b from-teal-600/10 to-slate-50 " >
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 justify-between">
+            <div class="flex">
+                <div class="flex flex-shrink-0 items-center">
+                    <a href="{{ path('app_main') }}"><img class="block h-8 w-auto lg:hidden" src="{{ asset('images/onlycoachlogo.png')}}" alt="Your Company"></a>
+                    <a href="{{ path('app_main') }}"><img class="lg:block h-8 w-auto hidden" src="{{ asset('images/onlycoachlogo.png')}}" alt="Your Company"></a>
+                </div>
+                <div class="hidden ml-12 sm:flex space-x-8">
+                    <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
+                    <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
+                    <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
+                    <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                </div>
+
+
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:items-center">
+
+                <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <span class="sr-only">View notifications</span>
+                    <!-- Heroicon name: outline/bell -->
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                </button>
+
+                <!-- Profile dropdown -->
+                <div class="relative ml-3">
+                    <div>
+                        <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                            <span class="sr-only">Open user menu</span>
+                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                        </button>
+                    </div>
+
+                    <!--
+                      Dropdown menu, show/hide based on menu state.
+
+                      Entering: "transition ease-out duration-200"
+                        From: "transform opacity-0 scale-95"
+                        To: "transform opacity-100 scale-100"
+                      Leaving: "transition ease-in duration-75"
+                        From: "transform opacity-100 scale-100"
+                        To: "transform opacity-0 scale-95"
+                    -->
+                    <div id="menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <!-- Active: "bg-gray-100", Not Active: "" -->
+                        <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Calendar</a>
+                        <a href="{{ path('app_login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                    </div>
+                </div>
+            </div>
+            <div class="-mr-2 flex items-center sm:hidden">
+                <!-- Mobile menu button -->
+                <button id="mobile-button" type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
+                    <span class="sr-only">Open main menu</span>
+                    <!--
+                      Icon when menu is closed.
+
+                      Heroicon name: outline/bars-3
+
+                      Menu open: "hidden", Menu closed: "block"
+                    -->
+                    <svg id="mobileMenuClosedIcon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                    </svg>
+                    <!--
+                      Icon when menu is open.
+
+                      Heroicon name: outline/x-mark
+
+                      Menu open: "block", Menu closed: "hidden"
+                    -->
+                    <svg id="mobileMenuOpenIcon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile menu, show/hide based on menu state. -->
+    <div class="sm:hidden hidden" id="mobile-menu">
+        <div class="space-y-1 pt-2 pb-3">
+            <!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
+            <a href="{{ path('app_courses_popular') }}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Popular</a>
+            <a href="{{ path('app_coach') }}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Coachs</a>
+            <a href="{{ path('app_contact') }}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-500 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-700">Contact</a>
+        </div>
+
+
+        <div class="border-t border-gray-200 pt-4 pb-3">
+            <div class="flex items-center px-4">
+                <div class="flex-shrink-0">
+                    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                </div>
+                <div class="ml-3">
+                    <div class="text-base font-medium text-gray-800">Amrou Ghribi</div>
+                </div>
+                <button type="button" class="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <span class="sr-only">View notifications</span>
+                    <!-- Heroicon name: outline/bell -->
+                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-3 space-y-1">
+                <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Settings</a>
+                <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Calendar</a>
+                <a href="{{ path('app_login') }}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Sign out</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<!-- End of navigation and start of main page body-->
+
+
+    <div class="overflow-hidden bg-slate-50 py-16 px-6 lg:px-8 lg:py-24">
+        <div class="relative mx-auto max-w-xl">
+            <svg class="absolute left-full translate-x-1/2 transform" width="404" height="404" fill="none" viewBox="0 0 404 404" aria-hidden="true">
+                <defs>
+                    <pattern id="85737c0e-0916-41d7-917f-596dc7edfa27" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
+                    </pattern>
+                </defs>
+                <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
+            </svg>
+            <svg class="absolute right-full bottom-0 -translate-x-1/2 transform" width="404" height="404" fill="none" viewBox="0 0 404 404" aria-hidden="true">
+                <defs>
+                    <pattern id="85737c0e-0916-41d7-917f-596dc7edfa27" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                        <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
+                    </pattern>
+                </defs>
+                <rect width="404" height="404" fill="url(#85737c0e-0916-41d7-917f-596dc7edfa27)" />
+            </svg>
+            <div class="text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Contact</h2>
+                <p class="mt-4 text-lg leading-6 text-gray-500"></p>
+            </div>
+            <div class="mt-12">
+                <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                    <div class="sm:col-span-2">
+                        <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                        <div class="mt-1">
+                            <input id="subject" name="sujet" type="text" autocomplete="subject" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                        </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                        <div class="mt-1">
+                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Let's talk</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Debut Footer -->
+<footer class="bg-black absolute w-full bottom-0 left-0 lg:block hidden">
+    <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
+
+        <div class="mt-8 md:order-1 md:mt-0">
+            <p class="text-center text-xs leading-5 text-white">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Fin Footer -->
+<script>
+    // Large screens starts here
+    const userprofile = document.getElementById('user-menu-button')
+    const profilemenu = document.getElementById('menu')
+
+    function showMenu() {
+        profilemenu.classList.remove('hidden')
+        profilemenu.classList.add('block')
+    }
+    function hideMenu() {
+        profilemenu.classList.remove('block')
+        profilemenu.classList.add('hidden')
+    }
+
+    userprofile.addEventListener('click', () => {
+        profilemenu.classList.contains('hidden') ? showMenu() : hideMenu()
+    })
+    // Large screens ends here
+
+    // mobile starts here
+
+    const mobilebutton = document.getElementById('mobile-button')
+    const mobilemenu = document.getElementById('mobile-menu')
+
+    function showMobileMenu() {
+        const OpenIcon = document.getElementById('mobileMenuOpenIcon')
+        const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
+
+        OpenIcon.classList.remove('hidden');
+        OpenIcon.classList.add('block')
+
+        ClosedIcon.classList.remove('block')
+        ClosedIcon.classList.add('hidden')
+
+        mobilemenu.classList.remove('hidden')
+        mobilemenu.classList.add('block')
+    }
+
+    function hideMobileMenu() {
+        const OpenIcon = document.getElementById('mobileMenuOpenIcon')
+        const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
+
+        OpenIcon.classList.remove('block');
+        OpenIcon.classList.add('hidden')
+
+        ClosedIcon.classList.remove('hidden')
+        ClosedIcon.classList.add('block')
+
+        mobilemenu.classList.remove('block')
+        mobilemenu.classList.add('hidden')
+    }
+
+    mobilebutton.addEventListener('click', () => {
+        mobilemenu.classList.contains('hidden') ? showMobileMenu() : hideMobileMenu()
+    })
+
+    // filter button for mobile
+
+    const filterButton = document.getElementById('filterButton')
+    const filterDialog = document.getElementById('filterDialog')
+    const closeFilterButton = document.getElementById('closeFilterButton')
+
+    function showFilters() {
+        filterDialog.classList.remove('hidden')
+        filterDialog.classList.add('block')
+    }
+
+    function hideFilters() {
+        filterDialog.classList.remove('block')
+        filterDialog.classList.add('hidden')
+    }
+
+    filterButton.addEventListener('click', () => {
+        showFilters()
+    })
+
+    closeFilterButton.addEventListener('click', () => {
+        hideFilters()
+    })
+
+
+    // filter button for mobile ends here
+
+    // mobile ends here
+
+</script>
+
+</body>
+</html>
+
+
