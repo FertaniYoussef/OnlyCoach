@@ -5,15 +5,21 @@ namespace App\Controller;
 use App\Entity\Cours;
 use App\Entity\Ressources;
 use App\Entity\Sections;
+use App\Entity\Coach;
+use App\Form\CoachType;
 use App\Repository\CoursRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
+use App\Repository\CoachRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
+// use generateUniqueFileName;
+
 
 class DashboardController extends AbstractController
 {
@@ -216,10 +222,58 @@ class DashboardController extends AbstractController
     // Partie coachs
 
     #[Route('/admin/dashboard/coachs', name: 'app_dashboard_adminCoachs')]
-    public function coachs(Request $request): Response
+    public function coachs(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo): Response
     {
-        return $this->render('dashboard/admin/coachs/coachs.html.twig');
+        $coachs = $repository->findAll();
+        $coach = new Coach();
+
+        $form = $this->createForm(CoachType::class, $coach);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $coach = $form->getData();
+            $user = $userRepo->find($coach->getIdUser());
+            $user->setRoles(['ROLE_COACH']);
+            // get user data and put them in coach (only in coach table)
+            $coach->setNom($user->getNom());
+            $coach->setPrenom($user->getPrenom());
+            // store uploaded picture in public/images
+
+            $file = $form->get('picture')->getData();
+            dump($file);
+            $coach->setPicture($file->getClientOriginalName());
+            $file->move('images', $file->getClientOriginalName());
+
+
+
+            $em = $doctrine->getManager();
+            $em->persist($coach);
+            $em->flush();
+
+            return $this->redirectToRoute('app_dashboard_adminCoachs');
+        }
+
+
+        return $this->render('dashboard/admin/coachs/coachs.html.twig', [
+            'form' => $form->createView(),
+            'coachs' => $coachs
+        ]);
     }
+
+    #[Route('/admin/dashboard/coachs/delete/{id}', name: 'app_dashboard_adminCoachsDelete')]
+    public function deleteCoach(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo, int $id): Response
+    {
+        $coach = $repository->find($id);
+        $user = $userRepo->find($coach->getIdUser());
+        $user->setRoles(['ROLE_USER']);
+        $em = $doctrine->getManager();
+        $em->remove($coach);
+        $em->flush();
+        return $this->redirectToRoute('app_dashboard_adminCoachs');
+
+    }
+
 
     // Partie Offers
 
