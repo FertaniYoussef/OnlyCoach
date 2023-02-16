@@ -198,8 +198,6 @@ class Coach
                 $idAbonnement->setCoach(null);
             }
         }
-=======
->>>>>>> Amrou
 
         return $this;
     }
