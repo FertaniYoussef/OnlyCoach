@@ -23,7 +23,6 @@ class Ressources
     private ?string $description = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_ressources')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Sections $sections = null;
 
     public function getId(): ?int
