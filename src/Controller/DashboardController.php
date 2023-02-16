@@ -13,7 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints\Date;
+use App\Repository\UserRepository;
 
 class DashboardController extends AbstractController
 {
@@ -206,11 +208,23 @@ class DashboardController extends AbstractController
 
     // Partie users
     #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
-    public function users(Request $request): Response
+    public function users(Request $request,UserRepository $repository): Response
     {
-        return $this->render('dashboard/admin/users/users.html.twig');
+        $users = $repository->findAll();
+        return $this->render('dashboard/admin/users/users.html.twig',[
+            'userstab' => $users
+        ]);
     }
-
+    
+    #[Route('/admin/dashboard/users/remove/{id}', name: 'app_dashboard_adminUsersremove')]
+    public function usersremove(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $em = $doctrine->getManager();
+        $em->remove($users);
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
 
 
     // Partie coachs
