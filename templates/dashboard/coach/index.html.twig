@@ -507,7 +507,7 @@
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                 <div class="pointer-events-auto w-screen max-w-md">
-                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
+                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data" id="courseForm">
                         <div class="h-0 flex-1 overflow-y-auto">
                             <div class="bg-sky-700 py-6 px-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -545,7 +545,7 @@
                                         <div>
                                             <label for="description" class="block text-sm font-medium text-gray-900">Course description</label>
                                             <div class="mt-1">
-                                                <textarea id="description" name="course-description" rows="4"
+                                                <textarea id="course-description" name="course-description" rows="4"
                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                                             </div>
                                         </div>
@@ -714,6 +714,91 @@
         section.parentNode.removeChild(section);
         counter--
     }
+
+    const formInputs = document.getElementById('courseForm');
+    formInputs.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(formInputs);
+        const data = Object.fromEntries(formData);
+
+        //extract sections
+        const sections = [];
+        for (let key in data) {
+            if (key.includes('section')) {
+                sections.push(data[key]);
+            }
+        }
+        console.log(sections)
+
+        // group sections by sectionid-title, sectionid-link, sectionid-description
+        const groupedSections = [];
+        for (let i = 0; i < sections.length; i += 3) {
+            groupedSections.push({
+                title: sections[i],
+                link: sections[i + 1],
+                description: sections[i + 2]
+            })
+        }
+        console.log(groupedSections)
+        console.log(data);
+
+        if (data['course-name'] === '') {
+            coursename = document.getElementById('course-name');
+            coursename.classList.add('border-red-500');
+            coursename.classList.add('border-2');
+            coursename.placeholder = 'Course name is required';
+            return;
+        }
+
+        if (data['course-description'] === '') {
+            courseDescription = document.getElementById('course-description');
+            courseDescription.classList.add('border-red-500');
+            courseDescription.classList.add('border-2');
+            courseDescription.placeholder = 'Course description is required';
+            return;
+        }
+        if (data['course-background'].name === '') {
+            alert('Course background is required');
+            return;
+        }
+
+        // validate grouped sections
+        for (let i = 0; i < groupedSections.length; i++) {
+            if (groupedSections[i].title === '') {
+                const sectionTitle = document.getElementById(`section${i + 1}-title`);
+                sectionTitle.classList.add('border-red-500');
+                sectionTitle.classList.add('border-2');
+                sectionTitle.placeholder = 'Section title is required';
+                return;
+            }
+            if (groupedSections[i].link === '') {
+                const sectionLink = document.getElementById(`section${i + 1}-link`);
+                sectionLink.classList.add('border-red-500');
+                sectionLink.classList.add('border-2');
+                sectionLink.placeholder = 'Section link is required';
+                return;
+            }
+            if (groupedSections[i].description === '') {
+                const sectionDescription = document.getElementById(`section${i + 1}-description`);
+                sectionDescription.classList.add('border-red-500');
+                sectionDescription.classList.add('border-2');
+                sectionDescription.placeholder = 'Section description is required';
+                return;
+            }
+        }
+
+
+
+
+
+    // submit form
+    const form = document.getElementById('courseForm');
+    form.submit();
+
+
+
+    })
+
 </script>
 </body>
 </html>
