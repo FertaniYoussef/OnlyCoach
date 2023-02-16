@@ -22,6 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class DashboardController extends AbstractController
@@ -35,6 +36,25 @@ class DashboardController extends AbstractController
     }
 
     // Debut partie coach Gestion cours
+
+    // make an api that returns a json response
+    #[Route('/coach/dashboard/api/courses', name: 'app_dashboard_api_courses')]
+    public function apiCourses(Request $request, CoursRepository $repository): Response
+    {
+        $courses = $repository->findAll();
+        // loop through the courses and each time append it to an array with json format
+        $coursesArray = [];
+        foreach ($courses as $course) {
+            $coursesArray[] = [
+                'id' => $course->getId(),
+                'title' => $course->getTitre(),
+                'description' => $course->getDescription(),
+                'image' => $course->getCoursPhoto(),
+                'date' => $course->getDateCreation(),
+            ];
+        }
+        return $this->json($coursesArray);
+    }
 
     #[Route('/coach/dashboard/courses', name: 'app_dashboard_listCourses')]
     public function listCourses(Request $request, CoursRepository $repository): Response
@@ -140,7 +160,7 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/coach/dashboard/addCourse', name: 'app_dashboard_addcourse')]
-    public function AddCourse(Request $request, ManagerRegistry $doctrine)
+    public function AddCourse(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator)
     {
         if ($request->getMethod() === 'POST') {
 
@@ -149,6 +169,7 @@ class DashboardController extends AbstractController
             $cours = new Cours();
             $cours->setTitre($inputs['course-name']);
             $cours->setDescription($inputs['course-description']);
+
 
             /* Uploading image */
             dump($_FILES);
@@ -167,6 +188,7 @@ class DashboardController extends AbstractController
 
             dump($inputs);
             $em = $doctrine->getManager();
+
             $em->persist($cours);
             // section & resource management
             dump('id du cours ajouté est : '.$cours->getId());
@@ -182,6 +204,8 @@ class DashboardController extends AbstractController
                 $cours->addIdSection($section);
                 $em->persist($section);
 
+
+
                 // resource
                 $resource = new Ressources();
                 $resource->setLien($inputs['section'.$i.'-link']);
@@ -189,8 +213,19 @@ class DashboardController extends AbstractController
                 $resource->setSections($section);
                 $resource->setIndexRessources(1);
                 $section->addIdRessource($resource);
+
                 $em->persist($resource);
             }
+
+            // validate $cours
+            $errors = $validator->validate($cours);
+
+            dump($errors);
+            if (count($errors) > 0) {
+                return new Response((string) $errors, 400);
+            }
+
+
 
             $em->flush();
             $em->clear();
