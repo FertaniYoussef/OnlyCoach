@@ -6,7 +6,11 @@ use App\Entity\Cours;
 use App\Entity\Ressources;
 use App\Entity\Sections;
 use App\Entity\Coach;
+use App\Entity\Offre;
+use App\Entity\Feedback;
 use App\Form\CoachType;
+use App\Form\OfferType;
+use App\Form\FeedbackType;
 use App\Repository\CoursRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
@@ -18,7 +22,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
-// use generateUniqueFileName;
 
 
 class DashboardController extends AbstractController
@@ -280,13 +283,35 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
     public function offers(Request $request): Response
     {
-        return $this->render('dashboard/admin/offers/offers.html.twig');
+        $offre = new Offre();
+        $form = $this->createForm(OfferType::class, $offre);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminOffers');
+        }
+        return $this->render('dashboard/admin/offers/offers.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
     public function offersModify(Request $request,int $id): Response
     {
-        return $this->render('dashboard/admin/offers/modifyoffer.html.twig');
+        $offre = new Offre();
+        $form = $this->createForm(OfferType::class, $offre);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminOffers');
+        }
+        return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     // Partie feedbacks
@@ -300,7 +325,18 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
     public function consulterFeedback(Request $request,int $id): Response
     {
-        return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig');
+        $feedback = new Feedback();
+        $form = $this->createForm(FeedbackType::class, $feedback);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminFeedbacks');
+        }
+        return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
 
