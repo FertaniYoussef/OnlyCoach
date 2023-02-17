@@ -28,6 +28,7 @@ class UserController extends AbstractController
             'error'         => $error,
             ]);
     }
+    
     #[Route('/inscription', name: 'User_inscription')]
     public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher)
     {
