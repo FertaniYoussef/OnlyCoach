@@ -25,7 +25,6 @@ class Sections
     private ?int $nbresources = null;
 
     #[ORM\ManyToOne(inversedBy: 'id_sections')]
-    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Cours $cours = null;
 
     #[ORM\OneToMany(mappedBy: 'sections', targetEntity: Ressources::class)]

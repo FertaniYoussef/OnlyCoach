@@ -37,7 +37,7 @@ class Cours
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
     private Collection $id_rating;
 
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class)]
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ["PERSIST"])]
     private Collection $id_sections;
 
     public function __construct()
