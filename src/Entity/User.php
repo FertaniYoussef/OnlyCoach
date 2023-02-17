@@ -207,6 +207,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    #handle Subscription existence
+    public function isSubscribedTo(Coach $coach): bool
+    {
+        return $this->id_abonnement->exists(function ($key, $id_abonnement) use ($coach) {
+            return $id_abonnement->getCoach() === $coach;
+        });
+    }
 
     /**
      * @return Collection<int, Feedback>
@@ -296,5 +303,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function __toString() {
+        return $this->id;
     }
 }
