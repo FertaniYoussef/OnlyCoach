@@ -277,7 +277,7 @@
                                     <div class="sm:flex sm:items-center">
                                         <div class="sm:flex-auto">
                                             <h1 class="text-xl font-semibold text-gray-900">Offers</h1>
-                                            <p class="mt-2 text-sm text-gray-700">A list of all the offers found, showing Id coach, Name and role.</p>
+                                            <p class="mt-2 text-sm text-gray-700">A list of all the offers found.</p>
                                         </div>
                                     </div>
                                     <div class="mt-8 flex flex-col">
@@ -319,7 +319,7 @@
                                                                 <div class="text-gray-900">{# date fin ici #}Date fin</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminModifierOffer', {id : 1})}}">Edit</a></div>
+                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminModifierOffer', {id : 1})}}">{# Changer l'id (dynamique) #}Edit</a></div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
@@ -387,59 +387,8 @@
                             <div class="flex flex-1 flex-col justify-between">
                                 <div class="divide-y divide-gray-200 px-4 sm:px-6">
                                     <div class="pt-6 pb-5 space-y-4">
-                                        <!-- WIP -->
-                                        <h1 class="text-gray-800 text-sm font-medium">Select coach</h1>
-                                        <select id="users" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                            {# afficher tous les users avec ceci #}
-                                            <option value="{# user id ici #}">a</option>
-                                        </select>
 
-                                        <!-- WIP -->
-
-                                        <div>
-                                            <label for="offer-nom" class="block text-sm font-medium text-gray-900">Offer
-                                                name</label>
-                                            <div class="mt-1">
-                                                <input type="text" name="offer-name" id="offer-name"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label for="offer-prix" class="block text-sm font-medium text-gray-900">Offer
-                                                price</label>
-                                            <div class="mt-1">
-                                                <input type="number" name="offer-prix" id="offer-prix"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label for="offer-discount" class="block text-sm font-medium text-gray-900">
-                                                Discount</label>
-                                            <div class="mt-1">
-                                                <input type="number" name="offer-discount" id="offer-discount"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label for="offer-datedeb" class="block text-sm font-medium text-gray-900">
-                                                Starts on</label>
-                                            <div class="mt-1">
-                                                <input type="date" name="offer-datedeb" id="offer-datedeb"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <label for="offer-datefin" class="block text-sm font-medium text-gray-900">
-                                                Ends on</label>
-                                            <div class="mt-1">
-                                                <input type="date" name="offer-datefin" id="offer-datefin"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
+                                        {{form(form)}}
 
 
                                     </div>
