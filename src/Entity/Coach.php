@@ -45,9 +45,13 @@ class Coach
     #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class)]
     private Collection $id_abonnement;
 
+    #[ORM\OneToMany(mappedBy: 'IdCoach', targetEntity: Cours::class)]
+    private Collection $cours;
+
     public function __construct()
     {
         $this->id_abonnement = new ArrayCollection();
+        $this->cours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -206,5 +210,35 @@ class Coach
 
     public function __toString() {
         return $this->id;
+    }
+
+    /**
+     * @return Collection<int, Cours>
+     */
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setIdCoach($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getIdCoach() === $this) {
+                $cour->setIdCoach(null);
+            }
+        }
+
+        return $this;
     }
 }

@@ -24,7 +24,7 @@ class Sections
     #[ORM\Column(nullable: true)]
     private ?int $nbresources = null;
 
-    #[ORM\ManyToOne(inversedBy: 'id_sections')]
+    #[ORM\ManyToOne(inversedBy: 'id_sections', cascade: ["PERSIST"])]
     private ?Cours $cours = null;
 
     #[ORM\OneToMany(mappedBy: 'sections', targetEntity: Ressources::class)]
