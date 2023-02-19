@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\AbonnementRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Persistence\ManagerRegistry;
 
 #[ORM\Entity(repositoryClass: AbonnementRepository::class)]
+// #[ORM\HasLifecycleCallbacks]
 class Abonnement
 {
     #[ORM\Id]
@@ -57,6 +59,20 @@ class Abonnement
 
         return $this;
     }
+ /*    public function isExpired(): bool
+    {
+        return $this->date_fin <= new \DateTime();
+    }
+    
+    public function checkForExpiration(ManagerRegistry $doctrine)
+    {
+        if ($this->isExpired()) {
+            // If the subscription has expired, delete it
+            $entityManager = $doctrine->getManager();
+            $entityManager->remove($this);
+            $entityManager->flush();
+        }
+    } */
 
     public function getPrix(): ?float
     {

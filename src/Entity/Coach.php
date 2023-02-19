@@ -75,7 +75,6 @@ class Coach
     public function setPrenom(?string $Prenom): self
     {
         $this->Prenom = $Prenom;
-
         return $this;
     }
 
@@ -201,5 +200,11 @@ class Coach
         }
 
         return $this;
+    }
+
+
+
+    public function __toString() {
+        return $this->id;
     }
 }

@@ -497,7 +497,6 @@
     </div>
 </div>
 
-
 <!-- Slide over for creating courses starts here -->
 
 <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="formSlide">
@@ -508,7 +507,7 @@
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                 <div class="pointer-events-auto w-screen max-w-md">
-                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
+                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data" id="courseForm">
                         <div class="h-0 flex-1 overflow-y-auto">
                             <div class="bg-sky-700 py-6 px-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -525,725 +524,7 @@
                                                       d="M6 18L18 6M6 6l12 12"/>
                                             </svg>
                                         </button>
-                                    </div><!doctype html>
-                                    <html class="h-full bg-gray-100">
-                                    <head>
-                                        <meta charset="utf-8">
-                                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                                        {% block stylesheets %}
-                                            {{ encore_entry_link_tags('app') }}
-                                        {% endblock %}
-                                    </head>
-                                    <body class="h-full">
-                                    <div class="min-h-full">
-                                        <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
-                                        <div class="relative z-40 hidden lg:hidden" role="dialog" aria-modal="true" id="mobileMenu">
-                                            <!--
-                                              Off-canvas menu backdrop, show/hide based on off-canvas menu state.
-
-                                              Entering: "transition-opacity ease-linear duration-300"
-                                                From: "opacity-0"
-                                                To: "opacity-100"
-                                              Leaving: "transition-opacity ease-linear duration-300"
-                                                From: "opacity-100"
-                                                To: "opacity-0"
-                                            -->
-                                            <div class="fixed inset-0 bg-gray-600 bg-opacity-75"></div>
-
-                                            <div class="fixed inset-0 z-40 flex">
-                                                <!--
-                                                  Off-canvas menu, show/hide based on off-canvas menu state.
-
-                                                  Entering: "transition ease-in-out duration-300 transform"
-                                                    From: "-translate-x-full"
-                                                    To: "translate-x-0"
-                                                  Leaving: "transition ease-in-out duration-300 transform"
-                                                    From: "translate-x-0"
-                                                    To: "-translate-x-full"
-                                                -->
-                                                <div class="relative flex w-full max-w-xs flex-1 flex-col bg-cyan-700 pt-5 pb-4">
-                                                    <!--
-                                                      Close button, show/hide based on off-canvas menu state.
-
-                                                      Entering: "ease-in-out duration-300"
-                                                        From: "opacity-0"
-                                                        To: "opacity-100"
-                                                      Leaving: "ease-in-out duration-300"
-                                                        From: "opacity-100"
-                                                        To: "opacity-0"
-                                                    -->
-                                                    <div class="absolute top-0 right-0 -mr-12 pt-2">
-                                                        <button type="button" id="closeMenu"
-                                                                class="ml-1 flex h-10 w-10 items-center justify-center rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                                                            <span class="sr-only">Close sidebar</span>
-                                                            <!-- Heroicon name: outline/x-mark -->
-                                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-
-                                                    <div class="flex flex-shrink-0 items-center px-4">
-                                                        <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=cyan&shade=300"
-                                                             alt="Easywire logo">
-                                                    </div>
-                                                    <nav class="mt-5 h-full flex-shrink-0 divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
-                                                        <div class="space-y-1 px-2">
-                                                            <!-- Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" -->
-                                                            <a href="#"
-                                                               class="bg-cyan-800 text-white group flex items-center px-2 py-2 text-base font-medium rounded-md"
-                                                               aria-current="page">
-                                                                <!-- Heroicon name: outline/home -->
-                                                                <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                     aria-hidden="true">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                          d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
-                                                                </svg>
-                                                                Home
-                                                            </a>
-
-                                                            <a href="#"
-                                                               class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                                                                <!-- Heroicon name: outline/clock -->
-                                                                <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                     aria-hidden="true">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                                                </svg>
-                                                                Offers
-                                                            </a>
-
-                                                            <a href="{{ path('app_dashboard_listCourses') }}"
-                                                               class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-base font-medium rounded-md">
-                                                                <!-- Heroicon name: outline/scale -->
-                                                                <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                     fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                     aria-hidden="true">
-                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                          d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z"/>
-                                                                </svg>
-                                                                Courses
-                                                            </a>
-
-
-
-                                                        </div>
-                                                    </nav>
-                                                </div>
-
-                                                <div class="w-14 flex-shrink-0" aria-hidden="true">
-                                                    <!-- Dummy element to force sidebar to shrink to fit close icon -->
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Static sidebar for desktop -->
-                                        <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
-                                            <!-- Sidebar component, swap this element with another sidebar if you like -->
-                                            <div class="flex flex-grow flex-col overflow-y-auto bg-cyan-700 pt-5 pb-4">
-                                                <div class="flex flex-shrink-0 items-center px-4">
-                                                    <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=cyan&shade=300"
-                                                         alt="Easywire logo">
-                                                </div>
-                                                <nav class="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
-                                                    <div class="space-y-1 px-2">
-                                                        <!-- Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" -->
-                                                        <a href="#"
-                                                           class="bg-cyan-800 text-white group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md"
-                                                           aria-current="page">
-                                                            <!-- Heroicon name: outline/home -->
-                                                            <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                 aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                      d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
-                                                            </svg>
-                                                            Home
-                                                        </a>
-
-
-                                                        <a href="#"
-                                                           class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
-                                                            <!-- Heroicon name: outline/scale -->
-                                                            <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                 aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                      d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.971zm-16.5.52c.99-.203 1.99-.377 3-.52m0 0l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.989 5.989 0 01-2.031.352 5.989 5.989 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L5.25 4.971z"/>
-                                                            </svg>
-                                                            Offer
-                                                        </a>
-
-                                                        <a href="{{ path('app_dashboard_listCourses') }}"
-                                                           class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
-                                                            <!-- Heroicon name: outline/credit-card -->
-                                                            <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg"
-                                                                 fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                 aria-hidden="true">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                      d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"/>
-                                                            </svg>
-                                                            Courses
-                                                        </a>
-
-                                                    </div>
-                                                </nav>
-                                            </div>
-                                        </div>
-
-                                        <div class="flex flex-1 flex-col lg:pl-64">
-                                            <div class="flex h-16 flex-shrink-0 border-b border-gray-200 bg-white lg:border-none">
-                                                <button type="button" id="openMenuMobile"
-                                                        class="border-r border-gray-200 px-4 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden">
-                                                    <span class="sr-only">Open sidebar</span>
-                                                    <!-- Heroicon name: outline/bars-3-center-left -->
-                                                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                         stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                                                        <path stroke-linecap="round" stroke-linejoin="round"
-                                                              d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5"/>
-                                                    </svg>
-                                                </button>
-                                                <!-- Search bar -->
-                                                <div class="flex flex-1 justify-between px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
-                                                    <div class="flex flex-1">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <main class="flex-1 pb-8">
-                                                <!-- Page header -->
-                                                <div class="bg-white shadow">
-                                                    <div class="px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
-                                                        <div class="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
-                                                            <div class="min-w-0 flex-1">
-                                                                <!-- Profile -->
-                                                                <div class="flex items-center">
-                                                                    <img class="hidden h-16 w-16 rounded-full sm:block"
-                                                                         src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                                                         alt="">
-                                                                    <div>
-                                                                        <div class="flex items-center">
-                                                                            <img class="h-16 w-16 rounded-full sm:hidden"
-                                                                                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
-                                                                                 alt="">
-                                                                            <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                                                                Good morning, Emilia Birch</h1>
-                                                                        </div>
-                                                                        <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
-                                                                            <dt class="sr-only">Company</dt>
-                                                                            <dd class="flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6">
-                                                                                <!-- Heroicon name: mini/building-office -->
-                                                                                <svg class="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                                     fill="currentColor" aria-hidden="true">
-                                                                                    <path fill-rule="evenodd"
-                                                                                          d="M4 16.5v-13h-.25a.75.75 0 010-1.5h12.5a.75.75 0 010 1.5H16v13h.25a.75.75 0 010 1.5h-3.5a.75.75 0 01-.75-.75v-2.5a.75.75 0 00-.75-.75h-2.5a.75.75 0 00-.75.75v2.5a.75.75 0 01-.75.75h-3.5a.75.75 0 010-1.5H4zm3-11a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zM7.5 9a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1zM11 5.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm.5 3.5a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1z"
-                                                                                          clip-rule="evenodd"/>
-                                                                                </svg>
-                                                                                Fitness
-                                                                            </dd>
-                                                                            <dt class="sr-only">Account status</dt>
-                                                                            <dd class="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
-                                                                                <!-- Heroicon name: mini/check-circle -->
-                                                                                <svg class="mr-1.5 h-5 w-5 flex-shrink-0 text-green-400"
-                                                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                                     fill="currentColor" aria-hidden="true">
-                                                                                    <path fill-rule="evenodd"
-                                                                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                                                                          clip-rule="evenodd"/>
-                                                                                </svg>
-                                                                                Verified coach
-                                                                            </dd>
-                                                                        </dl>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-                                                                <button type="button" id="openForm"
-                                                                        class="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                                                                    New Course
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="mt-8">
-                                                    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                                        <h2 class="text-lg font-medium leading-6 text-gray-900">Overview</h2>
-
-                                                        <!-- WIP -->
-
-                                                        <div>
-
-                                                            <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                                                                <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
-                                                                    <dt>
-                                                                        <div class="absolute rounded-md bg-indigo-500 p-3">
-                                                                            <!-- Heroicon name: outline/users -->
-                                                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                      d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Subscribers</p>
-                                                                    </dt>
-                                                                    <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                                                        <p class="text-2xl font-semibold text-gray-900">71,897</p>
-                                                                        <p class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                                                            <!-- Heroicon name: mini/arrow-up -->
-                                                                            <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
-                                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path fill-rule="evenodd"
-                                                                                      d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                                                      clip-rule="evenodd"/>
-                                                                            </svg>
-                                                                            <span class="sr-only"> Increased by </span>
-                                                                            122
-                                                                        </p>
-                                                                        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                                                                            <div class="text-sm">
-                                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                                                    all<span class="sr-only"> Total Subscribers stats</span></a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </dd>
-                                                                </div>
-
-                                                                <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
-                                                                    <dt>
-                                                                        <div class="absolute rounded-md bg-indigo-500 p-3">
-                                                                            <!-- Heroicon name: outline/envelope-open -->
-                                                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                      d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z"/>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <p class="ml-16 truncate text-sm font-medium text-gray-500">Balance</p>
-                                                                    </dt>
-                                                                    <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                                                        <p class="text-2xl font-semibold text-gray-900">58.16%</p>
-                                                                        <p class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                                                            <!-- Heroicon name: mini/arrow-up -->
-                                                                            <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
-                                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path fill-rule="evenodd"
-                                                                                      d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                                                      clip-rule="evenodd"/>
-                                                                            </svg>
-                                                                            <span class="sr-only"> Increased by </span>
-                                                                            5.4%
-                                                                        </p>
-                                                                        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                                                                            <div class="text-sm">
-                                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                                                    all<span class="sr-only"> Avg. Open Rate stats</span></a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </dd>
-                                                                </div>
-
-                                                                <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
-                                                                    <dt>
-                                                                        <div class="absolute rounded-md bg-indigo-500 p-3">
-                                                                            <!-- Heroicon name: outline/cursor-arrow-rays -->
-                                                                            <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                      d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/>
-                                                                            </svg>
-                                                                        </div>
-                                                                        <p class="ml-16 truncate text-sm font-medium text-gray-500">Avg. View Rate</p>
-                                                                    </dt>
-                                                                    <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                                                        <p class="text-2xl font-semibold text-gray-900">24.57%</p>
-                                                                        <p class="ml-2 flex items-baseline text-sm font-semibold text-red-600">
-                                                                            <!-- Heroicon name: mini/arrow-down -->
-                                                                            <svg class="h-5 w-5 flex-shrink-0 self-center text-red-500"
-                                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                                                                 aria-hidden="true">
-                                                                                <path fill-rule="evenodd"
-                                                                                      d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
-                                                                                      clip-rule="evenodd"/>
-                                                                            </svg>
-                                                                            <span class="sr-only"> Decreased by </span>
-                                                                            3.2%
-                                                                        </p>
-                                                                        <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
-                                                                            <div class="text-sm">
-                                                                                <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                                                    all<span class="sr-only"> Avg. Click Rate stats</span></a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </dd>
-                                                                </div>
-                                                            </dl>
-                                                        </div>
-
-
-                                                        <!-- WIP -->
-
-                                                        <!-- More items... -->
-                                                    </div>
-                                                </div>
-
-                                                <h2 class="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">Recent
-                                                    subscribers</h2>
-
-                                                <!-- Activity list (smallest breakpoint only) -->
-                                                <div class="shadow sm:hidden">
-                                                    <ul role="list" class="mt-2 divide-y divide-gray-200 overflow-hidden shadow sm:hidden">
-                                                        <li>
-                                                            <a href="#" class="block bg-white px-4 py-4 hover:bg-gray-50">
-                <span class="flex items-center space-x-4">
-                  <span class="flex flex-1 space-x-2 truncate">
-                    <!-- Heroicon name: mini/banknotes -->
-                    <svg class="h-5 w-5 flex-shrink-0 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path fill-rule="evenodd"
-                            d="M1 4a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4zm12 4a3 3 0 11-6 0 3 3 0 016 0zM4 9a1 1 0 100-2 1 1 0 000 2zm13-1a1 1 0 11-2 0 1 1 0 012 0zM1.75 14.5a.75.75 0 000 1.5c4.417 0 8.693.603 12.749 1.73 1.111.309 2.251-.512 2.251-1.696v-.784a.75.75 0 00-1.5 0v.784a.272.272 0 01-.35.25A49.043 49.043 0 001.75 14.5z"
-                            clip-rule="evenodd"/>
-                    </svg>
-                    <span class="flex flex-col truncate text-sm text-gray-500">
-                      <span class="truncate">Payment to Molly Sanders</span>
-                      <span><span class="font-medium text-gray-900">$20,000</span> USD</span>
-                      <time datetime="2020-07-11">July 11, 2020</time>
-                    </span>
-                  </span>
-                    <!-- Heroicon name: mini/chevron-right -->
-                  <svg class="h-5 w-5 flex-shrink-0 text-gray-400" xmlns="http://www.w3.org/2000/svg"
-                       viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd"
-                          d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
-                          clip-rule="evenodd"/>
-                  </svg>
-                </span>
-                                                            </a>
-                                                        </li>
-
-                                                        <!-- More transactions... -->
-                                                    </ul>
-
-                                                    <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3"
-                                                         aria-label="Pagination">
-                                                        <div class="flex flex-1 justify-between">
-                                                            <a href="#"
-                                                               class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">Previous</a>
-                                                            <a href="#"
-                                                               class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-500">Next</a>
-                                                        </div>
-                                                    </nav>
-                                                </div>
-
-                                                <!-- Activity table (small breakpoint and up) -->
-                                                <div class="hidden sm:block">
-                                                    <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                                                        <div class="mt-2 flex flex-col">
-                                                            <div class="min-w-full overflow-hidden overflow-x-auto align-middle shadow sm:rounded-lg">
-                                                                <table class="min-w-full divide-y divide-gray-200">
-                                                                    <thead>
-                                                                    <tr>
-                                                                        <th class="bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900"
-                                                                            scope="col">Transaction
-                                                                        </th>
-                                                                        <th class="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                            scope="col">Amount
-                                                                        </th>
-                                                                        <th class="hidden bg-gray-50 px-6 py-3 text-left text-sm font-semibold text-gray-900 md:block"
-                                                                            scope="col">Status
-                                                                        </th>
-                                                                        <th class="bg-gray-50 px-6 py-3 text-right text-sm font-semibold text-gray-900"
-                                                                            scope="col">Date
-                                                                        </th>
-                                                                    </tr>
-                                                                    </thead>
-                                                                    <tbody class="divide-y divide-gray-200 bg-white">
-                                                                    <tr class="bg-white">
-                                                                        <td class="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
-                                                                            <div class="flex">
-                                                                                <a href="#" class="group inline-flex space-x-2 truncate text-sm">
-                                                                                    <!-- Heroicon name: mini/banknotes -->
-                                                                                    <svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
-                                                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                                                         fill="currentColor" aria-hidden="true">
-                                                                                        <path fill-rule="evenodd"
-                                                                                              d="M1 4a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4zm12 4a3 3 0 11-6 0 3 3 0 016 0zM4 9a1 1 0 100-2 1 1 0 000 2zm13-1a1 1 0 11-2 0 1 1 0 012 0zM1.75 14.5a.75.75 0 000 1.5c4.417 0 8.693.603 12.749 1.73 1.111.309 2.251-.512 2.251-1.696v-.784a.75.75 0 00-1.5 0v.784a.272.272 0 01-.35.25A49.043 49.043 0 001.75 14.5z"
-                                                                                              clip-rule="evenodd"/>
-                                                                                    </svg>
-                                                                                    <p class="truncate text-gray-500 group-hover:text-gray-900">Payment to
-                                                                                        Molly Sanders</p>
-                                                                                </a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            <span class="font-medium text-gray-900">$20,000</span>
-                                                                            USD
-                                                                        </td>
-                                                                        <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
-                                                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">success</span>
-                                                                        </td>
-                                                                        <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                                                            <time datetime="2020-07-11">July 11, 2020</time>
-                                                                        </td>
-                                                                    </tr>
-
-                                                                    <!-- More transactions... -->
-                                                                    </tbody>
-                                                                </table>
-                                                                <!-- Pagination -->
-                                                                <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6"
-                                                                     aria-label="Pagination">
-                                                                    <div class="hidden sm:block">
-                                                                        <p class="text-sm text-gray-700">
-                                                                            Showing
-                                                                            <span class="font-medium">18</span>
-                                                                            results
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="flex flex-1 justify-between sm:justify-end">
-                                                                        <a href="#"
-                                                                           class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
-                                                                        <a href="#"
-                                                                           class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
-                                                                    </div>
-                                                                </nav>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </main>
-                                        </div>
                                     </div>
-
-
-                                    <!-- Slide over for creating courses starts here -->
-
-                                    <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="formSlide">
-                                        <!-- Background backdrop, show/hide based on slide-over state. -->
-                                        <div class="fixed inset-0"></div>
-
-                                        <div class="fixed inset-0 overflow-hidden">
-                                            <div class="absolute inset-0 overflow-hidden">
-                                                <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-                                                    <div class="pointer-events-auto w-screen max-w-md">
-                                                        <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
-                                                            <div class="h-0 flex-1 overflow-y-auto">
-                                                                <div class="bg-sky-700 py-6 px-4 sm:px-6">
-                                                                    <div class="flex items-center justify-between">
-                                                                        <h2 class="text-lg font-medium text-white" id="slide-over-title">New Course</h2>
-                                                                        <div class="ml-3 flex h-7 items-center">
-                                                                            <button id="closebutton" type="button"
-                                                                                    class="rounded-md bg-sky-700 text-sky-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
-                                                                                <span class="sr-only">Close panel</span>
-                                                                                <!-- Heroicon name: outline/x-mark -->
-                                                                                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                                                     aria-hidden="true">
-                                                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                                                          d="M6 18L18 6M6 6l12 12"/>
-                                                                                </svg>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="mt-1">
-                                                                        <p class="text-sm text-sky-300">Get started by filling in the information below to
-                                                                            create your new course.</p>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="flex flex-1 flex-col justify-between">
-                                                                    <div class="divide-y divide-gray-200 px-4 sm:px-6">
-                                                                        <div class="space-y-6 pt-6 pb-5">
-                                                                            <div>
-                                                                                <label for="course-name" class="block text-sm font-medium text-gray-900">Course
-                                                                                    title</label>
-                                                                                <div class="mt-1">
-                                                                                    <input type="text" name="course-name" id="course-name"
-                                                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div>
-                                                                                <label for="description" class="block text-sm font-medium text-gray-900">Course description</label>
-                                                                                <div class="mt-1">
-                                                <textarea id="description" name="course-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div>
-                                                                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="small_size">Course background</label>
-
-                                                                                <div class="mt-1">
-                                                                                    <div class="flex items-center justify-center w-full">
-                                                                                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                                                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                                                                <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                                                                                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                                                                <p class="text-xs text-gray-500 dark:text-gray-400">PNG JPG or JPEG</p>
-                                                                                            </div>
-                                                                                            <input id="dropzone-file" name="course-background" type="file" class="hidden" />
-                                                                                        </label>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                            <div id="sections" class="space-y-5">
-                                                                                <div class="flex justify-between">
-                                                                                    <h1 class="block text-sm font-medium text-gray-900">Add new
-                                                                                        section</h1>
-                                                                                    <div id="buttons__container" class="flex space-x-1">
-                                                                                        <div id="plus"
-                                                                                             class="px-4 py-1 flex items-center justify-center text-xs text-white bg-orange-600 rounded-md cursor-pointer"
-                                                                                             onclick="{ addSection() }">+
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div id="section1" class="mt-4">
-                                                                                    <div>
-                                                                                        <div class="w-full bg-sky-700 px-2 py-3 mb-4 rounded-md">
-                                                                                            <h1 class="text-white rounded-md">Section 1</h1>
-                                                                                        </div>
-
-                                                                                        <label for="section1title"
-                                                                                               class="block text-sm font-medium text-gray-900">Section 1
-                                                                                            Title</label>
-                                                                                        <div class="mt-1">
-                                                                                            <input type="text" name="section1-title" id="section1-title"
-                                                                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div>
-                                                                                        <div id="resources1" class="mt-4">
-                                                                                            <h1 class="w-full bg-sky-700 px-2 py-3 mb-4 text-white rounded-md">Section 1 Resource</h1>
-
-                                                                                            <div class="mt-1">
-                                                                                                <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                                                                <input type="text" name="section1-link" id="section1-title"
-                                                                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
-                                                                                                <div class="mt-2">
-                                                                                                    <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
-                                                                                                    <div class="mt-1">
-                                                <textarea id="description" name="section1-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-
-                                                                        </div>
-
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                                                                <button type="button"
-                                                                        class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                                                    Cancel
-                                                                </button>
-                                                                <button type="submit"
-                                                                        class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                                                    Save
-                                                                </button>
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Slide over panel for creating courses ends here-->
-
-                                    <script>
-
-                                        const closeButton = document.getElementById('closebutton')
-                                        closeButton.addEventListener('click', () => {
-                                            document.getElementById('formSlide').classList.remove('block')
-                                            document.getElementById('formSlide').classList.add('hidden')
-                                        })
-
-                                        const openButton = document.getElementById('openForm')
-                                        openButton.addEventListener('click', () => {
-                                            document.getElementById('formSlide').classList.remove('hidden')
-                                            document.getElementById('formSlide').classList.add('block')
-                                        })
-
-                                        const closeMenuButton = document.getElementById('closeMenu')
-                                        closeMenuButton.addEventListener('click', () => {
-                                            document.getElementById('mobileMenu').classList.add('hidden')
-                                        })
-
-                                        const openMenuButton = document.getElementById('openMenuMobile')
-                                        openMenuButton.addEventListener('click', () => {
-                                            document.getElementById('mobileMenu').classList.remove('hidden')
-                                        })
-
-
-                                        let counter = 2;
-
-                                        function addSection() {
-                                            const form = document.getElementById('sections');
-                                            const div = document.createElement('div');
-                                            const sectionId = `section${counter}`;
-                                            div.id = sectionId;
-                                            div.innerHTML = `<div id="${sectionId}" class="mt-4">
-                                                <div>
-                                                    <div class="w-full bg-sky-700 px-2 py-3 mb-4 rounded-md flex justify-between items-center">
-                                                        <h1 class="text-white rounded-md">Section ${counter}</h1>
-                                                        <button type="button" style="background: #ef4444" class="px-4 text-white text-xs py-1 rounded-md" onclick="removeSection('${sectionId}')">Remove Section</button>
-                                                    </div>
-
-                                                    <label for="${sectionId}title"
-                                                           class="block text-sm font-medium text-gray-900">Section ${counter}
-                                                        Title</label>
-                                                    <div class="mt-1">
-                                                        <input type="text" name="${sectionId}-title" id="${sectionId}-title"
-                                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div id="resources${counter}" class="mt-4">
-                                                        <h1 class="w-full bg-sky-700 px-2 py-3 mb-4 text-white rounded-md">Section ${counter} Resource</h1>
-
-                                                        <div class="mt-1">
-                                                            <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                            <input type="text" name="${sectionId}-link" id="section1-title"
-                                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
-                                                            <div class="mt-2">
-                                                                <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
-                                                                <div class="mt-1">
-                                                <textarea id="description" name="${sectionId}-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-  `;
-
-                                            form.appendChild(div);
-                                            counter++;
-                                        }
-
-                                        function removeSection(sectionId) {
-                                            const section = document.getElementById(sectionId);
-                                            section.parentNode.removeChild(section);
-                                            counter--
-                                        }
-                                    </script>
-                                    </body>
-                                    </html>
                                 </div>
                                 <div class="mt-1">
                                     <p class="text-sm text-sky-300">Get started by filling in the information below to
@@ -1264,7 +545,7 @@
                                         <div>
                                             <label for="description" class="block text-sm font-medium text-gray-900">Course description</label>
                                             <div class="mt-1">
-                                                <textarea id="description" name="course-description" rows="4"
+                                                <textarea id="course-description" name="course-description" rows="4"
                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                                             </div>
                                         </div>
@@ -1355,6 +636,7 @@
 
 <!-- Slide over panel for creating courses ends here-->
 
+
 <script>
 
     const closeButton = document.getElementById('closebutton')
@@ -1432,6 +714,91 @@
         section.parentNode.removeChild(section);
         counter--
     }
+
+    const formInputs = document.getElementById('courseForm');
+    formInputs.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(formInputs);
+        const data = Object.fromEntries(formData);
+
+        //extract sections
+        const sections = [];
+        for (let key in data) {
+            if (key.includes('section')) {
+                sections.push(data[key]);
+            }
+        }
+        console.log(sections)
+
+        // group sections by sectionid-title, sectionid-link, sectionid-description
+        const groupedSections = [];
+        for (let i = 0; i < sections.length; i += 3) {
+            groupedSections.push({
+                title: sections[i],
+                link: sections[i + 1],
+                description: sections[i + 2]
+            })
+        }
+        console.log(groupedSections)
+        console.log(data);
+
+        if (data['course-name'] === '') {
+            coursename = document.getElementById('course-name');
+            coursename.classList.add('border-red-500');
+            coursename.classList.add('border-2');
+            coursename.placeholder = 'Course name is required';
+            return;
+        }
+
+        if (data['course-description'] === '') {
+            courseDescription = document.getElementById('course-description');
+            courseDescription.classList.add('border-red-500');
+            courseDescription.classList.add('border-2');
+            courseDescription.placeholder = 'Course description is required';
+            return;
+        }
+        if (data['course-background'].name === '') {
+            alert('Course background is required');
+            return;
+        }
+
+        // validate grouped sections
+        for (let i = 0; i < groupedSections.length; i++) {
+            if (groupedSections[i].title === '') {
+                const sectionTitle = document.getElementById(`section${i + 1}-title`);
+                sectionTitle.classList.add('border-red-500');
+                sectionTitle.classList.add('border-2');
+                sectionTitle.placeholder = 'Section title is required';
+                return;
+            }
+            if (groupedSections[i].link === '') {
+                const sectionLink = document.getElementById(`section${i + 1}-link`);
+                sectionLink.classList.add('border-red-500');
+                sectionLink.classList.add('border-2');
+                sectionLink.placeholder = 'Section link is required';
+                return;
+            }
+            if (groupedSections[i].description === '') {
+                const sectionDescription = document.getElementById(`section${i + 1}-description`);
+                sectionDescription.classList.add('border-red-500');
+                sectionDescription.classList.add('border-2');
+                sectionDescription.placeholder = 'Section description is required';
+                return;
+            }
+        }
+
+
+
+
+
+    // submit form
+    const form = document.getElementById('courseForm');
+    form.submit();
+
+
+
+    })
+
 </script>
 </body>
 </html>

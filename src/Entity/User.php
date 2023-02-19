@@ -214,6 +214,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+    #handle Subscription existence
+    public function isSubscribedTo(Coach $coach): bool
+    {
+        return $this->id_abonnement->exists(function ($key, $id_abonnement) use ($coach) {
+            return $id_abonnement->getCoach() === $coach;
+        });
+    }
 
     /**
      * @return Collection<int, Feedback>
@@ -301,18 +308,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $idRating->setUser(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getPicture(): ?string
-    {
-        return $this->picture;
-    }
-
-    public function setPicture(?string $picture): self
-    {
-        $this->picture = $picture;
 
         return $this;
     }
