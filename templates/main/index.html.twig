@@ -246,24 +246,25 @@
                                     <div id="TrendingCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-5 md:gap-x-5 pt-7">
                                         <!-- Make it dynamic later -->
 
-                                        {% for course in popular|sort((a, b) => a.rating <=> b.rating)  %}
-                                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.background }}')"></div>
-                                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                                    <h1 class="text-xs text-gray-500 pt-1">{{ course.creator }}</h1>
-                                                    {% if course.totalratings > 10 %}
+                                        {% for course in popular %}
+                                        {{dump(course)}}
+                                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
+                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
+                                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
+                                                    <h1 class="text-xs text-gray-500 pt-1">{{course.IdCoach.nom}} {{course.IdCoach.prenom}}</h1>
+                                                   {# {% if course.totalratings > 10 %} #}
                                                         <div class="flex items-center">
-                                                            <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                                            {% for i in range(1, course.rating|round(0, 'floor')) %}
+                                                            <span class="text-amber-600 text-sm font-medium">rating goes here</span>
+                                                           {# {% for i in range(1, course.rating|round(0, 'floor')) %} #}
                                                                 <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                                            {% endfor %}
-                                                            <span class="text-xs text-gray-400 ml-1">(2,432)</span>
+                                                          {#  {% endfor %} #}
+                                                            <span class="text-xs text-gray-400 ml-1">count ratings here</span>
                                                         </div>
-                                                    {% else %}
+                                                   {# {% else %} #}
                                                         <div class="w-12 h-5 bg-black flex items-center justify-center mt-1">
                                                             <span class="text-xs text-white font-medium uppercase ">new</span>
                                                         </div>
-                                                    {% endif %}
+                                                  {#  {% endif %} #}
                                                 </div></a>
                                         {% endfor %}
 
@@ -282,8 +283,11 @@
                                     </div>
                                     <span class="text-gray-400 text-sm">Loved by everyone, take a look at the most popular courses we have to offer!</span>
                                     <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-0 md:gap-x-5 pt-7">
+
+                            
+
                                         <!-- Make it dynamic later -->
-                                        {% for course in popular %}
+                                      {#  {% for course in popular %}
                                         <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                             <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black  shadow-lg rounded-sm  bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.background }}')"></div>
                                             <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
@@ -302,7 +306,9 @@
                                                 </div>
                                                     {% endif %}
                                         </div></a>
-                                        {% endfor %}
+                                        {% endfor %} #}
+
+                                        
 
                                     </div>
                                 </div>
@@ -439,6 +445,5 @@
 
 </body>
 </html>
-{{ dump(coaches)}}
 
 

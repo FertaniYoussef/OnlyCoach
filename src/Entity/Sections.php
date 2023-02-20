@@ -24,10 +24,10 @@ class Sections
     #[ORM\Column(nullable: true)]
     private ?int $nbresources = null;
 
-    #[ORM\ManyToOne(inversedBy: 'id_sections', cascade: ["PERSIST"])]
+    #[ORM\ManyToOne(inversedBy: 'id_sections'),]
     private ?Cours $cours = null;
 
-    #[ORM\OneToMany(mappedBy: 'sections', targetEntity: Ressources::class)]
+    #[ORM\OneToMany(mappedBy: 'sections', targetEntity: Ressources::class, cascade: ['persist', 'remove'])]
     private Collection $id_ressources;
 
     public function __construct()

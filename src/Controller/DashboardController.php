@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\Validator\Constraints\Date;
-use App\Repository\UserRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DashboardController extends AbstractController
@@ -121,6 +120,7 @@ class DashboardController extends AbstractController
         // get coach from user by id
         $coach = $repository->find($user->getId());
         $courses = $repository->findBy(array('IdCoach' => $coach));
+        $courses = $repository->findAll();
         return $this->render('dashboard/coach/courses.html.twig', ['courses' => $courses,'user' => $this->getUser(),]);
     }
 

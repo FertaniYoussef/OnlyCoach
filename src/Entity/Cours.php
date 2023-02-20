@@ -40,7 +40,7 @@ class Cours
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
     private Collection $id_rating;
 
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ["PERSIST"])]
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ['persist', 'remove'])]
     private Collection $id_sections;
 
     #[ORM\ManyToOne(inversedBy: 'cours')]

@@ -187,15 +187,15 @@
                 <p class="mt-6 text-gray-500">{{ course.description }}</p>
 
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
-                    <button type="button"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {# course.coach #}</button>
+                    <button type="button"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</button>
                 </div>
 
                 <div class="mt-10 border-t border-gray-200 pt-10">
                     <div id="CoachContainer" class="flex flex-col items-center">
                         <div class="w-20 h-20 rounded-full bg-[url('../../public/images/coach3.jpg')] bg-cover"></div>
                         <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
-                            <span class="text-md pt-2 ">{# course.coach #}</span>
-                            <span class="text-sm text-teal-600">{# course.coachcategory #}</span>
+                            <span class="text-md pt-2 ">{{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</span>
+                            <span class="text-sm text-teal-600">{{ course.IdCoach.categorie.Type}}</span>
                         </div>
                     </div>
                 </div>
@@ -426,8 +426,10 @@
             // fetch data
             // create an async function to fetch data
 
+            var slug = url => new URL(url).pathname.match(/[^\/]+/g)
+            const id = slug(window.location.href)
                async function getData() {
-                const response = await fetch('http://127.0.0.1:8000/coach/dashboard/api/course/30', {
+                const response = await fetch('http://127.0.0.1:8000/coach/dashboard/api/course/'+id[1], {
              method: 'POST',
                 headers: {
                  'Content-Type': 'application/json',
@@ -458,6 +460,7 @@
                 sections.forEach(section => {
                     var link = /[^/]*$/.exec(section.resources[0].link)[0];
                     link = link.replace("watch?v=", "");
+                    console.log(link)
                     const div = document.createElement('div');
                     const sectionId = `section${section.id}`;
                     div.id = sectionId;

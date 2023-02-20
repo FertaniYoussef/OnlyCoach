@@ -45,7 +45,7 @@ class Coach
     #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class)]
     private Collection $id_abonnement;
 
-    #[ORM\OneToMany(mappedBy: 'IdCoach', targetEntity: Cours::class)]
+    #[ORM\OneToMany(mappedBy: 'IdCoach', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
     private Collection $cours;
 
     public function __construct()
