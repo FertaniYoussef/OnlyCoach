@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\FeedbackRepository;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,15 +17,13 @@ class Feedback
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message:"sujet is required")]
     private ?string $Sujet = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message:"Description is required")]
-    #[Assert\Length(min: 3)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]

@@ -157,32 +157,7 @@
                 <p class="mt-4 text-lg leading-6 text-gray-500"></p>
             </div>
             <div class="mt-12">
-                <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
-                    <div class="sm:col-span-2">
-                        <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
-                        <div class="mt-1">
-
-                            <select id="subject" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                <option>** Select your subject **</option>
-                                <option>Coach</option>
-                                <option>Cours</option>
-                                <option>Payment</option>
-                                <option>Bug</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                        <div class="mt-1">
-                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="sm:col-span-2">
-                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Let's talk</button>
-                    </div>
-                </form>
+    {{ form(form) }}
             </div>
         </div>
     </div>
