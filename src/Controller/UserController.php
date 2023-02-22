@@ -44,12 +44,19 @@ class UserController extends AbstractController
             $role = $user->getRoles();
             $user->setRoles($role);
             $user->setPassword($hashedPassword);
+            $user->setPicture('images\defaultuser.png');
             $user->setEmail($inputs["email"]);
             $user->setNom($inputs["lastname"]);
             $user->setPrenom($inputs["firstname"]);
             $repository->add($user, true);
             return  $this->redirectToRoute("app_login");
         }
+    }
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    public function logout()
+    {
+        // controller can be blank: it will never be called!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response

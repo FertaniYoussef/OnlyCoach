@@ -78,6 +78,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
+ 
 
     public function setEmail(string $email): self
     {
@@ -85,6 +86,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+
 
     /**
      * A visual identifier that represents this user.
@@ -308,6 +311,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $idRating->setUser(null);
             }
         }
+
+        return $this;
+    }
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
 
         return $this;
     }
