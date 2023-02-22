@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\Abonnement;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
+use App\Repository\AbonnementRepository;
 use App\Repository\CoachRepository;
 use App\Repository\CategorieRepository;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,9 +54,25 @@ class AbonnementController extends AbstractController
             // Redirect the user to a page confirming the subscription
             return $this->render('main/index.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'creator' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'creator' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'creator' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]],  'coaches' => $coachrepo->findAll(), 'categories' => $catrepo->findAll()));  
     }
+    #[Route('/cancel/{subscriptionid}',name:'unsubscribe_from_coach')]
+        public function unsubscribeToCoach(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine)
+        {
+           
+            $user = $this->getUser();
+            $abonnement= $aborepo->find($subscriptionid);
+            if (!$abonnement) {
+                throw $this->createNotFoundException('The subscription does not exist');
+            }        
+            
+            $em = $doctrine->getManager();
+            $em->remove($abonnement);
+            $em->flush();
+            die();
+        }
+     #[Route('/abonnement',name:'unsubscribe_from_coach')]
     public function subscriptionConfirmation(): Response
     {
         // Render a template confirming the subscription
-        return $this->render('abonnement/confirmation.html.twig');
+        return $this->render('abonnement/index.html.twig');
     }
 }
