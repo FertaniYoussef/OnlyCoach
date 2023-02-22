@@ -7,6 +7,7 @@ use App\Entity\Ressources;
 use App\Entity\Sections;
 use App\Entity\Coach;
 use App\Entity\Offre;
+use App\Entity\Commentaire;
 use App\Entity\Feedback;
 use App\Form\CoachType;
 use App\Form\OfferType;
@@ -23,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use DateTime;
+use App\EntityManagerInterface;
 
 use App\Entity\User;
 use App\Repository\OffreRepository;
@@ -77,6 +79,69 @@ class DashboardController extends AbstractController
         dump($resources);
         return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources]);
     }
+    //Cours commentaire
+
+    #[Route('/coach/dashboard/Commentairecourses', name: 'app_dashboard_ommentairecourses')]
+
+    public function afficherCommentaire(Request $request,CoursRepository $repository): Response
+    {
+        $Commentaires= $this->$repository()->getManager()->getRepository(Commentaire::class)->findAll();
+       
+        return $this->render('dashboard/coach/course.html.twig', [
+            'b'=>$Commentaires
+        ]);
+    }
+    public function addCommentaire(Request $request,CoursRepository $repository): Response
+    {
+      
+       $Commentaire=new Commentaire();
+       $form=$this->createForm(CommentaireType::class,$Commentaire);
+       $form->handleRequest($request);
+       if($form->isSubmitted() && $form->isValid()){
+           $Commentaire->setDate(new DateTime());
+         $em = $this->$repository()->getManager();
+           $em->persist($Commentaire);
+           $em->flush();
+
+           return $this->redirectToRoute('displayCommentaire');
+       }
+       else
+       return $this->render('commentaire/createCommentaire.html.twig',['f'=>$form->createView()]);
+
+    }
+
+
+    public function modifierCommentaire(Request $request,CoursRepository $repository,$id): Response
+    {
+      
+       $Commentaires=$this->$repository()->getManager()->getRepository(Commentaire::class)->find($id);
+       $form=$this->createForm(CommentaireType::class,$Commentaires);
+       $form->handleRequest($request);
+       if($form->isSubmitted() && $form->isValid()){
+    
+       
+           $em = $this->$repository()->getManager();
+           
+           $em->flush();
+
+           return $this->redirectToRoute('displayCommentaire');
+       }
+       else
+       return $this->render('commentaire/modifierCommentaire.html.twig',['f'=>$form->createView()]);
+
+    }
+
+    public function deleteCommentaire( Request $request,CoursRepository $repository){
+
+        $Commentaire=$this->$repository()->getRepository(Commentaire::class)->findOneBy(array('id'=>$request->query->get("id")));
+        $em=$this->$repository ->getManager();
+        $em->remove($Commentaire);
+        $em->flush();
+        return new Response("success");
+        
+    }
+
+
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
     public function DeleteCourse(ManagerRegistry $doctrine, CoursRepository $repository, int $id) {
@@ -384,9 +449,12 @@ class DashboardController extends AbstractController
         ]);
     }
     #[Route('/admin/dashboard/offers/delete/{id}', name: 'app_dashboard_adminDeleteOffer')]
-    public function deleteOffer(Request $request,ManagerRegistry $doctrine, OffreRepository $repository,  int $id): Response
+    public function deleteOffer(Request $request,ManagerRegistry $doctrine, OffreRepository $repository,  int $id,): Response
     {
-        $offre = $repository->find($id);
+      
+        
+        $offre = $doctrine->getRepository(Offre::class)->findOneBy(array('id' => $request->query->get("id")));
+
         $em = $doctrine->getManager();
         $em->remove($offre);
         $em->flush();
