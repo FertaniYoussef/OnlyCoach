@@ -19,8 +19,7 @@ class Coach
     private ?string $nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $prenom = null;
-=======
+    #[Assert\NotBlank(message:'le nom ne peut pas etre vide ')]
     private ?string $Nom = null;
 
     
@@ -76,7 +75,7 @@ class Coach
     {
         $this->id_abonnement = new ArrayCollection();
     }
->>>>>>> Stashed changes
+
 
     public function getId(): ?int
     {
