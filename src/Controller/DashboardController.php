@@ -21,7 +21,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use DateTime;
+
 use App\Entity\User;
+use App\Repository\OffreRepository;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -328,14 +332,20 @@ class DashboardController extends AbstractController
     // Partie Offers
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
-    public function offers(Request $request, ManagerRegistry $doctrine): Response
+    public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine): Response
     {
-        $offre = new Offre();
+        $offres = $repository->findAll();
+        $offre = new offre();
+
         $form = $this->createForm(OfferType::class, $offre);
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $offre = $form->getData();
+            // get user data and put them in coach (only in coach table)
+            $offre->setNom($offre->getNom());
+            
 
             $em = $doctrine->getManager();
             $em->persist($offre);
@@ -343,13 +353,19 @@ class DashboardController extends AbstractController
 
             return $this->redirectToRoute('app_dashboard_adminOffers');
         }
+
+
         return $this->render('dashboard/admin/offers/offers.html.twig', [
             'form' => $form->createView(),
+            'offres' => $offres
         ]);
     }
 
+
+    
+
     #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
-    public function offersModify(Request $request,int $id): Response
+    public function offersModify(Request $request,int $id,ManagerRegistry $doctrine): Response
     {
         $offre = new Offre();
         $form = $this->createForm(OfferType::class, $offre);
@@ -357,6 +373,9 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $em = $doctrine ->getManager();
+            $em->persist($offre);
+            $em->flush();
 
             return $this->redirectToRoute('app_dashboard_adminOffers');
         }
@@ -364,6 +383,17 @@ class DashboardController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    #[Route('/admin/dashboard/offers/delete/{id}', name: 'app_dashboard_adminDeleteOffer')]
+    public function deleteOffer(Request $request,ManagerRegistry $doctrine, OffreRepository $repository,  int $id): Response
+    {
+        $offre = $repository->find($id);
+        $em = $doctrine->getManager();
+        $em->remove($offre);
+        $em->flush();
+        return $this->redirectToRoute('app_dashboard_adminDeleteOffer');
+
+    }
+  
 
     // Partie feedbacks
 

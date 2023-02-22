@@ -13,12 +13,14 @@ class OfferType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+        ->add('id_coach')
+
             ->add('Nom')
             ->add('Prix')
             ->add('Discount')
             ->add('date_deb')
             ->add('date_fin')
-            ->add('id_coach')
+            
             ->add('Ajouter', SubmitType::class, [
                 'label' => 'Ajouter',
             ])

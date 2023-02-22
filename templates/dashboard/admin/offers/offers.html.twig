@@ -289,9 +289,11 @@
                                                         <tr>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id Coach</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Discount</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Starts</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ends</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date debut</th>
+                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Fin</th>
+
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Edit</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Delete</th>
                                                         </tr>
@@ -299,53 +301,38 @@
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
                                                        <!-- boucle for ici-->
-                                                       {% for Offer in Offers %}
+
+                                                       {% for offre in offres %}
                                                         <tr>
                                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                                               
-                                                                    <div class="ml-4">
-                                                                        <div class="font-medium text-gray-900">{# Prenom ici #}{{ offer.nom}} {{ coach.prenom}}</div>
-                                                                    </div>
-                                                                </div>
+                                                               </td>
+                                                           
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Email ici #} {{ offer.getIdUser().email}}</div>
+                                                                <div class="text-gray-900">{# Nom ici #}{{ offre.nom }}</div>
+                                                            </td>
+                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# prix ici #}{{ offre.prix}}$</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Role ici #}{{ offer.getIdUser().roles[0]}}</div>
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.Discount }}$</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-red-600"><a href="{{ path('app_dashboard_adminCoachsDelete', {'id': coach.id})}}">Delete</a></div>
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.DateDeb|date('d-m-Y') }}</div>
                                                             </td>
-                                                        </tr>
-                                                        {% endfor %}
-                                                        <tr>
-                                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                                                <div class="flex items-center">
-                                                                    <div>
-                                                                        <div class="font-medium text-gray-900">{# id coach ici #}Id coach</div>
-                                                                    </div>
-                                                                </div>
+                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.DateFin|date('d-m-Y') }}</div>
                                                             </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Nom ici #}Nom</div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Discount ici #}Discount</div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date debut ici #}Date debut</div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date fin ici #}Date fin</div>
-                                                            </td>
+                                                            
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-sky-600"><a href="{{ path('app_dashboard_adminModifierOffer', {id : 1})}}">{# Changer l'id (dynamique) #}Edit</a></div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
+                                                                <div class="text-red-600"><a href="{{ path('app_dashboard_adminDeleteOffer', {'id': offre.id})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
+                                                            {% endfor %}
+
                                                         <!-- end boucle for ici-->
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
