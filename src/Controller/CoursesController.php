@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
+use App\Repository\CoursRepository;
 
 class CoursesController extends AbstractController
 {
@@ -25,10 +26,11 @@ class CoursesController extends AbstractController
     }
 
 
-    #[Route('/courses/{slug}', name: 'app_course')]
-    public function indexCourse($slug): Response
+    #[Route('/courses/{id}', name: 'app_course')]
+    public function indexCourse(CoursRepository $repository, int $id): Response
     {
-        return $this->render('courses/course.html.twig', array('course' => ['id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi','coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
+        $course = $repository->find($id);
+        return $this->render('courses/course.html.twig', array('course' => $course));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
