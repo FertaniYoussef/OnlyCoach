@@ -5,10 +5,52 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
+use App\Repository\UserRepository;
+use App\Form\UserType;
+use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserController extends AbstractController
 {
-
+    
+    #[Route('/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->render('login/index.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error,
+            ]);
+    }
+    
+    #[Route('/inscription', name: 'User_inscription')]
+    public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher)
+    {
+        if ($request->getMethod() === 'POST'){
+            $request->request->all();
+            $inputs = $request->request->all();   
+            $user = new User();
+            $plaintextPassword = $inputs["password"];
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $plaintextPassword
+            );
+            $role = $user->getRoles();
+            $user->setRoles($role);
+            $user->setPassword($hashedPassword);
+            $user->setEmail($inputs["email"]);
+            $user->setNom($inputs["lastname"]);
+            $user->setPrenom($inputs["firstname"]);
+            $repository->add($user, true);
+            return  $this->redirectToRoute("app_login");
+        }
+    }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
     {

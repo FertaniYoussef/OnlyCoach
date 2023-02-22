@@ -239,7 +239,7 @@
                                 <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-10 md:gap-x-5 pt-7">
                                     <!-- Make it dynamic later -->
                                     {% for course in popular %}
-                                        <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                                        <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                                 <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black  shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                                 <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
                                                 <h1 class="text-xs text-gray-500 pt-1">{{ course.coach }}</h1>

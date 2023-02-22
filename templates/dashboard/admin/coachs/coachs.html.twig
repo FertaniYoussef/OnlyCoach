@@ -193,18 +193,6 @@
                         Feedback
                     </a>
 
-                       <a href="{{ path('app_categorie_dashboard_index') }}"
-                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
-
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-4  w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
- 
-</svg>
-
-
-                        Category
-                    </a>
-
                 </div>
             </nav>
         </div>
@@ -320,10 +308,10 @@
                                                                 </div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                
+                                                                <div class="text-gray-900">{# Email ici #} {{ coach.getIdUser().email}}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                
+                                                                <div class="text-gray-900">{# Role ici #}{{ coach.getIdUser().roles[0]}}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-red-600"><a href="{{ path('app_dashboard_adminCoachsDelete', {'id': coach.id})}}">Delete</a></div>
@@ -391,10 +379,7 @@
                             </div>
                             <div class="flex flex-1 flex-col justify-between">
                                 <div class="divide-y divide-gray-200 px-4 sm:px-6">
-                                    
-{{ form_start(form, {'attr': {'novalidate': true}})}}
-
-{{ form_end(form) }}
+                                    {{form(form)}}
                                         </div>
 
                             </div>

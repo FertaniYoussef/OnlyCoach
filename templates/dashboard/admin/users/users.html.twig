@@ -116,16 +116,6 @@
 
                             Feedback
                         </a>
-                        
-                         <a href="{{ path('app_categorie_dashboard_index') }}"
-                           class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
-
-                            <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 01-.923 1.785A5.969 5.969 0 006 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337z" />
-                            </svg>
-
-                            Category
-                        </a>
 
 
 
@@ -201,15 +191,6 @@
                         </svg>
 
                         Feedback
-                    </a>
-                      <a href="{{ path('app_categorie_dashboard_index') }}"
-                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-4 w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
-</svg>
-
-
-                        Category
                     </a>
 
                 </div>
@@ -308,6 +289,7 @@
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
+                                                        {% for u in userstab %}
                                                             <tr>
                                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                     <div class="flex items-center">
@@ -315,20 +297,21 @@
                                                                             <img class="h-10 w-10 rounded-full" src="/images/coach2.jpg{# <-- fasakh l coach2.jpg (dummy) lien image ici #}" alt="">
                                                                         </div>
                                                                         <div class="ml-4">
-                                                                            <div class="font-medium text-gray-900">{# Prenom ici #}Nom+prenom</div>
+                                                                            <div class="font-medium text-gray-900">{# Prenom ici #}{{u.Prenom}} {{u.Nom}}</div>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-gray-900">{# Email ici #}Email</div>
+                                                                    <div class="text-gray-900">{# Email ici #}{{u.email}}</div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-gray-900">{# Role ici #}Role</div>
+                                                                    <div class="text-gray-900">{# Role ici #}{{u.roles[0]}}</div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersremove',{'id':u.id}) }}">Delete</a></div>
                                                                 </td>
                                                             </tr>
+                                                            {% endfor %}
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>

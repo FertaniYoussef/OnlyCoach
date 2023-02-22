@@ -5,15 +5,25 @@ use App\Entity\User;
 use App\Entity\Cours;
 use App\Entity\Ressources;
 use App\Entity\Sections;
+use App\Entity\Coach;
+use App\Entity\Offre;
+use App\Entity\Feedback;
+use App\Form\CoachType;
+use App\Form\OfferType;
+use App\Form\FeedbackType;
 use App\Repository\CoursRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
+use App\Repository\CoachRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
 use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DashboardController extends AbstractController
 {
@@ -21,15 +31,97 @@ class DashboardController extends AbstractController
     public function index(Request $request): Response
     {
         return $this->render('dashboard/coach/index.html.twig', [
-            'controller_name' => 'DashboardController',
+            'user' => $this->getUser(),
         ]);
+    }
+
+    // Debut partie coach Gestion cours
+
+    // api that fetches a course by id
+    #[Route('/coach/dashboard/api/course/{id}', name: 'app_dashboard_api_course')]
+    public function apiCourse(Request $request, CoursRepository $repository, int $id): Response
+    {
+        $course = $repository->find($id);
+
+        // loop through the course sections and extract the resources
+        $sections = $course->getIdSections()->getValues();
+        $resources = [];
+        foreach ($sections as $section) {
+            $resources[] = $section->getIdRessources()->getValues();
+        }
+
+        // loop through sections with a counter
+        $sectionsArray = [];
+        $counter = 0;
+        foreach ($sections as $section) {
+                $sectionsArray[$counter] = [
+                    'id' => $section->getId(),
+                    'title' => $section->getTitre(),
+                ];
+                $counter++;
+        }
+     //  print(json_encode($sectionsArray));
+
+        // loop through resources with a counter
+        $resourcesArray = [];
+        $counter = 0;
+        foreach ($resources as $resource) {
+            foreach ($resource as $res) {
+                $resourcesArray[$counter] = [
+                    'id' => $res->getId(),
+                    'description' => $res->getDescription(),
+                    'link' => $res->getLien(),
+                ];
+                $counter++;
+            }
+        }
+
+      //  print(json_encode($resourcesArray));
+
+
+
+
+
+        $courseArray = [
+            'id' => $course->getId(),
+            'title' => $course->getTitre(),
+            'description' => $course->getDescription(),
+            'image' => $course->getCoursPhoto(),
+            'date' => $course->getDateCreation(),
+            'sections' => $sectionsArray,
+            'resources' => $resourcesArray,
+        ];
+        return $this->json($courseArray);
+    }
+
+    // make an api that returns a json response
+    #[Route('/coach/dashboard/api/courses', name: 'app_dashboard_api_courses')]
+    public function apiCourses(Request $request, CoursRepository $repository): Response
+    {
+        $courses = $repository->findAll();
+        // loop through the courses and each time append it to an array with json format
+        $coursesArray = [];
+        foreach ($courses as $course) {
+            $coursesArray[] = [
+                'id' => $course->getId(),
+                'title' => $course->getTitre(),
+                'description' => $course->getDescription(),
+                'image' => $course->getCoursPhoto(),
+                'date' => $course->getDateCreation(),
+            ];
+        }
+        return $this->json($coursesArray);
     }
 
     #[Route('/coach/dashboard/courses', name: 'app_dashboard_listCourses')]
     public function listCourses(Request $request, CoursRepository $repository): Response
     {
+        $user = $this->getUser();
+        // get coach from user by id
+        $coach = $repository->find($user->getId());
+        $courses = $repository->findBy(array('IdCoach' => $coach));
         $courses = $repository->findAll();
-        return $this->render('dashboard/coach/courses.html.twig', ['courses' => $courses,]);
+        return $this->render('dashboard/coach/courses.html.twig', ['courses' => $courses,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/courses/{id}', name: 'app_dashboard_course')]
@@ -40,7 +132,7 @@ class DashboardController extends AbstractController
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources]);
+        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
@@ -52,18 +144,84 @@ class DashboardController extends AbstractController
         return  $this->redirectToRoute("app_dashboard_listCourses");
     }
 
-    #[Route('/coach/dashboard/modifycourse/{id}', name: 'app_dashboard_modifyCourse')]
-    public function modifyCourse(ManagerRegistry $doctrine, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id) {
+    #[Route('/coach/dashboard/deleteCourse/{idc}/{ids}', name: 'app_dashboard_deleteSection')]
+    public function deleteSection(ManagerRegistry $doctrine, SectionsRepository $repository, int $idc, int $ids) {
+        $section= $repository->find($ids);
+        $em = $doctrine->getManager();
+        $em->remove($section);
+        $em->flush();
+        return  $this->redirectToRoute("app_dashboard_modifycourse", ['id' => $idc]);
+    }
+
+
+    #[Route('/coach/dashboard/modifySection/{idc}/{ids}', name: 'app_dashboard_modifySection')]
+    public function modifySection(ManagerRegistry $doctrine,CoursRepository $coursRepository, SectionsRepository $repository,RessourcesRepository $resourceRepository, int $idc, int $ids, Request $request) {
+        $cours = $coursRepository->find($idc);
+        $section = $repository->find($ids);
+        dump($section);
+        $resource = $resourceRepository->findBy(array('sections' => $section));
+        dump($resource);
+        if ($request->getMethod() === "POST") {
+            $inputs = $request->request->all();
+            $section->setTitre($inputs['section-title']);
+            $resource[0]->setLien($inputs['section-link']);
+            $resource[0]->setDescription($inputs['section-description']);
+            $em = $doctrine->getManager();
+            $em->flush();
+            return  $this->redirectToRoute("app_dashboard_modifycourse", ['id' => $idc]);
+        }
+        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'user' => $this->getUser(),]);
+    }
+
+    #[Route('/coach/dashboard/modifycourse/{id}', name: 'app_dashboard_modifycourse')]
+    public function modifyCourse(Request $request,ManagerRegistry $doctrine, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id) {
         $course = $repository->find($id);
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
+        dump($course);
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources]);
+
+        // WIP
+
+        if ($request->getMethod() === 'POST') {
+            dump($request->request->all());
+            $inputs = $request->request->all();
+            $course->setTitre($inputs['course-name']);
+            $course->setDescription($inputs['course-description']);
+
+            /* Uploading image */
+            dump($_FILES);
+            $target_dir = "./images/"; // update if needed with coach/user name
+            $target_file = $target_dir . basename($_FILES["course-background"]["name"]);
+            dump($_FILES["course-background"]["name"]);
+            move_uploaded_file($_FILES["course-background"]["tmp_name"], $target_file);
+            /* */
+        if ($_FILES["course-background"]["name"])
+            $course->setCoursPhoto($_FILES["course-background"]["name"]);
+        else
+            $course->setCoursPhoto($course->getCoursPhoto());
+
+            $course->setDateCreation($course->getDateCreation());
+            $course->setNbVues($course->getNbVues());
+
+
+            $em = $doctrine->getManager();
+
+            $em->flush();
+            $em->clear();
+
+
+            return $this->redirectToRoute('app_dashboard');
+        }
+
+        // WIP
+
+        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/addCourse', name: 'app_dashboard_addcourse')]
-    public function AddCourse(Request $request, ManagerRegistry $doctrine)
+    public function AddCourse(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, CoachRepository $repository)
     {
         if ($request->getMethod() === 'POST') {
 
@@ -72,6 +230,18 @@ class DashboardController extends AbstractController
             $cours = new Cours();
             $cours->setTitre($inputs['course-name']);
             $cours->setDescription($inputs['course-description']);
+
+            // get current user from token
+            $user = $this->getUser();
+            dump($user);
+
+            // get coach from user by id
+            $coach = $repository->findBy(array('id_user' => $user));
+            dump($coach);
+            $coach = $coach[0];
+            $cours->setIdCoach($coach);
+            $coach->addCour($cours);
+
 
             /* Uploading image */
             dump($_FILES);
@@ -90,6 +260,7 @@ class DashboardController extends AbstractController
 
             dump($inputs);
             $em = $doctrine->getManager();
+
             $em->persist($cours);
             // section & resource management
             dump('id du cours ajouté est : '.$cours->getId());
@@ -105,6 +276,8 @@ class DashboardController extends AbstractController
                 $cours->addIdSection($section);
                 $em->persist($section);
 
+
+
                 // resource
                 $resource = new Ressources();
                 $resource->setLien($inputs['section'.$i.'-link']);
@@ -112,8 +285,19 @@ class DashboardController extends AbstractController
                 $resource->setSections($section);
                 $resource->setIndexRessources(1);
                 $section->addIdRessource($resource);
+
                 $em->persist($resource);
             }
+
+            // validate $cours
+            $errors = $validator->validate($cours);
+
+            dump($errors);
+            if (count($errors) > 0) {
+                return new Response((string) $errors, 500);
+            }
+
+
 
             $em->flush();
             $em->clear();
@@ -123,8 +307,6 @@ class DashboardController extends AbstractController
         }
         return $this->redirectToRoute('app_login');
     }
-<<<<<<< Updated upstream
-=======
 
     // Fin partie coach
 
@@ -140,11 +322,23 @@ class DashboardController extends AbstractController
 
     // Partie users
     #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
-    public function users(Request $request): Response
+    public function users(Request $request,UserRepository $repository): Response
     {
-        return $this->render('dashboard/admin/users/users.html.twig');
+        $users = $repository->findAll();
+        return $this->render('dashboard/admin/users/users.html.twig',[
+            'userstab' => $users
+        ]);
     }
-
+    
+    #[Route('/admin/dashboard/users/remove/{id}', name: 'app_dashboard_adminUsersremove')]
+    public function usersremove(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $em = $doctrine->getManager();
+        $em->remove($users);
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
 
 
     // Partie coachs
@@ -160,9 +354,6 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($form->getErrors(true) as $error) {
-                $this->addFlash('error', $error->getMessage());
-            }
             $coach = $form->getData();
             $user = $userRepo->find($coach->getIdUser());
             $user->setRoles(['ROLE_COACH']);
@@ -183,7 +374,6 @@ class DashboardController extends AbstractController
             $em->flush();
 
             return $this->redirectToRoute('app_dashboard_adminCoachs');
-            
         }
 
 
@@ -272,5 +462,4 @@ class DashboardController extends AbstractController
     // fin partie admin
 
 
->>>>>>> Stashed changes
 }
