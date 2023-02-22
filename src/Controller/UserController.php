@@ -61,7 +61,7 @@ class UserController extends AbstractController
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
     {
-        return $this->render('user/settings.html.twig');
+        return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser()));
     }
 
     #[Route('/user/{id}', name: 'app_user')]
