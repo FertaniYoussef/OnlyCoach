@@ -298,6 +298,27 @@
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
+                                                       <!-- boucle for ici-->
+                                                       {% for Offer in Offers %}
+                                                        <tr>
+                                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
+                                                               
+                                                                    <div class="ml-4">
+                                                                        <div class="font-medium text-gray-900">{# Prenom ici #}{{ offer.nom}} {{ coach.prenom}}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Email ici #} {{ offer.getIdUser().email}}</div>
+                                                            </td>
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Role ici #}{{ offer.getIdUser().roles[0]}}</div>
+                                                            </td>
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-red-600"><a href="{{ path('app_dashboard_adminCoachsDelete', {'id': coach.id})}}">Delete</a></div>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
                                                         <tr>
                                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                 <div class="flex items-center">
@@ -325,6 +346,7 @@
                                                                 <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
                                                             </td>
                                                         </tr>
+                                                        <!-- end boucle for ici-->
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>
@@ -360,7 +382,7 @@
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                 <div class="pointer-events-auto w-screen max-w-md">
-                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
+                    <div class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                         <div class="h-0 flex-1 overflow-y-auto">
                             <div class="bg-sky-700 py-6 px-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -406,7 +428,7 @@
                                 Save
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>

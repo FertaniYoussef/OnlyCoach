@@ -23,7 +23,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use Symfony\Component\Validator\Constraints\Date;
-use App\Repository\UserRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DashboardController extends AbstractController
@@ -329,7 +328,7 @@ class DashboardController extends AbstractController
     // Partie Offers
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
-    public function offers(Request $request): Response
+    public function offers(Request $request, ManagerRegistry $doctrine): Response
     {
         $offre = new Offre();
         $form = $this->createForm(OfferType::class, $offre);
@@ -337,6 +336,10 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $em = $doctrine->getManager();
+            $em->persist($offre);
+            $em->flush();
 
             return $this->redirectToRoute('app_dashboard_adminOffers');
         }
