@@ -54,13 +54,23 @@ class CoachRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Coach
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+   public function findOneBySomeField($id): ?Coach
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.categorie = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
+//public function getcoachByCategory($id)  {
+ //   $qb= $this->createQueryBuilder('s')
+   //     ->join('s.categorie','c')
+   //     ->addSelect('c')
+   //     ->where('c.id=:id')
+    //    ->setParameter('id',$id);
+   // return $qb->getQuery()
+     //   ->getResult();
+// }
+

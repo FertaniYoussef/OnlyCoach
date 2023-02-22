@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\User;
 use App\Entity\Cours;
 use App\Entity\Ressources;
 use App\Entity\Sections;
@@ -123,4 +123,154 @@ class DashboardController extends AbstractController
         }
         return $this->redirectToRoute('app_login');
     }
+<<<<<<< Updated upstream
+=======
+
+    // Fin partie coach
+
+
+
+    // Partie admin
+
+    #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
+    public function adminIndex(Request $request): Response
+    {
+        return $this->render('dashboard/admin/index.html.twig');
+    }
+
+    // Partie users
+    #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
+    public function users(Request $request): Response
+    {
+        return $this->render('dashboard/admin/users/users.html.twig');
+    }
+
+
+
+    // Partie coachs
+
+    #[Route('/admin/dashboard/coachs', name: 'app_dashboard_adminCoachs')]
+    public function coachs(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo): Response
+    {
+        $coachs = $repository->findAll();
+        $coach = new Coach();
+
+        $form = $this->createForm(CoachType::class, $coach);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($form->getErrors(true) as $error) {
+                $this->addFlash('error', $error->getMessage());
+            }
+            $coach = $form->getData();
+            $user = $userRepo->find($coach->getIdUser());
+            $user->setRoles(['ROLE_COACH']);
+            // get user data and put them in coach (only in coach table)
+            $coach->setNom($user->getNom());
+            $coach->setPrenom($user->getPrenom());
+            // store uploaded picture in public/images
+
+            $file = $form->get('picture')->getData();
+            dump($file);
+            $coach->setPicture($file->getClientOriginalName());
+            $file->move('images', $file->getClientOriginalName());
+
+
+
+            $em = $doctrine->getManager();
+            $em->persist($coach);
+            $em->flush();
+
+            return $this->redirectToRoute('app_dashboard_adminCoachs');
+            
+        }
+
+
+        return $this->render('dashboard/admin/coachs/coachs.html.twig', [
+            'form' => $form->createView(),
+            'coachs' => $coachs
+        ]);
+    }
+
+    #[Route('/admin/dashboard/coachs/delete/{id}', name: 'app_dashboard_adminCoachsDelete')]
+    public function deleteCoach(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo, int $id): Response
+    {
+        $coach = $repository->find($id);
+        $user = $userRepo->find($coach->getIdUser());
+        $user->setRoles(['ROLE_USER']);
+        $em = $doctrine->getManager();
+        $em->remove($coach);
+        $em->flush();
+        return $this->redirectToRoute('app_dashboard_adminCoachs');
+
+    }
+
+
+    // Partie Offers
+
+    #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
+    public function offers(Request $request): Response
+    {
+        $offre = new Offre();
+        $form = $this->createForm(OfferType::class, $offre);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminOffers');
+        }
+        return $this->render('dashboard/admin/offers/offers.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
+    public function offersModify(Request $request,int $id): Response
+    {
+        $offre = new Offre();
+        $form = $this->createForm(OfferType::class, $offre);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminOffers');
+        }
+        return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    // Partie feedbacks
+
+    #[Route('/admin/dashboard/feedbacks', name: 'app_dashboard_adminFeedbacks')]
+    public function feedbacks(Request $request): Response
+    {
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig');
+    }
+
+    #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
+    public function consulterFeedback(Request $request,int $id): Response
+    {
+        $feedback = new Feedback();
+        $form = $this->createForm(FeedbackType::class, $feedback);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminFeedbacks');
+        }
+        return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+
+    // fin partie admin
+
+
+>>>>>>> Stashed changes
 }
