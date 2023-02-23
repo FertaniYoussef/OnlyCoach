@@ -49,7 +49,6 @@
 
                     <!--
                       Dropdown menu, show/hide based on menu state.
-
                       Entering: "transition ease-out duration-200"
                         From: "transform opacity-0 scale-95"
                         To: "transform opacity-100 scale-100"
@@ -71,9 +70,7 @@
                     <span class="sr-only">Open main menu</span>
                     <!--
                       Icon when menu is closed.
-
                       Heroicon name: outline/bars-3
-
                       Menu open: "hidden", Menu closed: "block"
                     -->
                     <svg id="mobileMenuClosedIcon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -81,9 +78,7 @@
                     </svg>
                     <!--
                       Icon when menu is open.
-
                       Heroicon name: outline/x-mark
-
                       Menu open: "block", Menu closed: "hidden"
                     -->
                     <svg id="mobileMenuOpenIcon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -163,23 +158,24 @@
                             <input id="subject" name="sujet" type="text" autocomplete="subject" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500">
                         </div>
                     </div>
-                    <div class="sm:col-span-2">
-                        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                        <div class="mt-1">
-                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
-                        </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <div class="mt-1">
+                        <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
                     </div>
+                </div>
 
-                    <div class="sm:col-span-2">
-                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Let's talk</button>
-                    </div>
-                </form>
-            </div>
+                <div class="sm:col-span-2">
+                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Let's talk</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 
 
-    <!-- Debut Footer -->
+<!-- Debut Footer -->
 <footer class="bg-black absolute w-full bottom-0 left-0 lg:block hidden">
     <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
 
@@ -194,7 +190,6 @@
     // Large screens starts here
     const userprofile = document.getElementById('user-menu-button')
     const profilemenu = document.getElementById('menu')
-
     function showMenu() {
         profilemenu.classList.remove('hidden')
         profilemenu.classList.add('block')
@@ -203,81 +198,57 @@
         profilemenu.classList.remove('block')
         profilemenu.classList.add('hidden')
     }
-
     userprofile.addEventListener('click', () => {
         profilemenu.classList.contains('hidden') ? showMenu() : hideMenu()
     })
     // Large screens ends here
-
     // mobile starts here
-
     const mobilebutton = document.getElementById('mobile-button')
     const mobilemenu = document.getElementById('mobile-menu')
-
     function showMobileMenu() {
         const OpenIcon = document.getElementById('mobileMenuOpenIcon')
         const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
-
         OpenIcon.classList.remove('hidden');
         OpenIcon.classList.add('block')
-
         ClosedIcon.classList.remove('block')
         ClosedIcon.classList.add('hidden')
-
         mobilemenu.classList.remove('hidden')
         mobilemenu.classList.add('block')
     }
-
     function hideMobileMenu() {
         const OpenIcon = document.getElementById('mobileMenuOpenIcon')
         const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
-
         OpenIcon.classList.remove('block');
         OpenIcon.classList.add('hidden')
-
         ClosedIcon.classList.remove('hidden')
         ClosedIcon.classList.add('block')
-
         mobilemenu.classList.remove('block')
         mobilemenu.classList.add('hidden')
     }
-
     mobilebutton.addEventListener('click', () => {
         mobilemenu.classList.contains('hidden') ? showMobileMenu() : hideMobileMenu()
     })
-
     // filter button for mobile
-
     const filterButton = document.getElementById('filterButton')
     const filterDialog = document.getElementById('filterDialog')
     const closeFilterButton = document.getElementById('closeFilterButton')
-
     function showFilters() {
         filterDialog.classList.remove('hidden')
         filterDialog.classList.add('block')
     }
-
     function hideFilters() {
         filterDialog.classList.remove('block')
         filterDialog.classList.add('hidden')
     }
-
     filterButton.addEventListener('click', () => {
         showFilters()
     })
-
     closeFilterButton.addEventListener('click', () => {
         hideFilters()
     })
-
-
     // filter button for mobile ends here
-
     // mobile ends here
-
 </script>
 
 </body>
 </html>
-
-
