@@ -2,28 +2,55 @@
 
 namespace App\Entity;
 
-use App\Repository\RessourcesRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: RessourcesRepository::class)]
+/**
+ * Ressources
+ *
+ * @ORM\Table(name="ressources", indexes={@ORM\Index(name="IDX_6A2CD5C7577906E4", columns={"sections_id"})})
+ * @ORM\Entity
+ */
 class Ressources
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Lien = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="lien", type="string", length=255, nullable=true)
+     */
+    private $lien;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $Index_ressources = null;
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="index_ressources", type="integer", nullable=true)
+     */
+    private $indexRessources;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
 
-    #[ORM\ManyToOne(inversedBy: 'id_ressources')]
-    private ?Sections $sections = null;
+    /**
+     * @var \Sections
+     *
+     * @ORM\ManyToOne(targetEntity="Sections")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sections_id", referencedColumnName="id")
+     * })
+     */
+    private $sections;
 
     public function getId(): ?int
     {
@@ -32,24 +59,24 @@ class Ressources
 
     public function getLien(): ?string
     {
-        return $this->Lien;
+        return $this->lien;
     }
 
-    public function setLien(?string $Lien): self
+    public function setLien(?string $lien): self
     {
-        $this->Lien = $Lien;
+        $this->lien = $lien;
 
         return $this;
     }
 
     public function getIndexRessources(): ?int
     {
-        return $this->Index_ressources;
+        return $this->indexRessources;
     }
 
-    public function setIndexRessources(?int $Index_ressources): self
+    public function setIndexRessources(?int $indexRessources): self
     {
-        $this->Index_ressources = $Index_ressources;
+        $this->indexRessources = $indexRessources;
 
         return $this;
     }
@@ -77,4 +104,6 @@ class Ressources
 
         return $this;
     }
+
+
 }

@@ -259,7 +259,66 @@
             <div class="mt-8 relative">
                 <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-                    {{form(form)}}
+           <h1 style="text-align: center;"> modifier offre </h1> 
+
+ {{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
+
+
+
+        <div class="card">
+            <div class="card-body">
+
+              <!-- Vertical Form -->
+              <form class="row g-3">
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Nom</label>
+                      {{ form_widget(form.Nom, {'attr': {'class': 'form-control','type':'text', 'placeholder': 'Enter  Nom'}}) }}
+                                                                            {{ form_errors(form.Nom,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress" class="form-label">Prix</label>
+                      {{ form_widget(form.Prix, {'attr': {'class': 'form-control','type':'number', 'placeholder': 'Enter  Prix'}}) }}
+                                                      {{ form_errors(form.Prix,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+                 <div class="col-12">
+                  <label for="inputAddress" class="form-label">Discount</label>
+                      {{ form_widget(form.Discount, {'attr': {'class': 'form-control','type':'number', 'placeholder': 'Enter  Discount'}}) }}
+                                                      {{ form_errors(form.Discount,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+                 <div class="col-12">
+                  <label for="inputAddress" class="form-label">date_deb</label>
+                      {{ form_widget(form.dateDeb, {'attr': {'class': 'form-control','type':'date', 'placeholder': 'Enter  date_deb'}}) }}
+                                                      {{ form_errors(form.dateDeb,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+                     <div class="col-12">
+                  <label for="inputAddress" class="form-label">date_fin</label>
+                      {{ form_widget(form.dateFin, {'attr': {'class': 'form-control','type':'date', 'placeholder': 'Enter  date_fin'}}) }}
+                                                      {{ form_errors(form.dateFin,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+
+               <div class="col-12">
+                  <label for="inputAddress" class="form-label"> id_coach</label>
+                      {{ form_widget(form.id_coach) }}
+                </div>
+                
+                <div class="text-center">
+
+          {{ form_widget(form) }}
+
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+{{ form_end(form) }}
 
                     <!-- More items... -->
                 </div>

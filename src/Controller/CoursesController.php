@@ -8,7 +8,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Categorie;
+use App\Entity\Commentaire;
+use App\Entity\Cours;
+use App\Form\CommentaireType;
 use App\Repository\CategorieRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 class CoursesController extends AbstractController
 {
@@ -26,9 +32,31 @@ class CoursesController extends AbstractController
 
 
     #[Route('/courses/{slug}', name: 'app_course')]
-    public function indexCourse($slug): Response
+    public function indexCourse($slug, EntityManagerInterface $EM, HttpFoundationRequest $request): Response
     {
-        return $this->render('courses/course.html.twig', array('course' => ['id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi','coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
+        $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);
+        $coures = $EM->getRepository(Cours::class)->find($slug);
+//ajouter
+        $Commentaire = new Commentaire();
+        $form = $this->createForm(CommentaireType::class, $Commentaire);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $Commentaire->setAuteur("imen");
+            $Commentaire->setIdCoures($coures);
+            $Commentaire->setDate(new DateTime());
+            $EM->persist($Commentaire);
+            $EM->flush();
+            $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);
+
+            return $this->render('courses/course.html.twig', array('course' => ['f' => $form->createView(), 'Commentaires' => $Commentaires, 'id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
+        }
+
+        //fin dajlouter
+
+
+
+
+        return $this->render('courses/course.html.twig', array('course' => ['f' => $form->createView(), 'Commentaires' => $Commentaires, 'id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]

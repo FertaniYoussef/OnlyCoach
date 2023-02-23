@@ -2,23 +2,59 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentaireRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: CommentaireRepository::class)]
+/**
+ * Commentaire
+ *
+ * @ORM\Table(name="commentaire", indexes={@ORM\Index(name="fk77", columns={"id_coures"})})
+ * @ORM\Entity
+ */
 class Commentaire
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255)]
-    private ?string $auteur = null;
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="auteur", type="string", length=255, nullable=false)
+     */
+    private $auteur;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date = null;
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime", nullable=false)
+     */
+    private $date;
+
+    /**
+     * @Assert\NotBlank(message=" contenu  est obligatoire")
+     * @Assert\Type(type="string")
+     * @var string
+     *
+     * @ORM\Column(name="contenu", type="string", length=255, nullable=false)
+     */
+    private $contenu;
+
+    /**
+     * @var \Cours
+     *
+     * @ORM\ManyToOne(targetEntity="Cours")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_coures", referencedColumnName="id")
+     * })
+     */
+    private $idCoures;
 
     public function getId(): ?int
     {
@@ -48,4 +84,30 @@ class Commentaire
 
         return $this;
     }
+
+    public function getContenu(): ?string
+    {
+        return $this->contenu;
+    }
+
+    public function setContenu(string $contenu): self
+    {
+        $this->contenu = $contenu;
+
+        return $this;
+    }
+
+    public function getIdCoures(): ?Cours
+    {
+        return $this->idCoures;
+    }
+
+    public function setIdCoures(?Cours $idCoures): self
+    {
+        $this->idCoures = $idCoures;
+
+        return $this;
+    }
+
+
 }

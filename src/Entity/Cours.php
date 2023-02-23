@@ -2,51 +2,60 @@
 
 namespace App\Entity;
 
-use App\Repository\CoursRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CoursRepository::class)]
+/**
+ * Cours
+ *
+ * @ORM\Table(name="cours")
+ * @ORM\Entity
+ */
 class Cours
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Titre = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="titre", type="string", length=255, nullable=true)
+     */
+    private $titre;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Description = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_creation = null;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_creation", type="date", nullable=true)
+     */
+    private $dateCreation;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $nbVues = null;
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="nb_vues", type="integer", nullable=true)
+     */
+    private $nbVues;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $cours_photo = null;
-
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Adherents::class)]
-    private Collection $id_adherents;
-
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
-    private Collection $id_rating;
-
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ["PERSIST"])]
-    private Collection $id_sections;
-
-    public function __construct()
-    {
-        $this->id_user_adherents = new ArrayCollection();
-        $this->id_adherents = new ArrayCollection();
-        $this->id_rating = new ArrayCollection();
-        $this->id_sections = new ArrayCollection();
-    }
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="cours_photo", type="string", length=255, nullable=true)
+     */
+    private $coursPhoto;
 
     public function getId(): ?int
     {
@@ -55,36 +64,36 @@ class Cours
 
     public function getTitre(): ?string
     {
-        return $this->Titre;
+        return $this->titre;
     }
 
-    public function setTitre(?string $Titre): self
+    public function setTitre(?string $titre): self
     {
-        $this->Titre = $Titre;
+        $this->titre = $titre;
 
         return $this;
     }
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
-    public function setDescription(?string $Description): self
+    public function setDescription(?string $description): self
     {
-        $this->Description = $Description;
+        $this->description = $description;
 
         return $this;
     }
 
     public function getDateCreation(): ?\DateTimeInterface
     {
-        return $this->date_creation;
+        return $this->dateCreation;
     }
 
-    public function setDateCreation(?\DateTimeInterface $date_creation): self
+    public function setDateCreation(?\DateTimeInterface $dateCreation): self
     {
-        $this->date_creation = $date_creation;
+        $this->dateCreation = $dateCreation;
 
         return $this;
     }
@@ -103,104 +112,15 @@ class Cours
 
     public function getCoursPhoto(): ?string
     {
-        return $this->cours_photo;
+        return $this->coursPhoto;
     }
 
-    public function setCoursPhoto(?string $cours_photo): self
+    public function setCoursPhoto(?string $coursPhoto): self
     {
-        $this->cours_photo = $cours_photo;
+        $this->coursPhoto = $coursPhoto;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Adherents>
-     */
-    public function getIdAdherents(): Collection
-    {
-        return $this->id_adherents;
-    }
-
-    public function addIdAdherent(Adherents $idAdherent): self
-    {
-        if (!$this->id_adherents->contains($idAdherent)) {
-            $this->id_adherents->add($idAdherent);
-            $idAdherent->setCours($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdAdherent(Adherents $idAdherent): self
-    {
-        if ($this->id_adherents->removeElement($idAdherent)) {
-            // set the owning side to null (unless already changed)
-            if ($idAdherent->getCours() === $this) {
-                $idAdherent->setCours(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Rating>
-     */
-    public function getIdRating(): Collection
-    {
-        return $this->id_rating;
-    }
-
-    public function addIdRating(Rating $idRating): self
-    {
-        if (!$this->id_rating->contains($idRating)) {
-            $this->id_rating->add($idRating);
-            $idRating->setCours($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdRating(Rating $idRating): self
-    {
-        if ($this->id_rating->removeElement($idRating)) {
-            // set the owning side to null (unless already changed)
-            if ($idRating->getCours() === $this) {
-                $idRating->setCours(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Sections>
-     */
-    public function getIdSections(): Collection
-    {
-        return $this->id_sections;
-    }
-
-    public function addIdSection(Sections $idSection): self
-    {
-        if (!$this->id_sections->contains($idSection)) {
-            $this->id_sections->add($idSection);
-            $idSection->setCours($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdSection(Sections $idSection): self
-    {
-        if ($this->id_sections->removeElement($idSection)) {
-            // set the owning side to null (unless already changed)
-            if ($idSection->getCours() === $this) {
-                $idSection->setCours(null);
-            }
-        }
-
-        return $this;
-    }
 
 }

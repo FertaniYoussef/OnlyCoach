@@ -2,35 +2,70 @@
 
 namespace App\Entity;
 
-use App\Repository\FeedbackRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: FeedbackRepository::class)]
+/**
+ * Feedback
+ *
+ * @ORM\Table(name="feedback", indexes={@ORM\Index(name="IDX_D2294458A76ED395", columns={"user_id"})})
+ * @ORM\Entity
+ */
 class Feedback
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Sujet = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="sujet", type="string", length=255, nullable=true)
+     */
+    private $sujet;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $email = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="email", type="string", length=255, nullable=true)
+     */
+    private $email;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $description = null;
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     */
+    private $description;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_feedback = null;
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_feedback", type="date", nullable=true)
+     */
+    private $dateFeedback;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $status = null;
+    /**
+     * @var int|null
+     *
+     * @ORM\Column(name="status", type="integer", nullable=true)
+     */
+    private $status;
 
-    #[ORM\ManyToOne(inversedBy: 'id_feedback')]
-    private ?User $user = null;
+    /**
+     * @var \User
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * })
+     */
+    private $user;
 
     public function getId(): ?int
     {
@@ -39,12 +74,12 @@ class Feedback
 
     public function getSujet(): ?string
     {
-        return $this->Sujet;
+        return $this->sujet;
     }
 
-    public function setSujet(?string $Sujet): self
+    public function setSujet(?string $sujet): self
     {
-        $this->Sujet = $Sujet;
+        $this->sujet = $sujet;
 
         return $this;
     }
@@ -75,12 +110,12 @@ class Feedback
 
     public function getDateFeedback(): ?\DateTimeInterface
     {
-        return $this->date_feedback;
+        return $this->dateFeedback;
     }
 
-    public function setDateFeedback(?\DateTimeInterface $date_feedback): self
+    public function setDateFeedback(?\DateTimeInterface $dateFeedback): self
     {
-        $this->date_feedback = $date_feedback;
+        $this->dateFeedback = $dateFeedback;
 
         return $this;
     }
@@ -108,4 +143,6 @@ class Feedback
 
         return $this;
     }
+
+
 }

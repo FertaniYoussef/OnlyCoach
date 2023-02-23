@@ -28,6 +28,7 @@ use App\EntityManagerInterface;
 
 use App\Entity\User;
 use App\Repository\OffreRepository;
+use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -427,38 +428,46 @@ class DashboardController extends AbstractController
     }
 
 
-    
+
+
 
     #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
-    public function offersModify(Request $request,int $id,ManagerRegistry $doctrine): Response
+    public function offersModify(Request $request, int $id, ORMEntityManagerInterface $em): Response
     {
-        $offre = new Offre();
-        $form = $this->createForm(OfferType::class, $offre);
 
+        $Offres = $em->getRepository(Offre::class)->find($id);
+        $form = $this->createForm(OfferType::class, $Offres);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
-            $em = $doctrine ->getManager();
-            $em->persist($offre);
+
+
+       
+
             $em->flush();
 
             return $this->redirectToRoute('app_dashboard_adminOffers');
-        }
-        return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        } else
+            return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
+                'form' => $form->createView(),
+            ]);
     }
-    #[Route('/admin/dashboard/offers/delete/{id}', name: 'app_dashboard_adminDeleteOffer')]
-    public function deleteOffer(Request $request,ManagerRegistry $doctrine, OffreRepository $repository,  int $id,): Response
-    {
-      
-        
-        $offre = $doctrine->getRepository(Offre::class)->findOneBy(array('id' => $request->query->get("id")));
 
+   
+
+
+
+
+    //delete offer
+    #[Route('/admin/dashboard/offers/delete/{id}', name: 'app_dashboard_adminDeleteOffer')]
+    public function deleteOffer(Request $request, ManagerRegistry $doctrine, OffreRepository $repository, int $id): Response
+    {
+
+        $offre = $repository->find($id);
+        $offre = $repository->find($offre->getId());
         $em = $doctrine->getManager();
         $em->remove($offre);
         $em->flush();
-        return $this->redirectToRoute('app_dashboard_adminDeleteOffer');
+        return $this->redirectToRoute('app_dashboard_adminOffers');
 
     }
   

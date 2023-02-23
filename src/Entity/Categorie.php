@@ -2,29 +2,31 @@
 
 namespace App\Entity;
 
-use App\Repository\CategorieRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategorieRepository::class)]
+/**
+ * Categorie
+ *
+ * @ORM\Table(name="categorie")
+ * @ORM\Entity
+ */
 class Categorie
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Type = null;
-
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Coach::class)]
-    private Collection $id_coach;
-
-    public function __construct()
-    {
-        $this->id_coach = new ArrayCollection();
-    }
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     */
+    private $type;
 
     public function getId(): ?int
     {
@@ -33,43 +35,15 @@ class Categorie
 
     public function getType(): ?string
     {
-        return $this->Type;
+        return $this->type;
     }
 
-    public function setType(?string $Type): self
+    public function setType(?string $type): self
     {
-        $this->Type = $Type;
+        $this->type = $type;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Coach>
-     */
-    public function getIdCoach(): Collection
-    {
-        return $this->id_coach;
-    }
 
-    public function addIdCoach(Coach $idCoach): self
-    {
-        if (!$this->id_coach->contains($idCoach)) {
-            $this->id_coach->add($idCoach);
-            $idCoach->setCategorie($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIdCoach(Coach $idCoach): self
-    {
-        if ($this->id_coach->removeElement($idCoach)) {
-            // set the owning side to null (unless already changed)
-            if ($idCoach->getCategorie() === $this) {
-                $idCoach->setCategorie(null);
-            }
-        }
-
-        return $this;
-    }
 }
