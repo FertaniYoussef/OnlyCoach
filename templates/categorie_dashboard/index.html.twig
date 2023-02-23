@@ -397,7 +397,11 @@
                             {{ form_start(form, {'attr': {'novalidate': true}}) }}
                             {{form_label(form.Type)}}
                             {{ form_widget(form.Type) }}
-                            {{ form_end(form) }}
+                            {% if form.Type.vars.errors|length > 0 %}
+                             <div class="alert alert-danger">{{ form_errors(form.Type) }}</div>
+                            {% endif %}
+                            {{ form_end(form) }} 
+                            
 
                                     </div>
                                 </div>

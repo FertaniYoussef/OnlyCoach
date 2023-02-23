@@ -7,12 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Coach;
 use App\Repository\CoachRepository;
-<<<<<<< Updated upstream
-#youssef aamel hkeya yijareb feha
-=======
-use App\Repository\CategorieRepository;
 
->>>>>>> Stashed changes
+
+use App\Repository\CategorieRepository;
 class CoachController extends AbstractController
 {
     #[Route('/coachs', name: 'app_coach')]
