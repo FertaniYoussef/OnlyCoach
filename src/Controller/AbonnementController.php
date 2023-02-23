@@ -14,6 +14,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
+use Stripe\Stripe;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Stripe\Checkout\Session;
 
 class AbonnementController extends AbstractController
 {
@@ -70,7 +73,7 @@ class AbonnementController extends AbstractController
             die();
         }
 
-     #[Route('/abonnement/{coachId}',name:'subscribe_checkout')]
+     #[Route('/abonnement/{coachId}',name:'subscribe_coach')]
     public function subscriptionConfirmation(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,CategorieRepository $catrepo,ManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
@@ -80,5 +83,36 @@ class AbonnementController extends AbstractController
           }
         // Render a template confirming the subscription
         return $this->render('abonnement/index.html.twig',array('coach'=>$coach));
+    }
+    #[Route('/abonnement/{coachId}/checkout',name:'subscribe_checkout')]
+    public function checkout(Request $request, $coachId,CoachRepository $coachrepo) : Response
+    {
+        $coach =$coachrepo->find($coachId);
+        if (!$coach) {
+            throw $this->createNotFoundException('The coach does not exist');
+        }
+
+        Stripe::setApiKey('sk_test_51MeLAvEYkEbKW1v6I2M4WnJtf1Ts5kfNlJr3q2XnaUxJ2MwGbYhjq6tOxutQvAyBXqUYXmjm6DaHAPDw1c1JuyS300btIzyOVi');
+         $session = Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [
+                [
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'unit_amount' => $coach->getPrix() * 100, // Stripe uses cents as the currency unit
+                        'product_data' => [
+                            'name' => $coach->getNom(),
+                            'description' => $coach->getDescription(),
+                        ],
+                    ],
+                    'quantity' => 1,
+                ],
+            ],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('subscription_checkout_success', [], true),
+            'cancel_url' => $this->generateUrl('subscription_checkout_cancel', [], true),
+        ]);
+          
+
     }
 }
