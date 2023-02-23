@@ -34,8 +34,12 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
-    public function indexslug($slug ,CategorieRepository $categorieRepository): Response
+    public function indexslug($slug ,CategorieRepository $categorieRepository, CoursRepository $repository): Response
     {
-        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'coach' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'categories' => $categorieRepository->findAll()));
+        $categorieId = $categorieRepository->findOneBy(['Type' => $slug]);
+        dump($categorieId);
+        $cours = $repository->findCoursByCategory($categorieId);
+        dump($cours);
+        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'courses' => $cours, 'categories' => $categorieRepository->findAll()));
     }
 }

@@ -4,28 +4,30 @@ namespace App\Form;
 
 use App\Entity\Feedback;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class FeedbackType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Sujet')
-            ->add('email')
-            ->add('description')
-            ->add('date_feedback')
-            ->add('status')
-            ->add('user')
-            ->add('Supprimer', SubmitType::class, [
-                'attr' => ['class' => 'button'],
+            ->add('sujet',ChoiceType::class,['placeholder'=>'** Select your subject **',
+
+                'choices'=>[
+
+                    'Coach' => 'Coach',
+                    'Cour' => 'Cour',
+                    'Payment' => 'Payment',
+                    'Bug' => 'Bug',
+                    'Other' => 'Other',
+
+                ]
             ])
-            ->add('Traiter', SubmitType::class, [
-                'attr' => ['class' => 'save'],
-            ])
-        ;
+            ->add('description');
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void

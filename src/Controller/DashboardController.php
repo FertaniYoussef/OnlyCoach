@@ -12,6 +12,7 @@ use App\Form\CoachType;
 use App\Form\OfferType;
 use App\Form\FeedbackType;
 use App\Repository\CoursRepository;
+use App\Repository\FeedbackRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
@@ -30,6 +31,7 @@ class DashboardController extends AbstractController
     #[Route('/coach/dashboard', name: 'app_dashboard')]
     public function index(Request $request): Response
     {
+
         return $this->render('dashboard/coach/index.html.twig', [
             'user' => $this->getUser(),
         ]);
@@ -436,12 +438,16 @@ class DashboardController extends AbstractController
     // Partie feedbacks
 
     #[Route('/admin/dashboard/feedbacks', name: 'app_dashboard_adminFeedbacks')]
-    public function feedbacks(Request $request): Response
+    public function feedbacks(Request $request,FeedbackRepository $repository): Response
     {
-        return $this->render('dashboard/admin/feedback/feedbacks.html.twig');
+        $Feedback=$repository->findAll();
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig',[
+            'Feedback' => $Feedback,
+
+        ]);
     }
 
-    #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
+   /* #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
     public function consulterFeedback(Request $request,int $id): Response
     {
         $feedback = new Feedback();
@@ -453,10 +459,37 @@ class DashboardController extends AbstractController
 
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            return $this->redirectToRoute('app_dashboard_adminFeedbacks');
+        }
         return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
             'form' => $form->createView(),
         ]);
+
+    }*/
+    #[Route("/admin/dashboard/feedbacks/consulter_stat/{id}",name:"consulter_stat")]
+    public function consulter(Feedback $feedback, ManagerRegistry $doctrine)
+    {
+        $feedback->setStatus(1);
+        $em = $doctrine->getManager();
+        $em->flush();
+        return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
     }
+    #[Route('/admin/dashboard/feedbacks/remove/{id}', name: 'app_dashboard_admin_removeFeedbacks')]
+    public function removeFeedback(ManagerRegistry $doctrine,$id,FeedbackRepository $repository)
+    {
+        $Feedback= $repository->find($id);
+        $em = $doctrine->getManager();
+        $em->remove($Feedback);
+        $em->flush();
+        $this->addFlash(
+            'info',
+            ' le Reclamation a été supprimer',
+        );
+        return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
+    }
+
 
 
     // fin partie admin
