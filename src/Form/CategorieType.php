@@ -16,7 +16,7 @@ class CategorieType extends AbstractType
         $builder
     
             ->add('Type',TextType::class,[
-                'required'=>true,
+                'required'=>false,
                 'constraints'=>[new NotBlank()]
             ])
             ->add('Submit', SubmitType::class, [

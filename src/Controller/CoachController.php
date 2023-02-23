@@ -16,9 +16,11 @@ class CoachController extends AbstractController
     
         public function index(CoachRepository $coachRepository): Response
         {
+            
             return $this->render('coach/index.html.twig', [
                 'coaches' => $coachRepository->findAll(),
             ]);
+           
         }
    
         #[Route('/showcategorie{id}', name: 'showcategorie')]

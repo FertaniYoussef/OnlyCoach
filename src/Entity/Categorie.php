@@ -22,11 +22,14 @@ class Categorie
 
     
     #[ORM\Column(length: 255, nullable: false)]
-    #[Assert\Length(min:4,minMessage:'tres court')]
-    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
+    #[Assert\Length(min:4,minMessage:' Le type est très court.')]
+    #[Assert\Regex(pattern:"/^[A-Za-z\s]+$/", message: "Le type ne peut contenir que des lettres et espaces.")]
+    
+    
     private ?string $Type = null;
+   
 
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Coach::class,  cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Coach::class,  cascade: ['persist','remove'])]
     private Collection $id_coach;
 
     public function __construct()

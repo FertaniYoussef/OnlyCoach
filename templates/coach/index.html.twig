@@ -214,13 +214,12 @@
                                 </div>
                                 <div id="TrendingCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-10 md:gap-y-10 md:gap-x-5 pt-10 place-items-stretch">
                                     <!-- Make it dynamic later -->
-                                  {% for coach in coaches %}
+                                {% for coach in coaches %}
                                         <div id="CoachContainer" class="flex flex-col items-center">
-                                            <div class="w-20 h-20 rounded-full bg-[url('../../public/images/coach1.jpg')] bg-cover"></div>
-                                            <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
-                                            <span class="text-md pt-2 ">{{ coach.prenom }} {{ coach.nom}}</span>
-                                            
-                                            </div>
+                                        <div class="w-20 h-20 rounded-full" style="background-image: url('/images/{{ coach.picture }}'); background-size: cover;"></div>
+                                        <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
+                                         <span class="text-md pt-2">{{ coach.nom }} {{ coach.prenom }}</span>
+                                        </div>
                                         </div>
                                         {% endfor %}
 
