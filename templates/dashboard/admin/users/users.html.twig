@@ -289,6 +289,7 @@
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
+                                                        {% for u in userstab %}
                                                             <tr>
                                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                     <div class="flex items-center">
@@ -296,20 +297,21 @@
                                                                             <img class="h-10 w-10 rounded-full" src="/images/coach2.jpg{# <-- fasakh l coach2.jpg (dummy) lien image ici #}" alt="">
                                                                         </div>
                                                                         <div class="ml-4">
-                                                                            <div class="font-medium text-gray-900">{# Prenom ici #}Nom+prenom</div>
+                                                                            <div class="font-medium text-gray-900">{# Prenom ici #}{{u.Prenom}} {{u.Nom}}</div>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-gray-900">{# Email ici #}Email</div>
+                                                                    <div class="text-gray-900">{# Email ici #}{{u.email}}</div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-gray-900">{# Role ici #}Role</div>
+                                                                    <div class="text-gray-900">{# Role ici #}{{u.roles[0]}}</div>
                                                                 </td>
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                    <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersremove',{'id':u.id}) }}">Delete</a></div>
                                                                 </td>
                                                             </tr>
+                                                            {% endfor %}
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>

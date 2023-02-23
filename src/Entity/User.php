@@ -21,6 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\Email]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -30,12 +31,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank]
     private ?string $password = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $Nom = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $Prenom = null;
 
     #[ORM\OneToOne(mappedBy: 'id_user', cascade: ['persist', 'remove'])]
@@ -52,6 +56,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Rating::class)]
     private Collection $id_rating;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $picture = null;
 
     public function __construct()
     {
@@ -307,5 +314,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __toString() {
         return $this->id;
+    }
+
+    public function getPicture(): ?string
+    {
+        return $this->picture;
+    }
+
+    public function setPicture(?string $picture): self
+    {
+        $this->picture = $picture;
+
+        return $this;
     }
 }

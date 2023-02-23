@@ -17,9 +17,12 @@ class Cours
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $Titre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 10, max: 255)]
     private ?string $Description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -37,8 +40,11 @@ class Cours
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
     private Collection $id_rating;
 
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ["PERSIST"])]
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ['persist', 'remove'])]
     private Collection $id_sections;
+
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    private ?Coach $IdCoach = null;
 
     public function __construct()
     {
@@ -199,6 +205,18 @@ class Cours
                 $idSection->setCours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdCoach(): ?Coach
+    {
+        return $this->IdCoach;
+    }
+
+    public function setIdCoach(?Coach $IdCoach): self
+    {
+        $this->IdCoach = $IdCoach;
 
         return $this;
     }

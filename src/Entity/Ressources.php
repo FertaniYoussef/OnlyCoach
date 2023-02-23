@@ -22,7 +22,7 @@ class Ressources
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\ManyToOne(inversedBy: 'id_ressources')]
+    #[ORM\ManyToOne(inversedBy: 'id_ressources',cascade: ["PERSIST"]),]
     private ?Sections $sections = null;
 
     public function getId(): ?int
