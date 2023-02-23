@@ -66,7 +66,8 @@
 
     
 
-      <form class="mt-6">
+      <form class="mt-6" id='checkout-form' method='post' action="{{ path('subscribe_checkout' , {'coachId': coach.id}) }}">
+        <input type='hidden' name='stripeToken' id='stripe-token-id'>     
         <div class="grid grid-cols-12 gap-y-6 gap-x-4">
           <div class="col-span-full">
             <label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
@@ -85,23 +86,14 @@
           <div class="col-span-full">
             <label for="card-number" class="block text-sm font-medium text-gray-700">Card number</label>
             <div class="mt-1">
-              <input type="text" id="card-number" name="card-number" autocomplete="cc-number" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+               <div id="card-element" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" ></div>
             </div>
           </div>
+          
 
-          <div class="col-span-8 sm:col-span-9">
-            <label for="expiration-date" class="block text-sm font-medium text-gray-700">Expiration date (MM/YY)</label>
-            <div class="mt-1">
-              <input type="text" name="expiration-date" id="expiration-date" autocomplete="cc-exp" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+       
 
-          <div class="col-span-4 sm:col-span-3">
-            <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
-            <div class="mt-1">
-              <input type="text" name="cvc" id="cvc" autocomplete="csc" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+      
 
           <div class="col-span-full">
             <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
@@ -139,7 +131,7 @@
           <label for="same-as-shipping" class="text-sm font-medium text-gray-900">Billing address is the same as shipping address</label>
         </div>
 
-        <button type="submit" class="mt-6 w-full rounded-md border border-transparent bg-orange-600  py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Pay ${{coach.prix * 1.1}}</button>
+        <button type="submit" onclick="createToken()" id='pay-btn' class="mt-6 w-full rounded-md border border-transparent bg-orange-600  py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Pay ${{coach.prix * 1.1}}</button>
 
         <p class="mt-6 flex justify-center text-sm font-medium text-gray-500">
           <svg class="mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -193,7 +185,31 @@
     </div>
   </div>
 </div>
-
+ <script src="https://js.stripe.com/v3/" ></script>
+    <script>
+        var stripe = Stripe("{{stripe_key}}");
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+     
+        function createToken() {
+            document.getElementById("pay-btn").disabled = true;
+            stripe.createToken(cardElement).then(function(result) {
+     
+                     
+                if(typeof result.error != 'undefined') {
+                    document.getElementById("pay-btn").disabled = false;
+                    alert(result.error.message);
+                }
+     
+                // creating token success
+                if(typeof result.token != 'undefined') {
+                    document.getElementById("stripe-token-id").value = result.token.id;
+                    document.getElementById('checkout-form').submit();
+                }
+            });
+        }
+    </script>
 
 </body>
 </html>
