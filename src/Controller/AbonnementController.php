@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use App\Repository\AbonnementRepository;
 use App\Repository\CoachRepository;
 use App\Repository\CategorieRepository;
+use App\Repository\CoursRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,17 +29,14 @@ class AbonnementController extends AbstractController
     }
 
   #[Route('/abonnement/{coachId}/checkout/success', name:'success')]
-    public function subscribeToCoach(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,CategorieRepository $catrepo,ManagerRegistry $doctrine)
+    public function subscribeToCoach(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
     {
         $user = $this->getUser();
       $coach =$coachrepo->find($coachId);
         if (!$coach) {
             throw $this->createNotFoundException('The coach does not exist');
         }
-        // Check if the user is already subscribed to the coach
-       /*  if ($user->isSubscribedTo($coach)) {
-            throw $this->createNotFoundException('The coach exist');
-        }  */
+    
         $subscription = new Abonnement();
         $subscription->setDateDeb(new \DateTime());
         $endDate = (new \DateTime())->modify('+30 days');
@@ -46,6 +44,7 @@ class AbonnementController extends AbstractController
         $subscription->setDateFin($endDate);
         $subscription->setUser($user);
         $subscription->setCoach($coach);
+        $subscription->setPrix ($coach -> getPrix() * 1.1);
         $user-> addIdAbonnement($subscription);
       
          
@@ -63,7 +62,7 @@ class AbonnementController extends AbstractController
             ]); 
     }
     #[Route('/cancel/{subscriptionid}',name:'unsubscribe_from_coach')]
-        public function unsubscribeToCoach(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine)
+        public function unsubscribeToCoach(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine,CategorieRepository $categorieRepository, CoursRepository $coursRepo,CoachRepository $coachRepository)
         {
            
             $user = $this->getUser();
@@ -75,7 +74,15 @@ class AbonnementController extends AbstractController
             $em = $doctrine->getManager();
             $em->remove($abonnement);
             $em->flush();
-          
+            $cours = $coursRepo->FindBy(array(), array('nbVues' => 'DESC'), 3, 0);
+
+        /* fin cours fetching */
+        if ($this->getUser()){
+            return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll()));    
+        }
+        else{
+            return $this->redirectToRoute("app_login");
+        }
         }
         #[Route('/abonnement/{coachId}/checkout/failed', name: 'failure')]
         public function failedPayment(): Response
@@ -84,14 +91,27 @@ class AbonnementController extends AbstractController
                 'stripe_key' => $_ENV["STRIPE_KEY"],
             ]);
         }
+        #[Route('/abonnement/{coachId}/failed',name:'failed_exist_already')]
+        public function subscriptionExist(): Response
+        {
+            return $this->render('abonnement/already.html.twig'
+            );
+        }
      #[Route('/abonnement/{coachId}',name:'subscribe_coach')]
-    public function subscriptionConfirmation(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,CategorieRepository $catrepo,ManagerRegistry $doctrine): Response
+    public function subscriptionConfirmation(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
         $coach =$coachrepo->find($coachId);
           if (!$coach) {
               throw $this->createNotFoundException('The coach does not exist');
           }
+         $user_id= $user->getId();
+
+          $isSubscribed= $aborepo->findOneBy(['user' => $user_id]);
+       
+          if ($isSubscribed) {
+             return $this->redirectToRoute('failed_exist_already', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+         } 
         // Render a template confirming the subscription
         return $this->render('abonnement/index.html.twig', [
             'stripe_key' => $_ENV["STRIPE_KEY"],

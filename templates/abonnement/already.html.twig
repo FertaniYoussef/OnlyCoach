@@ -1,0 +1,108 @@
+<!doctype html>
+<html class="h-full bg-white">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+  {% endblock %}
+</head>
+<body class="h-full">
+
+<!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+<!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-white">
+  <body class="h-full">
+  ```
+-->
+<div class="relative mx-auto w-full bg-white">
+  <div class="grid min-h-screen grid-cols-10">
+    <div class="col-span-full py-6 px-4 sm:py-12 lg:col-span-6 lg:py-24">
+      <section aria-labelledby="payment-heading" class="flex-auto overflow-y-auto px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:px-8 lg:pt-0 lg:pb-24">
+    <h2 id="payment-heading" class="sr-only">Payment and shipping details</h2>
+
+    <div class="mx-auto max-w-lg lg:pt-16">
+      <div class="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
+    <div class="relative">
+      <ul class="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+      <a class="flex h-6 w-6 items-center justify-center rounded-full bg-orange-600 text-xs font-semibold text-white" href="#">1</a>
+          <span class="font-semibold text-gray-900">Coach</span>
+        </li>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+      <a class="flex h-6 w-6 items-center justify-center rounded-full bg-teal-600 text-xs font-semibold text-white ring ring-teal-600 ring-offset-2" href="#">2</a>
+          <span class="font-semibold text-gray-900">Subscription</span>
+        </li>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+           <a class="flex h-6 w-6 items-center justify-center rounded-full bg-teal-600 text-xs font-semibold text-white ring ring-teal-600 ring-offset-2" href="#">3</a>
+          <span class="font-semibold text-gray-500">Payment</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+ 
+<div class=" h-24 border-2 border-teal-500 rounded-lg mt-6">
+      <div class="bg-white p-6  md:mx-auto">
+  
+        <div class="text-center">
+            <h3 class="md:text-2xl text-base text-gray-900 font-semibold text-center">You are already subscribed</h3>
+            <p class="text-gray-600 my-2">Thank you for trusting us.</p>
+            <p> Have a great day!  </p>
+            <div class="py-10 text-center">
+                <button  onclick="history.back()" class="px-8 bg-orange-600 hover:bg-orange-500 text-white font-semibold py-3 rounded-lg">
+                    BACK 
+               </button>
+            </div>
+        </div>
+    </div>
+ 
+</div>
+    
+    </div>
+  </section>
+    </div>
+    <div class="relative col-span-full flex flex-col py-6 pl-8 pr-4 sm:py-12 lg:col-span-4 lg:py-24">
+      <h2 class="sr-only">Order summary</h2>
+      <div>
+        <img src="{{ asset('images/LoginImage.jpg') }}" alt="" class="absolute inset-0 h-full w-full object-cover" />
+         <div class="absolute inset-0 h-full w-full bg-gradient-to-t from-teal-800 to-teal-400 opacity-80"></div> 
+      </div>
+      
+      <div class="relative mt-10 text-white">
+        <h3 class="mb-5 text-lg font-bold">Support</h3>
+        <p class="text-sm font-semibold">+01 653 235 211 <span class="font-light">(International)</span></p>
+        <p class="mt-1 text-sm font-semibold">support@nanohair.com <span class="font-light">(Email)</span></p>
+        <p class="mt-2 text-xs font-medium">Call us now for payment related issues</p>
+      </div>
+      <div class="relative mt-10 flex">
+        <p class="flex flex-col"><span class="text-sm font-bold text-white">Money Back Guarantee</span><span class="text-xs font-medium text-white">within 30 days of purchase</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</body>
+</html>
