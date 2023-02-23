@@ -10,6 +10,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\Feedback;
+use App\Repository\FeedbackRepository;
+
 class ContactController extends AbstractController
 {
     #[Route('/contact', name: 'app_contact')]
