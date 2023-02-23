@@ -6,12 +6,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterController extends AbstractController
+class RatingController extends AbstractController
 {
-    #[Route('/register', name: 'app_register')]
+    #[Route('/rating', name: 'app_rating')]
     public function index(): Response
     {
-        return $this->render('register/index.html.twig');
+        return $this->render('rating/index.html.twig', [
+            'controller_name' => 'RatingController',
+        ]);
     }
-
 }
