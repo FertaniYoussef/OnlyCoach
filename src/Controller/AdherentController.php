@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use App\Repository\CoursRepository;
 use App\Entity\User;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Adherents;
 use App\Entity\Abonnement;
 use App\Repository\UserRepository;
@@ -30,16 +31,18 @@ class AdherentController extends AbstractController
         if (!$cours) {
             throw $this->createNotFoundException('The course does not exist');
         }
-        $userid= $user->getId();
+        
+        
         $adherent = new Adherents();
         $adherent -> setDate(new \DateTime());
-        $adherent -> setUser($userid);
-        $adherent -> setCours($courseId);
+        $adherent -> setUser($user);
+        $adherent -> setCours($cours);
 
 
         $entityManager = $doctrine->getManager();
         $entityManager->persist($adherent);
         $entityManager->flush();
+        dump($adherent);
         die();
         }
 

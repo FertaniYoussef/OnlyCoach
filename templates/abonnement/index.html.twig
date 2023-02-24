@@ -69,19 +69,9 @@
       <form class="mt-6" id='checkout-form' method='post' action="{{ path('subscribe_checkout' , {'coachId': coach.id}) }}">
         <input type='hidden' name='stripeToken' id='stripe-token-id'>     
         <div class="grid grid-cols-12 gap-y-6 gap-x-4">
-          <div class="col-span-full">
-            <label for="email-address" class="block text-sm font-medium text-gray-700">Email address</label>
-            <div class="mt-1">
-              <input type="email" id="email-address" name="email-address" autocomplete="email" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+          
 
-          <div class="col-span-full">
-            <label for="name-on-card" class="block text-sm font-medium text-gray-700">Name on card</label>
-            <div class="mt-1">
-              <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+          
 
           <div class="col-span-full">
             <label for="card-number" class="block text-sm font-medium text-gray-700">Card number</label>
@@ -95,41 +85,15 @@
 
       
 
-          <div class="col-span-full">
-            <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-            <div class="mt-1">
-              <input type="text" id="address" name="address" autocomplete="street-address" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+          
 
-          <div class="col-span-full sm:col-span-4">
-            <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-            <div class="mt-1">
-              <input type="text" id="city" name="city" autocomplete="address-level2" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+          
 
-          <div class="col-span-full sm:col-span-4">
-            <label for="region" class="block text-sm font-medium text-gray-700">State / Province</label>
-            <div class="mt-1">
-              <input type="text" id="region" name="region" autocomplete="address-level1" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
 
-          <div class="col-span-full sm:col-span-4">
-            <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal code</label>
-            <div class="mt-1">
-              <input type="text" id="postal-code" name="postal-code" autocomplete="postal-code" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-            </div>
-          </div>
+          
         </div>
 
-        <div class="mt-6 flex space-x-2">
-          <div class="flex h-5 items-center">
-            <input id="same-as-shipping" name="same-as-shipping" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 text-orange-600  focus:ring-orange-600 ">
-          </div>
-          <label for="same-as-shipping" class="text-sm font-medium text-gray-900">Billing address is the same as shipping address</label>
-        </div>
+        
 
         <button type="submit" onclick="createToken()" id='pay-btn' class="mt-6 w-full rounded-md border border-transparent bg-orange-600  py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Pay ${{coach.prix * 1.1}}</button>
 
@@ -184,7 +148,17 @@
       </div>
     </div>
   </div>
+  <!-- Debut Footer -->
+<footer class="bg-black relative bottom-0 left-0 lg:block hidden">
+    <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
+
+        <div class="mt-8 md:order-1 md:mt-0">
+            <p class="text-center text-xs leading-5 text-white">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
 </div>
+
  <script src="https://js.stripe.com/v3/" ></script>
     <script>
         var stripe = Stripe("{{stripe_key}}");

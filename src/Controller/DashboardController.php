@@ -17,6 +17,8 @@ use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
+use App\Entity\Adherents;
+use App\Repository\AdherentsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,7 +46,7 @@ class DashboardController extends AbstractController
     public function apiCourse(Request $request, CoursRepository $repository, int $id): Response
     {
         $course = $repository->find($id);
-
+       
         // loop through the course sections and extract the resources
         $sections = $course->getIdSections()->getValues();
         $resources = [];
@@ -127,14 +129,26 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/coach/dashboard/courses/{id}', name: 'app_dashboard_course')]
-    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id): Response
+    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id,AdherentsRepository $adhrepo,UserRepository $userrepo,ManagerRegistry $doctrine): Response
     {
         $course = $repository->find($id);
+        $adherents=$adhrepo->findByCourse($course);
+   
+
+        $users=[];
+        $entityManager = $doctrine->getManager();
+        foreach($adherents as $adherent) {
+            $userProxy= $adherent->getUser();
+            
+            $entityManager->initializeObject($userProxy);
+           
+            $users[]=$userProxy;
+        }
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]

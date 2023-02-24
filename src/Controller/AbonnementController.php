@@ -46,6 +46,7 @@ class AbonnementController extends AbstractController
         $subscription->setCoach($coach);
         $subscription->setPrix ($coach -> getPrix() * 1.1);
         $user-> addIdAbonnement($subscription);
+        
       
          
           $entityManager = $doctrine->getManager();
