@@ -13,6 +13,7 @@ use App\Entity\Adherents;
 use App\Entity\Abonnement;
 use App\Repository\UserRepository;
 use App\Repository\AdherentsRepository;
+use Doctrine\Persistence\ManagerRegistry;
 class AdherentController extends AbstractController
 {
     #[Route('/adherent', name: 'app_adherent')]
@@ -42,8 +43,9 @@ class AdherentController extends AbstractController
         $entityManager = $doctrine->getManager();
         $entityManager->persist($adherent);
         $entityManager->flush();
-        dump($adherent);
-        die();
+        
+        // return redirecto previous page
+        return $this->redirect($request->headers->get('referer'));
         }
 
         #[Route('/leavecourse/{courseId}' , name : 'leave_join')]
@@ -60,7 +62,8 @@ class AdherentController extends AbstractController
             $em = $doctrine->getManager();
             $em->remove($adherent);
             $em->flush();
-            die();
+            // return redirecto previous page
+        return $this->redirect($request->headers->get('referer'));
         }
     
         
