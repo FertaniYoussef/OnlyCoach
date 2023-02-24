@@ -87,10 +87,16 @@ class AbonnementController extends AbstractController
         }
         }
         #[Route('/abonnement/{coachId}/checkout/failed', name: 'failure')]
-        public function failedPayment(): Response
+        public function failedPayment(Request $request, $coachId, CoachRepository $coachrepo): Response
         {
-            return $this->render('main/index.html.twig', [
+            $user = $this->getUser();
+            $coach =$coachrepo->find($coachId);
+              if (!$coach) {
+                  throw $this->createNotFoundException('The coach does not exist');
+              }
+            return $this->render('abonnement/failed.html.twig', [
                 'stripe_key' => $_ENV["STRIPE_KEY"],
+                'coach'=>$coach
             ]);
         }
         #[Route('/abonnement/{coachId}/failed',name:'failed_exist_already')]
