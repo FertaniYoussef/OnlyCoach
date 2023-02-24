@@ -138,7 +138,7 @@
         <div class="lg:grid lg:grid-cols-7 lg:grid-rows-1 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
             <!-- Product image -->
             <div class="lg:col-span-4 lg:row-end-1">
-                {# <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 bg-cover" style="background-image: url('/images/{{ course.cours_photo }}')"> #}
+                <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 bg-cover" style="background-image: url('/images/{{ course.coursphoto }}')"> 
                 </div>
             </div>
 
@@ -189,22 +189,41 @@
 
                 <p class="mt-6 text-gray-500">{{ course.description }}</p>
 
+
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
+                {% if abonnement is empty %}
                 <form action="{{ path('subscribe_coach' , {'coachId': course.IdCoach})}}">
-                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</button>
+                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }} for {{course.IdCoach.prix}}$</button>
                  </form>
-                    <button type="button"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe</button>
-                    <button type="button"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove subscription</button>
+                 {% endif %}
+
+                 {% if abonnement %}
+                <form action="{{ path('unsubscribe_from_coach' , {'subscriptionid': abonnement.id})}}">
+                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove subscription from {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</button>
+                 </form>
+                 {% endif %}
+                    {% if adherent is empty and abonnement %}
+                 <form action="{{ path('course_join' , {'courseId': course.id})}}">
+                   <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Enroll to this course</button>
+                 </form>
+                    {% endif %}
+                    {% if adherent %}
+                 <form action="{{ path('leave_join' , {'courseId': course.id})}}">
+                    <button type="submit" class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Leave course</button>
+                 </form>
+                    {% endif %}
+                    
+
                 </div>
 
                 <div class="mt-10 border-t border-gray-200 pt-10">
-                    <div id="CoachContainer" class="flex flex-col items-center">
-                        <div class="w-20 h-20 rounded-full bg-[url('../../public/images/coach3.jpg')] bg-cover"></div>
+                  <a href="{{path('app_user',{'id':course.IdCoach.id})}}"><div id="CoachContainer" class="flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-full bg-cover" style="background-image: url('/images/{{ course.IdCoach.picture }}')"></div>
                         <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
                             <span class="text-md pt-2 ">{{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</span>
                             <span class="text-sm text-teal-600">{{ course.IdCoach.categorie.Type}}</span>
                         </div>
-                    </div>
+                    </div></a>
                 </div>
 
 
@@ -238,11 +257,12 @@
                     </ul>
                 </div>
             </div>
-
+    {% if adherent %}
         <!-- WIP SECTIONS -->
             <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none" id="sections">
             </div>
         <!-- END WIP SECTIONS -->
+    {% endif %}
 
             <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none">
                 <div>
@@ -476,7 +496,7 @@
             var slug = url => new URL(url).pathname.match(/[^\/]+/g)
             const id = slug(window.location.href)
                async function getData() {
-                const response = await fetch('http://127.0.0.1:8000/coach/dashboard/api/course/'+id[1], {
+                const response = await fetch('/coach/dashboard/api/course/'+id[1], {
              method: 'POST',
                 headers: {
                  'Content-Type': 'application/json',
@@ -512,8 +532,8 @@
                     const sectionId = `section${section.id}`;
                     div.id = sectionId;
                     div.innerHTML = `<div id="${sectionId}">
-                    <div class="bg-sky-700 w-full py-4 mb-4 shadow flex justify-between items-center px-4">
-                    <h1 class="text-lg text-sky-200 font-medium">${section.title}</h1>
+                    <div class="bg-black w-full py-4 mb-4 shadow-md flex justify-between items-center px-4 rounded-md">
+                    <h1 class="text-lg text-white font-medium">Section ${n} : ${section.title}</h1>
                     <span class="text-sm text-sky-200">${n}/${sections.length}</span></div>
                     <iframe class="w-full h-[25rem]" src="https://www.youtube.com/embed/${link}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 

@@ -58,7 +58,7 @@ class AbonnementController extends AbstractController
         );
             return $this->render('abonnement/success.html.twig', [
                 'stripe_key' => $_ENV["STRIPE_KEY"],
-                'coach'=> $coach
+                'coach'=> $coach,
             ]); 
     }
     #[Route('/cancel/{subscriptionid}',name:'unsubscribe_from_coach')]
@@ -81,6 +81,7 @@ class AbonnementController extends AbstractController
             return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll()));    
         }
         else{
+            
             return $this->redirectToRoute("app_login");
         }
         }
@@ -139,6 +140,7 @@ $formattedPrice = number_format($total, 2, '.', '');
             ]);
 
             // Paiement réussi, on redirige l'utilisateur vers la page de succès
+
         
          
             return $this->redirectToRoute('success', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);

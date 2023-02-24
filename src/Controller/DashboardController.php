@@ -263,6 +263,29 @@ class DashboardController extends AbstractController
             dump($inputs);
             $em = $doctrine->getManager();
 
+            dump($cours);
+
+                        // validate $cours
+                $errors = $validator->validate($cours);
+
+                try {
+                $errorString = (string) $errors[0];
+                    }
+                catch (\Exception $e) {
+                    $errorString = "";
+                }
+                // replace "Object(App\Entity\Cours)." with ""
+                $errorString = str_replace('Object(App\Entity\Cours).', '', $errorString);
+
+                if (count($errors) > 0) {
+                        // check if errorString contains "cours_photo" if so, replace it with "background"
+                        if (strpos($errorString, 'cours_photo') !== false) {
+                                $errorString = str_replace('cours_photo', 'background', $errorString);
+                                $errorString = str_replace('This value should not be blank.', 'This value should not be blank. Please upload a background image.', $errorString);
+                        }
+                    return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
+                }
+
             $em->persist($cours);
             // section & resource management
             dump('id du cours ajouté est : '.$cours->getId());
@@ -291,13 +314,6 @@ class DashboardController extends AbstractController
                 $em->persist($resource);
             }
 
-            // validate $cours
-            $errors = $validator->validate($cours);
-
-            dump($errors);
-            if (count($errors) > 0) {
-                return new Response((string) $errors, 500);
-            }
 
 
 
@@ -305,7 +321,7 @@ class DashboardController extends AbstractController
             $em->clear();
 
 
-            return $this->redirectToRoute('app_dashboard');
+            return $this->redirectToRoute('app_dashboard', ['success' => "Course added successfully!"]);
         }
         return $this->redirectToRoute('app_login');
     }

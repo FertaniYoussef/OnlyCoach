@@ -10,6 +10,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
+use App\Repository\AbonnementRepository;
+use App\Repository\AdherentsRepository;
 
 class CoursesController extends AbstractController
 {
@@ -27,10 +29,17 @@ class CoursesController extends AbstractController
 
 
     #[Route('/courses/{id}', name: 'app_course')]
-    public function indexCourse(CoursRepository $repository, int $id): Response
+    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep): Response
     {
+        $user = $this->getUser();
+        $cours = $repository->find($id);
+        $coach = $cours->getIdCoach();
+        $coachId = $coach->getId();
+        $abonnement = $abonRep->findAbonnementByAdherentAndCoach($user->getId(), $coachId);
+        $adherent = $adRep->findAdherentByCourseId($user, $id);
+
         $course = $repository->find($id);
-        return $this->render('courses/course.html.twig', array('course' => $course));
+        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]

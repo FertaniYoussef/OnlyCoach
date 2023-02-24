@@ -39,6 +39,19 @@ class AdherentsRepository extends ServiceEntityRepository
         }
     }
 
+    // find adherent where adherent id and course id
+    public function findAdherentByCourseId($adherentId, $courseId)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :adherentId')
+            ->andWhere('a.cours = :courseId')
+            ->setParameter('adherentId', $adherentId)
+            ->setParameter('courseId', $courseId)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
 //    /**
 //     * @return Adherents[] Returns an array of Adherents objects
 //     */
