@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use ApiPlatform\Metadata\ApiResource;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -21,8 +22,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 180, unique: true)]
-    #[Assert\Email]
+    #[ORM\Column(length: 180)]
+    #[Assert\Email(message:"email '{{ value }}' is not valid")]
+    #[Assert\NotBlank(message:"Email cannot be blank.")]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -32,15 +34,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message:"Password cannot be blank.")]
+    #[Assert\Length(
+        min: 8,
+        max: 100,
+        minMessage: 'Your password must be at least {{ limit }} characters long',
+        maxMessage: 'Your password name cannot be longer than {{ limit }} characters',
+    )]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Last name cannot be blank.")]
     private ?string $Nom = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank]
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"First name cannot be blank.")]
     private ?string $Prenom = null;
 
     #[ORM\OneToOne(mappedBy: 'id_user', cascade: ['persist', 'remove'])]
@@ -64,8 +72,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $Description = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true)]    
+    #[Assert\Length(8)]
     private ?int $Phone = null;
+
 
     public function __construct()
     {
