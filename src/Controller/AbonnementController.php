@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Stripe;
+use Symfony\Component\Serializer\SerializerInterface ;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class AbonnementController extends AbstractController
 {
@@ -162,4 +164,137 @@ $formattedPrice = number_format($total, 2, '.', '');
           
 
     }
+    // Mobile API for web service
+
+    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach')]
+    public function subscriptionConfirmationJson(Request $request,SerializerInterface $serializer, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
+    {
+        {
+            $user = $this->getUser();
+            $coach =$coachrepo->find($coachId);
+              if (!$coach) {
+                  throw $this->createNotFoundException('The coach does not exist');
+              }
+          
+    
+              $isSubscribed= $aborepo->findOneBy(['user' => $user]);
+           
+              if ($isSubscribed) {
+                 return $this->json("User already subscribed",409,[]);
+             } 
+             
+             
+             $response = [
+                'stripe_key' => $_ENV["STRIPE_KEY"],
+                'CLIENT_SECRET'=>$_ENV['STRIPE_SECRET'],
+                'coach'=> $coach
+             ];
+             $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+                        
+             
+        return $this->json($jsonContent,200,[]);
+    }
+}
+#[Route('api/abonnement/{coachId}/checkout',name:'subscribe_api_checkout',methods:['POST'])]
+public function checkoutapi(Request $request, $coachId,CoachRepository $coachrepo) : Response
+{
+    $coach =$coachrepo->find($coachId);
+    if (!$coach) {
+        return $this->json('Coach not found',404,[]);
+    }
+$total= $coach->getPrix() * 1.1 ;
+$formattedPrice = number_format($total, 2, '.', '');
+    Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
+    try {
+        Stripe\Charge::create ([
+            "amount" => $formattedPrice * 100,
+            "currency" => "usd",
+            "source" => $request->request->get('stripeToken'),
+            "description" => " Payment Test"
+        ]);
+
+        // Paiement réussi, on redirige l'utilisateur vers la page de succès
+
+    
+     
+        return $this->redirectToRoute('success_api', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+    } catch (Stripe\Exception\CardException $e) {
+        // Paiement échoué, on redirige l'utilisateur vers la page d'échec
+        $this->addFlash(
+            'failure',
+            'Payment Succesful'
+        );
+        return $this->redirectToRoute('faillure_api', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+    }
+      
+
+}
+#[Route('api/abonnement/{coachId}/checkout/success', name:'success_api')]
+public function subscribeToCoach_api(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
+{
+    $user = $this->getUser();
+  $coach =$coachrepo->find($coachId);
+    if (!$coach) {
+        return $this->json('Coach not found',404,[]);
+    }
+
+    $subscription = new Abonnement();
+    $subscription->setDateDeb(new \DateTime());
+    $endDate = (new \DateTime())->modify('+30 days');
+
+    $subscription->setDateFin($endDate);
+    $subscription->setUser($user);
+    $subscription->setCoach($coach);
+    $subscription->setPrix ($coach -> getPrix() * 1.1);
+    $user-> addIdAbonnement($subscription);
+    
+  
+     
+      $entityManager = $doctrine->getManager();
+      $entityManager->persist($subscription);
+      $entityManager->flush();
+      
+      $response = [
+        'stripe_key'=> $_ENV["STRIPE_KEY"],
+        'coach'=> $coach,
+      ];
+      $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+     
+        return $this->json($jsonContent,200,[]);
+        
+}
+#[Route('api/abonnement/{coachId}/checkout/failed', name: 'failure_api')]
+public function failedPayment_api(Request $request, $coachId, CoachRepository $coachrepo): Response
+{
+    $user = $this->getUser();
+    $coach =$coachrepo->find($coachId);
+      if (!$coach) {
+          return $this->json("Coach not found",404,[]);
+      }
+      $response = [
+        'stripe_key'=> $_ENV["STRIPE_KEY"],
+        'coach'=> $coach,
+      ];
+      $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+     
+        return $this->json($jsonContent,500,[]);
+    
+}
+#[Route('api/cancel/{subscriptionid}',name:'unsubscribe_from_coach_api')]
+public function unsubscribeToCoach_api(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine,CategorieRepository $categorieRepository, CoursRepository $coursRepo,CoachRepository $coachRepository)
+{
+   
+    $user = $this->getUser();
+    $abonnement= $aborepo->find($subscriptionid);
+    if (!$abonnement) {
+        throw $this->createNotFoundException('The subscription does not exist');
+    }        
+    $user->removeIdAbonnement($abonnement);
+    $em = $doctrine->getManager();
+    $em->remove($abonnement);
+    $em->flush();
+
+    return $this->json("Subscription canceled",200,[]);    
+
+}
 }
