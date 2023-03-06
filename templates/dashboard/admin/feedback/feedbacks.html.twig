@@ -264,7 +264,12 @@
 
                             <div id="courses" class="w-full pt-7">
                                 <!-- Make it dynamic later -->
-
+                                <div id="google_translate_element"></div>
+                                <script type="text/javascript">
+                                    function googleTranslateElementInit() {
+                                        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                                    }
+                                </script>
 
                                 <!-- WIP -->
                                 <div class="px-4 sm:px-6 ">
@@ -273,6 +278,14 @@
                                             <h1 class="text-xl font-semibold text-gray-900">Feedbacks</h1>
                                         </div>
                                     </div>
+
+
+                                    <form action="{{ path('feedback_search') }}" method="get" class="flex items-center">
+
+                                        <input type="text" id="q" name="q" value="{{ app.request.query.get('q') }}" class="border border-gray-400 rounded py-2 px-3 mr-2 leading-tight focus:outline-none focus:shadow-outline">
+                                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Rechercher</button>
+                                    </form>
+
                                     <div class="mt-8 flex flex-col">
                                         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -282,6 +295,7 @@
                                                         <tr>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id Reclamation</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id User</th>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Email user</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Sujet</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Feedback</th>
@@ -290,11 +304,18 @@
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Supprimer</th>
                                                         </tr>
                                                         </thead>
+
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
-                                                        <tr>
-                                                            {% for s in  Feedback %}
 
+                                                        <div class="my-4">
+                                                            <a href="{{ path('feedbacks_list', {'sort': 'date_asc'}) }}" class="mr-4 text-sm font-medium text-gray-500 hover:text-gray-700">Tri par date asc</a>
+                                                            <a href="{{ path('feedbacks_list', {'sort': 'date_desc'}) }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Tri par date desc</a>
+                                                        </div>
+
+                                                            {% for s in  Feedback %}
+                                                                <tr>
+                                                            <div id="feedback-results"></div>
                                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                 <div class="flex items-center">
                                                                     <div>
@@ -303,7 +324,10 @@
                                                                 </div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{{ s.user.id }}</div>
+                                                                <div class="text-gray-900">{{ s.user}}</div>
+                                                            </td>
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{{ s.email }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-gray-900">{{ s.sujet }}</div>
@@ -319,21 +343,18 @@
                                                             </td>
 
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                {% if s.status == 0 %}
-                                                                <div class="text-sky-600"><a href="{{ path('consulter_stat',{id: s.id}) }}">Consulter</a></div>
-                                                                {% else %}
-                                                                    <a>Cette entité a déjà été consultée.</a>
-                                                                {% endif %}
+                                                                <div class="text-blue-800"><a href="{{  path('app_dashboard_adminConsulterFeedback',{id:s.id})}}">consulter</a></div>
                                                             </td>
 
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-red-600"><a href="{{  path('app_dashboard_admin_removeFeedbacks',{id:s.id})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
+
+
                                                         {% endfor %}
 
-                                                        <!-- Rendre cette partie dynamique avec twig -->
-                                                        </tbody>
+
                                                     </table>
                                                 </div>
                                             </div>
@@ -344,15 +365,13 @@
                                 <!-- WIP -->
 
                             </div>
-
                             <!-- More items... -->
-                        </div>
-                    </div>
-                </div>
-            </div>
 
 
-        </main>
+
+
+
+                                            </main>
     </div>
 </div>
 

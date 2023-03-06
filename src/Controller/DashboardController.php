@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Cours;
+use App\Entity\Reponse;
 use App\Entity\Ressources;
 use App\Entity\Sections;
 use App\Entity\Coach;
@@ -11,13 +12,18 @@ use App\Entity\Feedback;
 use App\Form\CoachType;
 use App\Form\OfferType;
 use App\Form\FeedbackType;
+use App\Form\ReponseType;
 use App\Repository\CoursRepository;
 use App\Repository\FeedbackRepository;
+use App\Repository\ReponseRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -447,35 +453,43 @@ class DashboardController extends AbstractController
         ]);
     }
 
-   /* #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
-    public function consulterFeedback(Request $request,int $id): Response
+   #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
+    public function consulterFeedback(Request $request,$id,Feedback $feedback,EntityManagerInterface $EM,ManagerRegistry $doctrine,ReponseRepository $repository): Response
     {
-        $feedback = new Feedback();
-        $form = $this->createForm(FeedbackType::class, $feedback);
-
+        $reponse = new Reponse();
+        $form = $this->createForm(ReponseType::class, $reponse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+            // ajouter reponse
+            $EM->persist($reponse);
+            $EM->flush();
+             $reponse->getIdFeedback();
+             $feedback->setStatus(1);
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->getClickedButton() && 'delete' === $form->getClickedButton()->getName()) {
+            // supprimer reponse
+            $reponse= $repository->find($id);
+            $em = $doctrine->getManager();
+            $em->remove($reponse);
+            $em->flush();
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
         return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
             'form' => $form->createView(),
         ]);
 
-    }*/
-    #[Route("/admin/dashboard/feedbacks/consulter_stat/{id}",name:"consulter_stat")]
+    }
+   /* #[Route("/admin/dashboard/feedbacks/consulter_stat/{id}",name:"consulter_stat")]
     public function consulter(Feedback $feedback, ManagerRegistry $doctrine)
     {
         $feedback->setStatus(1);
         $em = $doctrine->getManager();
         $em->flush();
         return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
-    }
+    }*/
     #[Route('/admin/dashboard/feedbacks/remove/{id}', name: 'app_dashboard_admin_removeFeedbacks')]
     public function removeFeedback(ManagerRegistry $doctrine,$id,FeedbackRepository $repository)
     {
@@ -490,7 +504,44 @@ class DashboardController extends AbstractController
         return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
     }
 
+    /**
+     * @Route("/admin/dashboard/feedbacks/search", name="feedback_search", methods={"GET"})
+     */
+    public function search(Request $request)
+    {
+        $query = $request->query->get('q');
 
+        $repository = $this->entityManager->getRepository(Feedback::class);
+
+        if (is_numeric($query)) {
+            $results = $repository->findBy(['id' => $query]);
+        } else {
+            $results = $repository->findBy(['Sujet' => $query]);
+        }
+
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
+            'Feedback' => $results,
+        ]);
+    }
+
+
+    /**
+     * @Route("/feedbacks/{sort}", name="feedbacks_list", defaults={"sort"="date_desc"})
+     */
+    public function listFeedbacks(EntityManagerInterface $entityManager, string $sort = 'date_desc'): Response
+    {
+        $feedbacksRepository = $entityManager->getRepository(Feedback::class);
+
+        $queryBuilder = $feedbacksRepository->createQueryBuilder('f')
+            ->orderBy('f.date_feedback', ($sort === 'date_asc') ? 'ASC' : 'DESC');
+
+        $feedbacks = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
+            'Feedback' => $feedbacks,
+            'sort' => $sort
+        ]);
+    }
 
     // fin partie admin
 
