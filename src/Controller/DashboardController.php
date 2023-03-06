@@ -27,6 +27,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class DashboardController extends AbstractController
 {
@@ -349,7 +354,7 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
     public function adminIndex(Request $request): Response
     {
-        return $this->render('dashboard/admin/index.html.twig');
+        return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));
     }
 
     // Partie users
@@ -358,10 +363,18 @@ class DashboardController extends AbstractController
     {
         $users = $repository->findAll();
         return $this->render('dashboard/admin/users/users.html.twig',[
-            'userstab' => $users
+            'userstab' => $users,'userinfo'=>$this->getUser()
         ]);
     }
     
+    #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
+    public function userss(Request $request,UserRepository $repository,SerializerInterface $serializer): Response
+    {
+        $users = $repository->findAll();
+        $jsonContent = $serializer->serialize($users, 'json');
+        dd($jsonContent);
+    }
+
     #[Route('/admin/dashboard/users/remove/{id}', name: 'app_dashboard_adminUsersremove')]
     public function usersremove(ManagerRegistry $doctrine,$id,UserRepository $repository)
     {
