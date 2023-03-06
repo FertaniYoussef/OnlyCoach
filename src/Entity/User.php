@@ -104,6 +104,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPhone(): ?int
+    {
+        return $this->Phone;
+    }
+ 
+
+    public function setPhone(int $Phone): self
+    {
+        $this->Phone = $Phone;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->Description;
+    }
+ 
+
+    public function setDescription(string $Description): self
+    {
+        $this->Description = $Description;
+
+        return $this;
+    }
 
 
     /**
@@ -328,9 +353,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $idRating->setUser(null);
             }
         }
-
-        return $this;
-    }
 
         return $this;
     }

@@ -55,7 +55,6 @@ class UserController extends AbstractController
                     'errors' => $errors,
                 ]);
             }
-            dd($user);
             $repository->add($user, true);
             return  $this->redirectToRoute("app_login");
         }

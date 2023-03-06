@@ -39,16 +39,17 @@ class CoursesController extends AbstractController
         $adherent = $adRep->findAdherentByCourseId($user, $id);
 
         $course = $repository->find($id);
-        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent));
+        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent,'userinfo' => $user));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
     public function indexslug($slug ,CategorieRepository $categorieRepository, CoursRepository $repository): Response
     {
+        $user = $this->getUser();
         $categorieId = $categorieRepository->findOneBy(['Type' => $slug]);
         dump($categorieId);
         $cours = $repository->findCoursByCategory($categorieId);
         dump($cours);
-        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'courses' => $cours, 'categories' => $categorieRepository->findAll()));
+        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'courses' => $cours,'userinfo' => $user, 'categories' => $categorieRepository->findAll()));
     }
 }

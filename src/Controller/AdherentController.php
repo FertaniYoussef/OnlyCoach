@@ -13,7 +13,6 @@ use App\Entity\Adherents;
 use App\Entity\Abonnement;
 use App\Repository\UserRepository;
 use App\Repository\AdherentsRepository;
-use Doctrine\Persistence\ManagerRegistry;
 class AdherentController extends AbstractController
 {
     #[Route('/adherent', name: 'app_adherent')]
