@@ -16,6 +16,20 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
+    
+    #[Route('/login', name: 'app_login')]
+    public function login(AuthenticationUtils $authenticationUtils): Response
+    {
+        // get the login error if there is one
+        $error = $authenticationUtils->getLastAuthenticationError();
+        // last username entered by the user
+        $lastUsername = $authenticationUtils->getLastUsername();
+        return $this->render('login/index.html.twig', [
+            'last_username' => $lastUsername,
+            'error'         => $error,
+            ]);
+    }
+    
     #[Route('/inscription', name: 'User_inscription')]
     public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator)
     {
