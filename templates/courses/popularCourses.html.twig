@@ -24,7 +24,7 @@
                         <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
                         <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
                         <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                        <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                        <a href="{{ path('app_contact') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
                     </div>
 
 
@@ -239,7 +239,7 @@
                                 <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-10 md:gap-x-5 pt-7">
                                     <!-- Make it dynamic later -->
                                     {% for course in popular %}
-                                        <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                                        <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                                 <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black  shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                                 <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
                                                 <h1 class="text-xs text-gray-500 pt-1">{{ course.coach }}</h1>

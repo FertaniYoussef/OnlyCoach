@@ -331,6 +331,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+        return $this;
+    }
+
     public function getPicture(): ?string
     {
         return $this->picture;
@@ -339,30 +343,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->Description;
-    }
-
-    public function setDescription(?string $Description): self
-    {
-        $this->Description = $Description;
-
-        return $this;
-    }
-
-    public function getPhone(): ?int
-    {
-        return $this->Phone;
-    }
-
-    public function setPhone(?int $Phone): self
-    {
-        $this->Phone = $Phone;
 
         return $this;
     }

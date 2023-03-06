@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Categorie;
 use App\Repository\CategorieRepository;
+use App\Repository\CoursRepository;
+use App\Repository\AbonnementRepository;
+use App\Repository\AdherentsRepository;
 
 class CoursesController extends AbstractController
 {
@@ -25,15 +28,27 @@ class CoursesController extends AbstractController
     }
 
 
-    #[Route('/courses/{slug}', name: 'app_course')]
-    public function indexCourse($slug): Response
+    #[Route('/courses/{id}', name: 'app_course')]
+    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep): Response
     {
-        return $this->render('courses/course.html.twig', array('course' => ['id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi','coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.'],'userinfo'=>$this->getUser()));
+        $user = $this->getUser();
+        $cours = $repository->find($id);
+        $coach = $cours->getIdCoach();
+        $coachId = $coach->getId();
+        $abonnement = $abonRep->findAbonnementByAdherentAndCoach($user->getId(), $coachId);
+        $adherent = $adRep->findAdherentByCourseId($user, $id);
+
+        $course = $repository->find($id);
+        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
-    public function indexslug($slug ,CategorieRepository $categorieRepository): Response
+    public function indexslug($slug ,CategorieRepository $categorieRepository, CoursRepository $repository): Response
     {
-        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'coach' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()));
+        $categorieId = $categorieRepository->findOneBy(['Type' => $slug]);
+        dump($categorieId);
+        $cours = $repository->findCoursByCategory($categorieId);
+        dump($cours);
+        return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'courses' => $cours, 'categories' => $categorieRepository->findAll()));
     }
 }

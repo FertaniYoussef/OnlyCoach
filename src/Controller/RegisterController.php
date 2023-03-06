@@ -16,4 +16,5 @@ class RegisterController extends AbstractController
             'errors' => $errors,
         ]);
     }
+
 }

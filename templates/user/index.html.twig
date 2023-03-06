@@ -181,23 +181,23 @@
                 <div class="mt-10">
                     <h1 class="text-xl font-bold mb-10 text-gray-800">My popular courses</h1>
                     <div id="courses" class="grid grid-cols-3  lg:grid-cols-4 gap-x-5 gap-y-5">
-                        {% for course in popular|sort((a, b) => a.rating <=> b.rating)  %}
-                            <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%]  bg-cover sm:group-hover:brightness-[90%]"></div>
+                        {% for course in popular %}
+                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                     <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                    {% if course.totalratings > 10 %}
+                                    {# if course.totalratings > 10 #}
                                         <div class="flex items-center">
                                             <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {% for i in range(1, course.rating|round(0, 'floor')) %}
+                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
                                                 <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {% endfor %}
+                                            {# endfor #}
                                             <span class="text-xs text-gray-400 ml-1">(2,432)</span>
                                         </div>
-                                    {% else %}
+                                    {# else #}
                                         <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
                                             <span class="text-xs text-white font-medium uppercase ">new</span>
                                         </div>
-                                    {% endif %}
+                                    {# endif #}
                                 </div></a>
                         {% endfor %}
                     </div>
@@ -206,43 +206,43 @@
                 <div class="mt-10">
                     <h1 class="text-xl font-bold mb-10 text-gray-800">My courses</h1>
                     <div id="courses" class="grid grid-cols-3  lg:grid-cols-4 gap-x-5 gap-y-5">
-                        {% for course in popular|sort((a, b) => a.rating <=> b.rating)  %}
-                            <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                        {% for course in popular %}
+                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                     <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                     <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                    {% if course.totalratings > 10 %}
+                                    {# if course.totalratings > 10 #}
                                         <div class="flex items-center">
                                             <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {% for i in range(1, course.rating|round(0, 'floor')) %}
+                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
                                                 <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {% endfor %}
+                                            {# endfor #}
                                             <span class="text-xs text-gray-400 ml-1">(2,432)</span>
                                         </div>
-                                    {% else %}
+                                    {# else #}
                                         <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
                                             <span class="text-xs text-white font-medium uppercase ">new</span>
                                         </div>
-                                    {% endif %}
+                                    {# endif #}
                                 </div></a>
                         {% endfor %}
 
-                        {% for course in popular|sort((a, b) => a.rating <= b.rating)  %}
-                            <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                        {% for course in popular %}
+                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                     <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                     <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                    {% if course.totalratings > 10 %}
+                                    {# if course.totalratings > 10 #}
                                         <div class="flex items-center">
                                             <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {% for i in range(1, course.rating|round(0, 'floor')) %}
+                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
                                                 <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {% endfor %}
+                                            {# endfor #}
                                             <span class="text-xs text-gray-400 ml-1">(2,432)</span>
                                         </div>
-                                    {% else %}
+                                    {# else #}
                                         <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
                                             <span class="text-xs text-white font-medium uppercase ">new</span>
                                         </div>
-                                    {% endif %}
+                                    {# endif #}
                                 </div></a>
                         {% endfor %}
                     </div>

@@ -271,7 +271,6 @@
                                     <div class="sm:flex sm:items-center">
                                         <div class="sm:flex-auto">
                                             <h1 class="text-xl font-semibold text-gray-900">Feedbacks</h1>
-                                            <p class="mt-2 text-sm text-gray-700">A list of all the feedbacks found.</p>
                                         </div>
                                     </div>
                                     <div class="mt-8 flex flex-col">
@@ -281,40 +280,58 @@
                                                     <table class="min-w-full divide-y divide-gray-300">
                                                         <thead class="bg-gray-50">
                                                         <tr>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id Reclamation</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id User</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Sujet</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Feedback</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Consulter</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Supprimer</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
                                                         <tr>
+                                                            {% for s in  Feedback %}
+
                                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                 <div class="flex items-center">
                                                                     <div>
-                                                                        <div class="font-medium text-gray-900">{# id coach ici #}Id user</div>
+                                                                        <div class="font-medium text-gray-900">{# id rec ici #}{{ s.id }}</div>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Nom ici #}Sujet</div>
+                                                                <div class="text-gray-900">{{ s.user.id }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Email ici #}Email</div>
+                                                                <div class="text-gray-900">{{ s.sujet }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date  ici #}Date feedback</div>
+                                                                <div class="text-gray-900">{{ s.description }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Status fin ici #}Status</div>
+                                                                <div class="text-gray-900">{{ s.DateFeedback|date('d-m-Y') }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminConsulterFeedback',{id: 1}) }}">Consulter</a></div>
+                                                                <div class="text-gray-900">{{ s.status }}</div>
+                                                            </td>
+
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                {% if s.status == 0 %}
+                                                                <div class="text-sky-600"><a href="{{ path('consulter_stat',{id: s.id}) }}">Consulter</a></div>
+                                                                {% else %}
+                                                                    <a>Cette entité a déjà été consultée.</a>
+                                                                {% endif %}
+                                                            </td>
+
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-red-600"><a href="{{  path('app_dashboard_admin_removeFeedbacks',{id:s.id})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
+                                                        {% endfor %}
+
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>

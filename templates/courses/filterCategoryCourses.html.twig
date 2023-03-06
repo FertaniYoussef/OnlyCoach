@@ -24,7 +24,7 @@
                         <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
                         <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
                         <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                        <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                        <a href="{{ path('app_contact') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
                     </div>
 
 
@@ -238,26 +238,39 @@
                             <div id="PopularContent" class="pt-8">
                                 <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-10 md:gap-x-5 pt-7">
                                     <!-- Make it dynamic later -->
-                                    {% for course in popular %}
-                                        <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                                <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black  shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
-                                                <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                                <h1 class="text-xs text-gray-500 pt-1">{{ course.coach }}</h1>
-                                                {% if course.totalratings > 10 %}
-                                                    <div class="flex items-center">
-                                                        <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                                        {% for i in range(1, course.rating|round(0, 'floor')) %}
-                                                            <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                                        {% endfor %}
-                                                        <span class="text-xs text-gray-400 ml-1">(2,432)</span>
-                                                    </div>
-                                                {% else %}
-                                                    <div class="w-12 h-5 bg-black flex items-center justify-center mt-1">
-                                                        <span class="text-xs text-white font-medium uppercase ">new</span>
-                                                    </div>
-                                                {% endif %}
-                                            </div></a>
-                                    {% endfor %}
+                                  {% if courses is empty %}
+                                            <div class="text-center col-span-3 border-2 border-dashed py-5 rounded-md border-gray-200">
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-gray-400">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+</svg>
+
+  <h3 class="mt-2 text-sm font-medium text-gray-900">No popular courses.</h3>
+  <p class="mt-1 text-sm text-gray-500">As courses get more popular, you will find them here.</p>
+</div>
+                                        {% else %}
+                                        <!-- Make it dynamic later -->
+                                        {% for course in courses %}
+                                        <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
+                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
+                                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
+                                                    <h1 class="text-xs text-gray-500 pt-1">{{course.IdCoach.nom}} {{course.IdCoach.prenom}}</h1>
+                                                   {# {% if course.totalratings > 10 %} #}
+                                                        <div class="flex items-center">
+                                                            <span class="text-amber-600 text-sm font-medium">rating goes here</span>
+                                                           {# {% for i in range(1, course.rating|round(0, 'floor')) %} #}
+                                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
+                                                          {#  {% endfor %} #}
+                                                            <span class="text-xs text-gray-400 ml-1">count ratings here</span>
+                                                        </div>
+                                                   {# {% else %} #}
+                                                        <div class="w-12 h-5 bg-black flex items-center justify-center mt-1">
+                                                            <span class="text-xs text-white font-medium uppercase ">new</span>
+                                                        </div>
+                                                  {#  {% endif %} #}
+                                                </div></a>
+                                        {% endfor %} 
+                                        {% endif %}
+                                    <!-- End of dynamic content -->
 
                                 </div>
                             </div>
