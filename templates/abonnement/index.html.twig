@@ -1,0 +1,189 @@
+<!doctype html>
+<html class="h-full bg-white">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+  {% endblock %}
+</head>
+<body class="h-full">
+
+<!--
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+<!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-white">
+  <body class="h-full">
+  ```
+-->
+<div class="relative mx-auto w-full bg-white">
+  <div class="grid min-h-screen grid-cols-10">
+    <div class="col-span-full py-6 px-4 sm:py-12 lg:col-span-6 lg:py-24">
+      <section aria-labelledby="payment-heading" class="flex-auto overflow-y-auto px-4 pt-12 pb-16 sm:px-6 sm:pt-16 lg:px-8 lg:pt-0 lg:pb-24">
+    <h2 id="payment-heading" class="sr-only">Payment and shipping details</h2>
+
+    <div class="mx-auto max-w-lg lg:pt-16">
+      <div class="mt-4 py-2 text-xs sm:mt-0 sm:ml-auto sm:text-base">
+    <div class="relative">
+      <ul class="relative flex w-full items-center justify-between space-x-2 sm:space-x-4">
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+          <a class="flex h-6 w-6 items-center justify-center rounded-full bg-orange-600  text-xs font-semibold text-white" href="#"><svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path></svg></a>
+          <span class="font-semibold text-gray-900">Coach</span>
+        </li>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+          <a class="flex h-6 w-6 items-center justify-center rounded-full bg-teal-600 text-xs font-semibold text-white ring ring-teal-600 ring-offset-2" href="#">2</a>
+          <span class="font-semibold text-gray-900">Subscription</span>
+        </li>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"></path>
+        </svg>
+        <li class="flex items-center space-x-3 text-left sm:space-x-4">
+          <a class="flex h-6 w-6 items-center justify-center rounded-full bg-gray-400 text-xs font-semibold text-white" href="#">3</a>
+          <span class="font-semibold text-gray-500">Payment</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+    
+
+      <form class="mt-6" id='checkout-form' method='post' action="{{ path('subscribe_checkout' , {'coachId': coach.id}) }}">
+        <input type='hidden' name='stripeToken' id='stripe-token-id'>     
+        <div class="grid grid-cols-12 gap-y-6 gap-x-4">
+          
+
+          
+
+          <div class="col-span-full">
+            <label for="card-number" class="block text-sm font-medium text-gray-700">Card number</label>
+            <div class="mt-1">
+               <div id="card-element" class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" ></div>
+            </div>
+          </div>
+          
+
+       
+
+      
+
+          
+
+          
+
+
+          
+        </div>
+
+        
+
+        <button type="submit" onclick="createToken()" id='pay-btn' class="mt-6 w-full rounded-md border border-transparent bg-orange-600  py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 focus:ring-offset-2">Pay ${{coach.prix * 1.1}}</button>
+
+        <p class="mt-6 flex justify-center text-sm font-medium text-gray-500">
+          <svg class="mr-1.5 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path fill-rule="evenodd" d="M10 1a4.5 4.5 0 00-4.5 4.5V9H5a2 2 0 00-2 2v6a2 2 0 002 2h10a2 2 0 002-2v-6a2 2 0 00-2-2h-.5V5.5A4.5 4.5 0 0010 1zm3 8V5.5a3 3 0 10-6 0V9h6z" clip-rule="evenodd" />
+          </svg>
+          Payment details stored in plain text
+        </p>
+      </form>
+    </div>
+  </section>
+    </div>
+    <div class="relative col-span-full flex flex-col py-6 pl-8 pr-4 sm:py-12 lg:col-span-4 lg:py-24">
+      <h2 class="sr-only">Order summary</h2>
+      <div>
+        <img src="{{ asset('images/LoginImage.jpg') }}" alt="" class="absolute inset-0 h-full w-full object-cover" />
+         <div class="absolute inset-0 h-full w-full bg-gradient-to-t from-teal-800 to-teal-400 opacity-80"></div> 
+      </div>
+      <div class="relative">
+        <ul class="space-y-5">
+          <li class="flex justify-between">
+          {% block coach %}
+            <div class="inline-flex">
+            
+              <img src="https://images.unsplash.com/photo-1620331311520-246422fd82f9?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTN8fGhhaXIlMjBkcnllcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" alt="" class="max-h-16 max-w-16 rounded-lg ring-2 ring-offset-2 ring-teal-600" />
+              <div class="ml-3">
+                <p class="text-base font-semibold text-white uppercase">{{coach.nom}} {{coach.prenom}}</p>
+                <p class="text-sm font-medium text-white text-opacity-80">{{coach.description}}</p>
+              </div>
+              
+            </div>
+            <p class="text-sm font-semibold text-white">${{coach.prix}}</p>
+            {% endblock %}
+          </li>
+         
+        </ul>
+        <div class="my-5 h-0.5 w-full bg-white bg-opacity-30"></div>
+        <div class="space-y-2">
+          <p class="flex justify-between text-lg font-bold text-white"><span>Total price:</span><span>${{coach.prix * 1.1}}</span></p>
+          <p class="flex justify-between text-sm font-medium text-white"><span>Tax: 10%</span><span>${{coach.prix * 0.1}}</span></p>
+        </div>
+      </div>
+      <div class="relative mt-10 text-white">
+        <h3 class="mb-5 text-lg font-bold">Support</h3>
+        <p class="text-sm font-semibold">+01 653 235 211 <span class="font-light">(International)</span></p>
+        <p class="mt-1 text-sm font-semibold">support@nanohair.com <span class="font-light">(Email)</span></p>
+        <p class="mt-2 text-xs font-medium">Call us now for payment related issues</p>
+      </div>
+      <div class="relative mt-10 flex">
+        <p class="flex flex-col"><span class="text-sm font-bold text-white">Money Back Guarantee</span><span class="text-xs font-medium text-white">within 30 days of purchase</span></p>
+      </div>
+    </div>
+  </div>
+  <!-- Debut Footer -->
+<footer class="bg-black relative bottom-0 left-0 lg:block hidden">
+    <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
+
+        <div class="mt-8 md:order-1 md:mt-0">
+            <p class="text-center text-xs leading-5 text-white">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+</div>
+
+ <script src="https://js.stripe.com/v3/" ></script>
+    <script>
+        var stripe = Stripe("{{stripe_key}}");
+        var elements = stripe.elements();
+        var cardElement = elements.create('card');
+        cardElement.mount('#card-element');
+     
+        function createToken() {
+            document.getElementById("pay-btn").disabled = true;
+            stripe.createToken(cardElement).then(function(result) {
+     
+                     
+                if(typeof result.error != 'undefined') {
+                    document.getElementById("pay-btn").disabled = false;
+                    alert(result.error.message);
+                }
+     
+                // creating token success
+                if(typeof result.token != 'undefined') {
+                    document.getElementById("stripe-token-id").value = result.token.id;
+                    document.getElementById('checkout-form').submit();
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

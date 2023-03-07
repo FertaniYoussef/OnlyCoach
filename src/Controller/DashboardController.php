@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller;
-
+use App\Entity\User;
 use App\Entity\Cours;
 use App\Entity\Reponse;
 use App\Entity\Ressources;
@@ -21,6 +21,8 @@ use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Adherents;
+use App\Repository\AdherentsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -28,9 +30,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\User;
+
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class DashboardController extends AbstractController
 {
@@ -133,14 +140,26 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/coach/dashboard/courses/{id}', name: 'app_dashboard_course')]
-    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id): Response
+    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id,AdherentsRepository $adhrepo,UserRepository $userrepo,ManagerRegistry $doctrine): Response
     {
         $course = $repository->find($id);
+        $adherents=$adhrepo->findByCourse($course);
+
+
+        $users=[];
+        $entityManager = $doctrine->getManager();
+        foreach($adherents as $adherent) {
+            $userProxy= $adherent->getUser();
+
+            $entityManager->initializeObject($userProxy);
+
+            $users[]=$userProxy;
+        }
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
@@ -269,6 +288,29 @@ class DashboardController extends AbstractController
             dump($inputs);
             $em = $doctrine->getManager();
 
+            dump($cours);
+
+                        // validate $cours
+                $errors = $validator->validate($cours);
+
+                try {
+                $errorString = (string) $errors[0];
+                    }
+                catch (\Exception $e) {
+                    $errorString = "";
+                }
+                // replace "Object(App\Entity\Cours)." with ""
+                $errorString = str_replace('Object(App\Entity\Cours).', '', $errorString);
+
+                if (count($errors) > 0) {
+                        // check if errorString contains "cours_photo" if so, replace it with "background"
+                        if (strpos($errorString, 'cours_photo') !== false) {
+                                $errorString = str_replace('cours_photo', 'background', $errorString);
+                                $errorString = str_replace('This value should not be blank.', 'This value should not be blank. Please upload a background image.', $errorString);
+                        }
+                    return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
+                }
+
             $em->persist($cours);
             // section & resource management
             dump('id du cours ajouté est : '.$cours->getId());
@@ -297,13 +339,6 @@ class DashboardController extends AbstractController
                 $em->persist($resource);
             }
 
-            // validate $cours
-            $errors = $validator->validate($cours);
-
-            dump($errors);
-            if (count($errors) > 0) {
-                return new Response((string) $errors, 500);
-            }
 
 
 
@@ -311,7 +346,7 @@ class DashboardController extends AbstractController
             $em->clear();
 
 
-            return $this->redirectToRoute('app_dashboard');
+            return $this->redirectToRoute('app_dashboard', ['success' => "Course added successfully!"]);
         }
         return $this->redirectToRoute('app_login');
     }
@@ -325,7 +360,7 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
     public function adminIndex(Request $request): Response
     {
-        return $this->render('dashboard/admin/index.html.twig');
+        return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));
     }
 
     // Partie users
@@ -334,10 +369,18 @@ class DashboardController extends AbstractController
     {
         $users = $repository->findAll();
         return $this->render('dashboard/admin/users/users.html.twig',[
-            'userstab' => $users
+            'userstab' => $users,'userinfo'=>$this->getUser()
         ]);
     }
     
+    #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
+    public function userss(Request $request,UserRepository $repository,SerializerInterface $serializer): Response
+    {
+        $users = $repository->findAll();
+        $jsonContent = $serializer->serialize($users, 'json');
+        dd($jsonContent);
+    }
+
     #[Route('/admin/dashboard/users/remove/{id}', name: 'app_dashboard_adminUsersremove')]
     public function usersremove(ManagerRegistry $doctrine,$id,UserRepository $repository)
     {
