@@ -166,10 +166,11 @@ $formattedPrice = number_format($total, 2, '.', '');
     }
     // Mobile API for web service
 
-    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach')]
+    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach',methods:['GET'])]
     public function subscriptionConfirmationJson(Request $request,SerializerInterface $serializer, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
     {
         {
+        
             $user = $this->getUser();
             $coach =$coachrepo->find($coachId);
               if (!$coach) {
@@ -187,12 +188,17 @@ $formattedPrice = number_format($total, 2, '.', '');
              $response = [
                 'stripe_key' => $_ENV["STRIPE_KEY"],
                 'CLIENT_SECRET'=>$_ENV['STRIPE_SECRET'],
-                'coach'=> $coach
+                'id'=>$coach->getId(),
+                'nom'=>$coach->getNom(),
+                'prenom'=>$coach->getPrenom(),
+                'description'=>$coach->getDescription(),
+                'prix'=>$coach->getPrix(),
+                'picture'=>$coach->getPicture(),
              ];
-             $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+            
                         
-             
-        return $this->json($jsonContent,200,[]);
+         
+        return $this->json($response,200,[]);
     }
 }
 #[Route('api/abonnement/{coachId}/checkout',name:'subscribe_api_checkout',methods:['POST'])]
