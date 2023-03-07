@@ -31,9 +31,15 @@ use App\Repository\OffreRepository;
 use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class DashboardController extends AbstractController
-{
+{ private $paginator;
+
+    public function __construct(PaginatorInterface $paginator)
+    {
+        $this->paginator = $paginator;
+    }
     #[Route('/coach/dashboard', name: 'app_dashboard')]
     public function index(Request $request): Response
     {
@@ -395,12 +401,21 @@ class DashboardController extends AbstractController
     }
 
 
-    // Partie Offers
+    // Partie Offers afiichage 
+    
+    
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
     public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine): Response
-    {
-        $offres = $repository->findAll();
+    { 
+        $page = $request->query->getInt('page',1);
+     
+        $limit = 2;
+        $paginator = $this->paginator;
+ 
+       
+        $offres = $paginator->paginate($repository->findAll(), $page, $limit);
+        
         $offre = new offre();
 
         $form = $this->createForm(OfferType::class, $offre);
@@ -411,14 +426,13 @@ class DashboardController extends AbstractController
             $offre = $form->getData();
             // get user data and put them in coach (only in coach table)
             $offre->setNom($offre->getNom());
-            
 
             $em = $doctrine->getManager();
             $em->persist($offre);
             $em->flush();
+            $this->addFlash('success','Offre Added Successfully !');
 
-            return $this->redirectToRoute('app_dashboard_adminOffers');
-        }
+            return $this->redirectToRoute('app_dashboard_adminOffers', [], Response::HTTP_SEE_OTHER);        }
 
 
         return $this->render('dashboard/admin/offers/offers.html.twig', [

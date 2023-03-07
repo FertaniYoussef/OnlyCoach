@@ -20,6 +20,7 @@ class OfferType extends AbstractType
             ->add('Nom')
             ->add('Prix')
             ->add('Discount')
+
         ->add('dateDeb')
             ->add('dateFin')
 

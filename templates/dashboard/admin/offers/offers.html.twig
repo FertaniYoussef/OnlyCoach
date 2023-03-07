@@ -291,6 +291,7 @@
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Discount</th>
+
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date debut</th>
                                                              <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Fin</th>
 
@@ -301,6 +302,11 @@
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
                                                        <!-- boucle for ici-->
+  {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+    {% endfor %}
 
                                                        {% for offre in offres %}
                                                         <tr>
@@ -317,7 +323,8 @@
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-gray-900">{# Discount ici #}{{ offre.Discount }}$</div>
-                                                            </td>
+                                                          
+                                                              
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                 <div class="text-gray-900">{# Discount ici #}{{ offre.DateDeb|date('d-m-Y') }}</div>
                                                             </td>
@@ -334,16 +341,20 @@
                                                         </tr>
                                                             {% endfor %}
 
+
                                                         <!-- end boucle for ici-->
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
+ <br>
+                                                    <br>
+                                                      {{ knp_pagination_render(offres,"pagination/pagination.html.twig") }}
                                 <!-- WIP -->
 
                             </div>

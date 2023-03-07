@@ -51,11 +51,21 @@ class Offre
      */
     private $discount;
 
+    
+
+
+
+
+
+
     /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="date_deb", type="date", nullable=true)
      */
+
+
+     
     private $dateDeb;
 
     /**
@@ -72,6 +82,8 @@ class Offre
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_coach_id", referencedColumnName="id")
      * })
+     * 
+     * 
      */
     private $idCoach;
 
@@ -115,6 +127,10 @@ class Offre
 
         return $this;
     }
+
+  
+
+
 
     public function getDateDeb(): ?\DateTimeInterface
     {

@@ -39,6 +39,9 @@ class OffreRepository extends ServiceEntityRepository
         }
     }
 
+
+    
+
 //    /**
 //     * @return Offre[] Returns an array of Offre objects
 //     */
