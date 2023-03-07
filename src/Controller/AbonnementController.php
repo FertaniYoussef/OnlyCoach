@@ -159,7 +159,7 @@ $formattedPrice = number_format($total, 2, '.', '');
                 'failure',
                 'Payment Succesful'
             );
-            return $this->redirectToRoute('faillure', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('failure', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
         }
           
 
@@ -170,6 +170,7 @@ $formattedPrice = number_format($total, 2, '.', '');
     public function subscriptionConfirmationJson(Request $request,SerializerInterface $serializer, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
     {
         {
+            
             $user = $this->getUser();
             $coach =$coachrepo->find($coachId);
               if (!$coach) {
@@ -177,62 +178,44 @@ $formattedPrice = number_format($total, 2, '.', '');
               }
           
     
-              $isSubscribed= $aborepo->findOneBy(['user' => $user]);
-           
-              if ($isSubscribed) {
-                 return $this->json("User already subscribed",409,[]);
-             } 
+             
              
              
              $response = [
-                'stripe_key' => $_ENV["STRIPE_KEY"],
-                'CLIENT_SECRET'=>$_ENV['STRIPE_SECRET'],
-                'coach'=> $coach
-             ];
-             $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+                'id'=> $coach->getId(),
+                'nom'=> $coach->getNom(),
+                'prenom'=> $coach->getPrenom(),
+                'description'=> $coach->getDescription(),
+                'prix'=> $coach->getPrix(),
+                'picture'=> $coach->getPicture()
+              ];
+                
+
                         
              
-        return $this->json($jsonContent,200,[]);
+        return $this->json($response);
     }
 }
-#[Route('api/abonnement/{coachId}/checkout',name:'subscribe_api_checkout',methods:['POST'])]
+#[Route('api/abonnement/{coachId}/checkout',name:'subscribe_api_checkout')]
 public function checkoutapi(Request $request, $coachId,CoachRepository $coachrepo) : Response
-{
-    $coach =$coachrepo->find($coachId);
-    if (!$coach) {
-        return $this->json('Coach not found',404,[]);
-    }
-$total= $coach->getPrix() * 1.1 ;
-$formattedPrice = number_format($total, 2, '.', '');
-    Stripe\Stripe::setApiKey($_ENV["STRIPE_SECRET"]);
-    try {
-        Stripe\Charge::create ([
-            "amount" => $formattedPrice * 100,
-            "currency" => "usd",
-            "source" => $request->request->get('stripeToken'),
-            "description" => " Payment Test"
-        ]);
+{   
+  
 
         // Paiement réussi, on redirige l'utilisateur vers la page de succès
 
     
      
         return $this->redirectToRoute('success_api', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
-    } catch (Stripe\Exception\CardException $e) {
-        // Paiement échoué, on redirige l'utilisateur vers la page d'échec
-        $this->addFlash(
-            'failure',
-            'Payment Succesful'
-        );
-        return $this->redirectToRoute('faillure_api', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+
     }
       
 
-}
+
 #[Route('api/abonnement/{coachId}/checkout/success', name:'success_api')]
 public function subscribeToCoach_api(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
 {
-    $user = $this->getUser();
+
+    $user = $userrepo->find(10);
   $coach =$coachrepo->find($coachId);
     if (!$coach) {
         return $this->json('Coach not found',404,[]);
@@ -241,12 +224,12 @@ public function subscribeToCoach_api(Request $request, $coachId,UserRepository $
     $subscription = new Abonnement();
     $subscription->setDateDeb(new \DateTime());
     $endDate = (new \DateTime())->modify('+30 days');
-
+    
     $subscription->setDateFin($endDate);
     $subscription->setUser($user);
     $subscription->setCoach($coach);
     $subscription->setPrix ($coach -> getPrix() * 1.1);
-    $user-> addIdAbonnement($subscription);
+    
     
   
      
@@ -254,13 +237,9 @@ public function subscribeToCoach_api(Request $request, $coachId,UserRepository $
       $entityManager->persist($subscription);
       $entityManager->flush();
       
-      $response = [
-        'stripe_key'=> $_ENV["STRIPE_KEY"],
-        'coach'=> $coach,
-      ];
-      $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+
      
-        return $this->json($jsonContent,200,[]);
+        return $this->json("okay",200,[]);
         
 }
 #[Route('api/abonnement/{coachId}/checkout/failed', name: 'failure_api')]
@@ -273,11 +252,16 @@ public function failedPayment_api(Request $request, $coachId, CoachRepository $c
       }
       $response = [
         'stripe_key'=> $_ENV["STRIPE_KEY"],
-        'coach'=> $coach,
+        'id'=> $coach->getId(),
+        'nom'=> $coach->getNom(),
+        'prenom'=> $coach->getPrenom(),
+        'description'=> $coach->getDescription(),
+        'prix'=> $coach->getPrix(),
+        'picture'=> $coach->getPicture()
       ];
-      $jsonContent = $serializer->serialize($response,'json',  ['groups' => ['coach_list']]);
+      
      
-        return $this->json($jsonContent,500,[]);
+        return $this->json($response,200,[]);
     
 }
 #[Route('api/cancel/{subscriptionid}',name:'unsubscribe_from_coach_api')]
