@@ -39,6 +39,20 @@ class AbonnementRepository extends ServiceEntityRepository
         }
     }
 
+// find abonnement where adherent id and coach id
+    public function findAbonnementByAdherentAndCoach($adherentId, $coachId)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.user = :adherentId')
+            ->andWhere('a.coach = :coachId')
+            ->setParameter('adherentId', $adherentId)
+            ->setParameter('coachId', $coachId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+
+
 //    /**
 //     * @return Abonnement[] Returns an array of Abonnement objects
 //     */

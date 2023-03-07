@@ -8,6 +8,68 @@
     {% endblock %}
 </head>
 <body class="h-full">
+<!-- WIP -->
+{% set errors = app.request.get('errors') %}
+{% if errors is defined and errors %}
+<div class="fixed top-0 left-0 w-full isolate flex items-center gap-x-6 overflow-hidden bg-red-600 py-3 px-6 sm:px-3.5 sm:before:flex-1 z-10 shadow-lg" id="errorcontainer">
+  <svg viewBox="0 0 577 310" aria-hidden="true" class="absolute top-1/2 left-[max(45rem,calc(50%+8rem))] -z-10 w-[36.0625rem] -translate-y-1/2 transform-gpu blur-2xl">
+    <use href="#1d77c128-3ec1-4660-a7f6-26c7006705ad" />
+  </svg>
+  <div class="flex flex-wrap items-center gap-y-2 gap-x-4">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+</svg>
+
+    <h1 class="text-sm text-gray-50">{{errors}}</h1>
+  </div>
+  <div class="flex flex-1 justify-end">
+    <button type="button" class="-m-3 p-3 focus-visible:outline-offset-[-4px]" id="errorbutton">
+      <span class="sr-only">Dismiss</span>
+      <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+
+
+
+<!-- WIP -->
+{% endif %}
+
+
+<!-- WIP -->
+{% set success = app.request.get('success') %}
+{% if success is defined and success %}
+<div class="fixed top-0 left-0 w-full isolate flex items-center gap-x-6 overflow-hidden bg-green-600 py-3 px-6 sm:px-3.5 sm:before:flex-1 z-10 shadow-lg" id="errorcontainer">
+  <svg viewBox="0 0 577 310" aria-hidden="true" class="absolute top-1/2 left-[max(45rem,calc(50%+8rem))] -z-10 w-[36.0625rem] -translate-y-1/2 transform-gpu blur-2xl">
+    <use href="#1d77c128-3ec1-4660-a7f6-26c7006705ad" />
+  </svg>
+  <div class="flex flex-wrap items-center gap-y-2 gap-x-4">
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-white">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+</svg>
+
+    <h1 class="text-sm text-gray-50">{{success}}</h1>
+  </div>
+  <div class="flex flex-1 justify-end">
+    <button type="button" class="-m-3 p-3 focus-visible:outline-offset-[-4px]" id="errorbutton">
+      <span class="sr-only">Dismiss</span>
+      <svg class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+      </svg>
+    </button>
+  </div>
+</div>
+
+
+
+
+<!-- WIP -->
+{% endif %}
+
+
 <div class="min-h-full">
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="relative z-40 hidden lg:hidden" role="dialog" aria-modal="true" id="mobileMenu">
@@ -715,7 +777,7 @@
         console.log(groupedSections)
         console.log(data);
 
-        if (data['course-name'] === '') {
+       /* if (data['course-name'] === '') {
             coursename = document.getElementById('course-name');
             coursename.classList.add('border-red-500');
             coursename.classList.add('border-2');
@@ -725,9 +787,9 @@
             coursename = document.getElementById('course-name');
             coursename.classList.remove('border-red-500');
             coursename.classList.remove('border-2');
-        }
+        } */
 
-        if (data['course-description'] === '') {
+      /*  if (data['course-description'] === '') {
             courseDescription = document.getElementById('course-description');
             courseDescription.classList.add('border-red-500');
             courseDescription.classList.add('border-2');
@@ -737,12 +799,12 @@
             courseDescription = document.getElementById('course-description');
             courseDescription.classList.remove('border-red-500');
             courseDescription.classList.remove('border-2');
-        }
+        } */
 
-        if (data['course-background'].name === '') {
+      /*  if (data['course-background'].name === '') {
             alert('Course background is required');
             return;
-        }
+        } */
 
         // validate grouped sections
         for (let i = 0; i < groupedSections.length; i++) {
@@ -791,6 +853,13 @@
 
 
 
+    })
+
+    const errorbutton = document.getElementById('errorbutton');
+    // add event listener to error button, on click, remove element with id errorcontainer
+    errorbutton.addEventListener('click', () => {
+        const errorcontainer = document.getElementById('errorcontainer');
+        errorcontainer.parentNode.removeChild(errorcontainer);
     })
 
 

@@ -18,26 +18,12 @@ class CoachController extends AbstractController
 {
     #[Route('/coachs', name: 'app_coach')]
     
-    public function index(CoachRepository $coachRepository): Response
-    {
-        return $this->render('coach/index.html.twig', [
-            'coaches' => $coachRepository->findAll(),
-        ]);
-    }
-    #[Route('/coachs/{id}', name: 'app_coach_tri')]
-        public function indexcategorie($id,CoachRepository $coachRepository, CategorieRepository $categorieRepository): Response
+        public function index(CoachRepository $coachRepository): Response
         {
-    // Récupérer la catégorie courante en fonction de l'ID fourni
-        $currentCategory = $categorieRepository->find($id);
-
-    // Récupérer les coaches triés par catégorie
-        $coaches = $coachRepository->findAllByCategory($id);
-        return $this->render('coach/filterBycategory.html.twig', [
-        'coaches' => $coaches,
-        'currentCategory' => $currentCategory,
-        ]);
+            return $this->render('coach/index.html.twig', [
+                'coaches' => $coachRepository->findAll(),'userinfo'=>$this->getUser()
+            ]);
         }
-        
     
     #[Route('coach/search', name: 'app_coach_search', methods: ['GET', 'POST'])]
     public function search( Request $request, CoachRepository $coachRepository)

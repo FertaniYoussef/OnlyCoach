@@ -6,51 +6,48 @@ use App\Repository\CoachRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CoachRepository::class)]
 class Coach
 {
+    /**
+     * @Groups({"coach_list"})
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
-
-
+/**
+     * @Groups({"coach_list"})
+     */
     #[ORM\Column(length: 255, nullable: true)]
     
     private ?string $Nom = null;
 
-    
-
-    #[ORM\Column(length: 255, nullable: false)]
-   
-    
+    /**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $Prenom = null;
-
-    /*
-    @Assert\NotBlank
-    */
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Picture = null;
 
-    /*
-    @Assert\NotBlank
-    */
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Description = null;
-    
-    /*
-    @Assert\NotBlank
-    */
 
+    /**
+     * @Groups({"coach_list"})
+     */
     #[ORM\Column(nullable: true)]
     private ?float $Prix = null;
 
+    /**
+     * @Groups({"coach_list"})
+     */
     #[ORM\Column(nullable: true)]
     private ?float $Rating = null;
-
 
     #[ORM\OneToOne(inversedBy: 'coach', cascade: ['persist', 'remove'])]
     #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
@@ -58,17 +55,29 @@ class Coach
 
     private ?User $id_user = null;
 
+    /**
+     * @Groups({"coach_list"})
+     */
     #[ORM\OneToOne(mappedBy: 'id_coach', cascade: ['persist', 'remove'])]
     private ?Offre $offre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'id_coach', cascade: ['persist', 'remove']) ]
-    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
-    
-
+    /**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\ManyToOne(inversedBy: 'id_coach')]
     private ?Categorie $categorie = null;
 
+    /**
+     * @Groups({"coach_list"})
+     */
     #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class)]
     private Collection $id_abonnement;
+
+    /**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\OneToMany(mappedBy: 'IdCoach', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
+    private Collection $cours;
 
     public function __construct()
     {
