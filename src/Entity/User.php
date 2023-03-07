@@ -43,6 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $Prenom = null;
 
     #[ORM\OneToOne(mappedBy: 'id_user', cascade: ['persist', 'remove'])]
+    #[Groups("user:read")]
     private ?Coach $coach = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Abonnement::class)]

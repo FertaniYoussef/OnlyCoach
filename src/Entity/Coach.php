@@ -55,6 +55,7 @@ class Coach
     #[ORM\OneToOne(inversedBy: 'coach', cascade: ['persist', 'remove'])]
     #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
 
+
     private ?User $id_user = null;
 
     #[ORM\OneToOne(mappedBy: 'id_coach', cascade: ['persist', 'remove'])]
@@ -232,9 +233,9 @@ class Coach
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Cours>
-     */
+    /*
+      @return Collection<int, Cours>
+     
     public function getCours(): Collection
     {
         return $this->cours;
@@ -261,4 +262,5 @@ class Coach
 
         return $this;
     }
+    */
 }

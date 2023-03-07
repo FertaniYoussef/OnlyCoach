@@ -195,6 +195,7 @@
         <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div class="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
                 <h1 class="text-4xl font-bold tracking-tight text-gray-900">Welcome</h1>
+    
 
                 <div class="flex items-center">
 
@@ -208,6 +209,8 @@
                 </div>
             </div>
 
+
+
             <section aria-labelledby="products-heading" class="pt-6 pb-24">
                 <h2 id="products-heading" class="sr-only">Products</h2>
 
@@ -219,7 +222,7 @@
                         <ul role="list" class="space-y-4 pb-6 text-sm font-medium text-gray-800">
                             
                             {% for cat in categories %}
-                                <a href="{{ path('app_courses_category', {'slug' : cat.type}) }}" class="block"><li class="hover:bg-gray-300 rounded-md p-2 hover:cursor-pointer" id="{{ cat.id }}" >
+                                <a href="{{ path('app_coach_tri', {'id' : cat.id}) }}" class="block"><li class="hover:bg-gray-300 rounded-md p-2 hover:cursor-pointer" id="{{ cat.id }}" >
                                     {{ cat.type }}
                                 </li></a>
                             {% endfor %}

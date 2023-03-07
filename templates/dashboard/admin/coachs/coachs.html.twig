@@ -264,6 +264,7 @@
                             </div>
                         </div>
                         <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
+   
                             <button type="button" id="openForm"
                                     class="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
                                 New coach
@@ -290,7 +291,9 @@
                                             <h1 class="text-xl font-semibold text-gray-900">Coachs</h1>
                                             <p class="mt-2 text-sm text-gray-700">A list of all the coachs found, showing full name, email and role.</p>
                                         </div>
-                                    </div>
+    <a href="{{ path('app_coach_pdf') }}" class="bg-white hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-700 hover:border-transparent rounded text-sm">
+  télécharger en PDF
+</a>                               </div>
                                     <div class="mt-8 flex flex-col">
                                         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">

@@ -23,6 +23,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
+use Knp\Snappy\Pdf;
+use Symfony\Component\Serializer\SerializerInterface;
+
+
 
 class DashboardController extends AbstractController
 {
@@ -314,9 +319,28 @@ class DashboardController extends AbstractController
     // Partie admin
 
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
-    public function adminIndex(Request $request): Response
-    {
-        return $this->render('dashboard/admin/index.html.twig');
+    public function adminIndex(Request $request,ManagerRegistry $doctrine): Response
+    
+    { 
+
+        $entityManager = $doctrine->getManager();
+
+         // Récupérer le nombre de coachs inscrits
+         $coachsInscrits = $entityManager->getRepository(Coach::class)->count([]);
+
+         // Récupérer le nombre de tous les users inscrits
+         $inscrits = $entityManager->getRepository(User::class)->count([]);
+         $abonnesInscrits = $inscrits-$coachsInscrits;
+ 
+         // Retourner les résultats dans une vue Twig
+        
+        return $this->render('dashboard/admin/index.html.twig', [
+            'user' => $this->getUser(),
+            'coachsInscrits' => $coachsInscrits,
+            'inscrits'=> $inscrits,
+            'abonnesInscrits' => $abonnesInscrits,
+            
+        ]);
     }
 
     // Partie users
@@ -381,6 +405,7 @@ class DashboardController extends AbstractController
             'coachs' => $coachs
         ]);
     }
+    
 
     #[Route('/admin/dashboard/coachs/delete/{id}', name: 'app_dashboard_adminCoachsDelete')]
     public function deleteCoach(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo, int $id): Response
@@ -394,6 +419,65 @@ class DashboardController extends AbstractController
         return $this->redirectToRoute('app_dashboard_adminCoachs');
 
     }
+
+    #[Route('/admin/dashboard/coachs/api', name: 'app_dashboard_api_coachs')]
+public function apiCoach(Request $request, CoachRepository $repository): Response
+{
+    $coachs = $repository->findAll();
+    $coachsArray = [];
+    foreach ($coachs as $coach) {
+        $coachsArray[] = [
+            'id' => $coach->getId(),
+            'nom' => $coach->getNom(),
+            'prenom' => $coach->getPrenom(),
+            'image' => $coach->getPicture()
+        ];
+    }
+    return $this->json($coachsArray);
+
+}
+#[Route('/admin/dashboard/coachs/addapi', name: 'app_dashboard_api_add_coachs')]
+public function create(Request $request,ManagerRegistry $doctrine): JsonResponse
+{
+    $entityManager = $doctrine->getManager();
+    $data = json_decode($request->getContent(), true);
+
+    $coach = new Coach();
+    $coach->setIdUser($data['id_user']);
+    $coach->setCategorie($data['categorie']);
+
+    $entityManager->persist($coach);
+    $entityManager->flush();
+
+    return new JsonResponse(['message' => 'Coach created!', 'id' => $coach->getId()], Response::HTTP_CREATED);
+}
+
+#[Route('/admin/dashboard/coachs/pdf', name: 'app_coach_pdf')]
+public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
+{
+    // Récupérer la liste des coachs depuis la base de données
+    $coachRepository = $doctrine->getRepository(Coach::class);
+    $coaches = $coachRepository->findAll();
+
+    // Générer le contenu HTML de la liste des coachs
+    $html = $this->renderView('dashboard/admin/coachs/liste.html.twig', ['coaches' => $coaches]);
+
+    // Générer le PDF à partir du contenu HTML
+    $pdfContent = $pdf->getOutputFromHtml($html);
+
+    // Retourner le PDF en réponse HTTP
+    return new PdfResponse(
+        $pdfContent,
+        'coach-list.pdf'
+    );
+
+}
+
+
+
+
+
+
 
 
     // Partie Offers
