@@ -17,6 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Stripe;
+use Symfony\Component\Serializer\SerializerInterface ;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 class AbonnementController extends AbstractController
 {
@@ -87,10 +89,16 @@ class AbonnementController extends AbstractController
         }
         }
         #[Route('/abonnement/{coachId}/checkout/failed', name: 'failure')]
-        public function failedPayment(): Response
+        public function failedPayment(Request $request, $coachId, CoachRepository $coachrepo): Response
         {
-            return $this->render('main/index.html.twig', [
+            $user = $this->getUser();
+            $coach =$coachrepo->find($coachId);
+              if (!$coach) {
+                  throw $this->createNotFoundException('The coach does not exist');
+              }
+            return $this->render('abonnement/failed.html.twig', [
                 'stripe_key' => $_ENV["STRIPE_KEY"],
+                'coach'=>$coach
             ]);
         }
         #[Route('/abonnement/{coachId}/failed',name:'failed_exist_already')]
@@ -151,9 +159,126 @@ $formattedPrice = number_format($total, 2, '.', '');
                 'failure',
                 'Payment Succesful'
             );
-            return $this->redirectToRoute('faillure', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('failure', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
         }
           
 
     }
+    // Mobile API for web service
+
+    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach')]
+    public function subscriptionConfirmationJson(Request $request,SerializerInterface $serializer, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
+    {
+        {
+            
+            $user = $this->getUser();
+            $coach =$coachrepo->find($coachId);
+              if (!$coach) {
+                  throw $this->createNotFoundException('The coach does not exist');
+              }
+          
+    
+             
+             
+             
+             $response = [
+                'id'=> $coach->getId(),
+                'nom'=> $coach->getNom(),
+                'prenom'=> $coach->getPrenom(),
+                'description'=> $coach->getDescription(),
+                'prix'=> $coach->getPrix(),
+                'picture'=> $coach->getPicture()
+              ];
+                
+
+                        
+             
+        return $this->json($response);
+    }
+}
+#[Route('api/abonnement/{coachId}/checkout',name:'subscribe_api_checkout')]
+public function checkoutapi(Request $request, $coachId,CoachRepository $coachrepo) : Response
+{   
+  
+
+        // Paiement réussi, on redirige l'utilisateur vers la page de succès
+
+    
+     
+        return $this->redirectToRoute('success_api', ["coachId"=>$coachId], Response::HTTP_SEE_OTHER);
+
+    }
+      
+
+
+#[Route('api/abonnement/{coachId}/checkout/success', name:'success_api')]
+public function subscribeToCoach_api(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
+{
+
+    $user = $userrepo->find(10);
+  $coach =$coachrepo->find($coachId);
+    if (!$coach) {
+        return $this->json('Coach not found',404,[]);
+    }
+
+    $subscription = new Abonnement();
+    $subscription->setDateDeb(new \DateTime());
+    $endDate = (new \DateTime())->modify('+30 days');
+    
+    $subscription->setDateFin($endDate);
+    $subscription->setUser($user);
+    $subscription->setCoach($coach);
+    $subscription->setPrix ($coach -> getPrix() * 1.1);
+    
+    
+  
+     
+      $entityManager = $doctrine->getManager();
+      $entityManager->persist($subscription);
+      $entityManager->flush();
+      
+
+     
+        return $this->json("okay",200,[]);
+        
+}
+#[Route('api/abonnement/{coachId}/checkout/failed', name: 'failure_api')]
+public function failedPayment_api(Request $request, $coachId, CoachRepository $coachrepo): Response
+{
+    $user = $this->getUser();
+    $coach =$coachrepo->find($coachId);
+      if (!$coach) {
+          return $this->json("Coach not found",404,[]);
+      }
+      $response = [
+        'stripe_key'=> $_ENV["STRIPE_KEY"],
+        'id'=> $coach->getId(),
+        'nom'=> $coach->getNom(),
+        'prenom'=> $coach->getPrenom(),
+        'description'=> $coach->getDescription(),
+        'prix'=> $coach->getPrix(),
+        'picture'=> $coach->getPicture()
+      ];
+      
+     
+        return $this->json($response,200,[]);
+    
+}
+#[Route('api/cancel/{subscriptionid}',name:'unsubscribe_from_coach_api')]
+public function unsubscribeToCoach_api(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine,CategorieRepository $categorieRepository, CoursRepository $coursRepo,CoachRepository $coachRepository)
+{
+   
+    $user = $this->getUser();
+    $abonnement= $aborepo->find($subscriptionid);
+    if (!$abonnement) {
+        throw $this->createNotFoundException('The subscription does not exist');
+    }        
+    $user->removeIdAbonnement($abonnement);
+    $em = $doctrine->getManager();
+    $em->remove($abonnement);
+    $em->flush();
+
+    return $this->json("Subscription canceled",200,[]);    
+
+}
 }
