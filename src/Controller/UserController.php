@@ -12,6 +12,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -30,7 +31,7 @@ class UserController extends AbstractController
     }
     
     #[Route('/inscription', name: 'User_inscription')]
-    public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher)
+    public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator)
     {
         if ($request->getMethod() === 'POST'){
             $request->request->all();
@@ -44,17 +45,87 @@ class UserController extends AbstractController
             $role = $user->getRoles();
             $user->setRoles($role);
             $user->setPassword($hashedPassword);
+            $user->setPicture('images\defaultuser.png');
             $user->setEmail($inputs["email"]);
             $user->setNom($inputs["lastname"]);
             $user->setPrenom($inputs["firstname"]);
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                return $this->render('register/index.html.twig', [
+                    'errors' => $errors,
+                ]);
+            }
             $repository->add($user, true);
             return  $this->redirectToRoute("app_login");
+        }
+    }
+    #[Route('/logout', name: 'app_logout', methods: ['GET'])]
+    public function logout()
+    {
+        // controller can be blank: it will never be called!
+        throw new \Exception('Don\'t forget to activate logout in security.yaml');
+    }
+    #[Route('/user/settings/modify', name: 'app_settings_modify')]
+    public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
+    {
+        $user = $this->getUser();
+        if ($request->getMethod() === 'POST'){
+            $request->request->all();
+            $inputs = $request->request->all();
+            $target_dir = "./images/"; // update if needed with coach/user name
+            $target_file = $target_dir . basename($_FILES["user-photo"]["name"]);
+            move_uploaded_file($_FILES["user-photo"]["tmp_name"], $target_file);
+        if ($_FILES["user-photo"]["name"])
+            $user->setPicture($target_file);
+        else
+            $user->setPicture($user->getPicture());
+
+        if ($inputs["first-name"])
+            $user->setPrenom($inputs["first-name"]);
+        else
+            $user->setPrenom($user->getPrenom());
+
+        if ($inputs["last-name"])
+            $user->setNom($inputs["last-name"]);
+        else
+            $user->setNom($user->getNom()); 
+
+        if ($inputs["phone"])
+            $user->setPhone($inputs["phone"]);
+        else
+            $user->setPhone($user->getPhone()); 
+             
+        if ($inputs["about"])
+            $user->setdescription($inputs["about"]);
+        else
+            $user->setdescription($user->getdescription());
+        if ($inputs["oldPassword"]){
+            $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
+            $hashedPassword = $passwordHasher->hashPassword(
+                $user,
+                $inputs["newPassword"]
+            );
+            $user->setPassword($hashedPassword);
+        }
+        else
+        $user->setPassword($user->getPassword());  
+        $errors = $validator->validate($user);
+        if (count($errors) > 0) {
+            return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
+        }
+        $em = $doctrine->getManager();
+        $em->flush();
+        $em->clear();
+
+
+            return $this->redirectToRoute('app_settings',array('userinfo'=>$this->getUser()));
         }
     }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
     {
-        return $this->render('user/settings.html.twig');
+        $errors=null;
+        return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
     }
 
     #[Route('/user/{id}', name: 'app_user')]

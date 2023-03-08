@@ -225,15 +225,15 @@
                             <!-- Profile -->
                             <div class="flex items-center">
                                 <img class="hidden h-16 w-16 rounded-full sm:block"
-                                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                     src="{{asset(userinfo.getpicture())}}"
                                      alt="">
                                 <div>
                                     <div class="flex items-center">
                                         <img class="h-16 w-16 rounded-full sm:hidden"
-                                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                             src="{{asset(userinfo.getpicture())}}"
                                              alt="">
                                         <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                            Welcome, Username here</h1>
+                                            Welcome, {{userinfo.getNom()}} here</h1>
                                     </div>
                                     <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                         <dt class="sr-only">Account status</dt>
@@ -294,7 +294,7 @@
                                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                     <div class="flex items-center">
                                                                         <div class="h-10 w-10 flex-shrink-0">
-                                                                            <img class="h-10 w-10 rounded-full" src="/images/coach2.jpg{# <-- fasakh l coach2.jpg (dummy) lien image ici #}" alt="">
+                                                                            <img class="h-10 w-10 rounded-full" src="{{asset(u.picture)}}" alt="">
                                                                         </div>
                                                                         <div class="ml-4">
                                                                             <div class="font-medium text-gray-900">{# Prenom ici #}{{u.Prenom}} {{u.Nom}}</div>

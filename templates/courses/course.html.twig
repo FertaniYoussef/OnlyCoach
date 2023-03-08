@@ -1,6 +1,7 @@
 <!doctype html>
-<html>
 <html class="h-full bg-white">
+<head>
+<title>{{ course.titre }} course</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% block stylesheets %}
@@ -22,48 +23,48 @@
                     <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
                     <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
                     <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                    <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                    <a href="{{ path('app_contact') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
                 </div>
 
 
             </div>
-            <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                            <div class="hidden sm:ml-6 sm:flex sm:items-center">
 
-                <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                    <span class="sr-only">View notifications</span>
-                    <!-- Heroicon name: outline/bell -->
-                    <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                    </svg>
-                </button>
+                    <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <span class="sr-only">View notifications</span>
+                        <!-- Heroicon name: outline/bell -->
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
+                    </button>
 
-                <!-- Profile dropdown -->
-                <div class="relative ml-3">
-                    <div>
-                        <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                            <span class="sr-only">Open user menu</span>
-                            <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
-                        </button>
-                    </div>
+                    <!-- Profile dropdown -->
+                    <div class="relative ml-3">
+                        <div>
+                            <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                <span class="sr-only">Open user menu</span>
+                                <img class="h-8 w-8 rounded-full" src="{{asset(userinfo.getpicture())}}" alt="">
+                            </button>
+                        </div>
 
-                    <!--
-                      Dropdown menu, show/hide based on menu state.
+                        <!--
+                          Dropdown menu, show/hide based on menu state.
 
-                      Entering: "transition ease-out duration-200"
-                        From: "transform opacity-0 scale-95"
-                        To: "transform opacity-100 scale-100"
-                      Leaving: "transition ease-in duration-75"
-                        From: "transform opacity-100 scale-100"
-                        To: "transform opacity-0 scale-95"
-                    -->
-                    <div id="menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <!-- Active: "bg-gray-100", Not Active: "" -->
-                        <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Calendar</a>
-                        <a href="{{ path('app_login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                          Entering: "transition ease-out duration-200"
+                            From: "transform opacity-0 scale-95"
+                            To: "transform opacity-100 scale-100"
+                          Leaving: "transition ease-in duration-75"
+                            From: "transform opacity-100 scale-100"
+                            To: "transform opacity-0 scale-95"
+                        -->
+                        <div id="menu" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                            <!-- Active: "bg-gray-100", Not Active: "" -->
+                            <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Calendar</a>
+                            <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                        </div>
                     </div>
                 </div>
-            </div>
             <div class="-mr-2 flex items-center sm:hidden">
                 <!-- Mobile menu button -->
                 <button id="mobile-button" type="button" class="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" aria-controls="mobile-menu" aria-expanded="false">
@@ -131,13 +132,13 @@
 
 <!-- End of navigation and start of main page body-->
 
-<div class="bg-white">
+<div class="bg-slate-50">
     <div class="mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <!-- Product -->
         <div class="lg:grid lg:grid-cols-7 lg:grid-rows-1 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
             <!-- Product image -->
             <div class="lg:col-span-4 lg:row-end-1">
-                <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 bg-cover" style="background-image: url('/images/{{ course.background }}')">
+                <div class="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg bg-gray-100 bg-cover" style="background-image: url('/images/{{ course.coursphoto }}')"> 
                 </div>
             </div>
 
@@ -145,59 +146,84 @@
             <div class="mx-auto mt-14 max-w-2xl sm:mt-16 lg:col-span-3 lg:row-span-2 lg:row-end-2 lg:mt-0 lg:max-w-none">
                 <div class="flex flex-col-reverse">
                     <div class="mt-4">
-                        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{{ course.title }}</h1>
+                        <h1 class="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">{{ course.titre }}</h1>
                     </div>
 
-                    <div>
+                    <form id="rating-form" action="{{path('app_rating')}}" method="POST">
                         <h3 class="sr-only">Reviews</h3>
-                        <div class="flex items-center">
+                        <div class="flex items-center" id="star-container">
                             <!--
                               Heroicon name: mini/star
 
                               Active: "text-yellow-400", Default: "text-gray-300"
                             -->
-                            <svg class="text-yellow-400 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="star  h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" id="1"  style="color: #E5E7EB">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>
 
                             <!-- Heroicon name: mini/star -->
-                            <svg class="text-yellow-400 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="star  h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" id="2" style="color: #E5E7EB">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>
 
                             <!-- Heroicon name: mini/star -->
-                            <svg class="text-yellow-400 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="star  h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" id="3" style="color: #E5E7EB">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>
 
                             <!-- Heroicon name: mini/star -->
-                            <svg class="text-yellow-400 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="star  h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" id="4" style="color: #E5E7EB">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>
 
                             <!-- Heroicon name: mini/star -->
-                            <svg class="text-gray-300 h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <svg class="star h-5 w-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" id="5" style="color: #E5E7EB">
                                 <path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
                             </svg>
                         </div>
                         <p class="sr-only">4 out of 5 stars</p>
-                    </div>
+                        <input type="hidden" name="rating" id="rating" value="">
+                        <input type="hidden" name="course" id="course" value="{{ course.id }}">
+                    </form>
                 </div>
 
                 <p class="mt-6 text-gray-500">{{ course.description }}</p>
 
+
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
-                    <button type="button"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 py-3 px-8 text-base font-medium text-white hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.coach }}</button>
+                {% if abonnement is empty %}
+                <form action="{{ path('subscribe_coach' , {'coachId': course.IdCoach})}}">
+                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }} for {{course.IdCoach.prix}}$</button>
+                 </form>
+                 {% endif %}
+
+                 {% if abonnement %}
+                <form action="{{ path('unsubscribe_from_coach' , {'subscriptionid': abonnement.id})}}">
+                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove subscription from {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</button>
+                 </form>
+                 {% endif %}
+                    {% if adherent is empty and abonnement %}
+                 <form action="{{ path('course_join' , {'courseId': course.id})}}">
+                   <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Enroll to this course</button>
+                 </form>
+                    {% endif %}
+                    {% if adherent %}
+                 <form action="{{ path('leave_join' , {'courseId': course.id})}}">
+                    <button type="submit" class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Leave course</button>
+                 </form>
+                    {% endif %}
+                    
+
                 </div>
 
                 <div class="mt-10 border-t border-gray-200 pt-10">
-                    <div id="CoachContainer" class="flex flex-col items-center">
-                        <div class="w-20 h-20 rounded-full bg-[url('../../public/images/coach3.jpg')] bg-cover"></div>
+                  <a href="{{path('app_user',{'id':course.IdCoach.id})}}"><div id="CoachContainer" class="flex flex-col items-center">
+                        <div class="w-20 h-20 rounded-full bg-cover" style="background-image: url('/images/{{ course.IdCoach.picture }}')"></div>
                         <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
-                            <span class="text-md pt-2 ">{{ course.coach }}</span>
-                            <span class="text-sm text-teal-600">{{ course.coachcategory }}</span>
+                            <span class="text-md pt-2 ">{{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</span>
+                            <span class="text-sm text-teal-600">{{ course.IdCoach.categorie.Type}}</span>
                         </div>
-                    </div>
+                    </div></a>
                 </div>
 
 
@@ -231,6 +257,12 @@
                     </ul>
                 </div>
             </div>
+    {% if adherent %}
+        <!-- WIP SECTIONS -->
+            <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none" id="sections">
+            </div>
+        <!-- END WIP SECTIONS -->
+    {% endif %}
 
             <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none">
                 <div>
@@ -241,15 +273,56 @@
                         </div>
                     </div>
 
+
                     <!-- 'Customer Reviews' panel, show/hide based on tab state -->
                     <div id="tab-panel-reviews" class="-mb-10" aria-labelledby="tab-reviews" role="tabpanel" tabindex="0">
                         <h3 class="sr-only">Customer Reviews</h3>
+
+
+<div class="flex items-start space-x-4 relative inset-y-4 pb-4">
+  <div class="flex-shrink-0">
+    <div class="inline-block h-10 w-10 rounded-full bg-cover" style="background-image: url('/images/{{ course.IdCoach.picture }}')" alt=""></div>
+  </div>
+  <div class="min-w-0 flex-1">
+    <form action="#" class="relative">
+      <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm focus-within:border-teal-500 focus-within:ring-1 focus-within:ring-teal-500">
+        <label for="review" class="sr-only">Add your Review</label>
+        <textarea rows="3" name="review" id="review" class="block w-full resize-none border-0 py-3 focus:ring-0 sm:text-sm" placeholder="Add your review..."></textarea>
+
+        <!-- Spacer element to match the height of the toolbar -->
+        <div class="py-2" aria-hidden="true">
+          <!-- Matches height of button in toolbar (1px border + 36px content height) -->
+          <div class="py-px">
+            <div class="h-9"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="absolute inset-x-0 bottom-0 flex justify-between py-2 pl-3 pr-2">
+        <div class="flex items-center space-x-5">
+          <div class="flex items-center">
+          </div>
+        </div>
+        <div class="flex-shrink-0">
+          <button type="submit" class="inline-flex items-center rounded-md border border-transparent bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+                            <!-- END WIP REVIEWS -->
 
                         <div class="flex space-x-4 text-sm text-gray-500">
                             <div class="flex-none py-10">
                                 <img src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80" alt="" class="h-10 w-10 rounded-full bg-gray-100">
                             </div>
                             <div class="py-10">
+
+
+
+
                                 <h3 class="font-medium text-gray-900">Fatma Masmoudi</h3>
                                 <p><time datetime="2021-07-16">Jan 16, 2023</time></p>
 
@@ -347,11 +420,11 @@
 </div>
 
 <!-- Debut Footer -->
-<footer class="bg-white">
+<footer class="bg-black">
     <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
 
         <div class="mt-8 md:order-1 md:mt-0">
-            <p class="text-center text-xs leading-5 text-gray-500">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
+            <p class="text-center text-xs leading-5 text-white">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
         </div>
     </div>
 </footer>
@@ -416,6 +489,136 @@
 
 
     // mobile ends here
+
+            // fetch data
+            // create an async function to fetch data
+
+            var slug = url => new URL(url).pathname.match(/[^\/]+/g)
+            const id = slug(window.location.href)
+               async function getData() {
+                const response = await fetch('/coach/dashboard/api/course/'+id[1], {
+             method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
+             },
+            })
+             .then(res => res.json())
+             .catch(err => console.log(err))
+
+             return response
+
+
+            }
+
+            // call the function then group sections and resources by section id
+           const data = getData().then(data => {
+                // extract section and group it with its resources by section id
+                const sections = data.sections.map(section => {
+                    const resources = data.resources.filter(resource => resource.id === section.id)
+                    return { ...section, resources }
+                })
+                console.log(sections);
+                // append sections to the dom
+                const sectionContainer = document.getElementById('sections')
+                
+                /* WIP */
+                var n = 1
+                sections.forEach(section => {
+                    var link = /[^/]*$/.exec(section.resources[0].link)[0];
+                    link = link.replace("watch?v=", "");
+                    console.log(link)
+                    const div = document.createElement('div');
+                    const sectionId = `section${section.id}`;
+                    div.id = sectionId;
+                    div.innerHTML = `<div id="${sectionId}">
+                    <div class="bg-black w-full py-4 mb-4 shadow-md flex justify-between items-center px-4 rounded-md">
+                    <h1 class="text-lg text-white font-medium">Section ${n} : ${section.title}</h1>
+                    <span class="text-sm text-sky-200">${n}/${sections.length}</span></div>
+                    <iframe class="w-full h-[25rem]" src="https://www.youtube.com/embed/${link}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+                    <h1 class="text-lg text-gray-800 font-medium mt-4">Description</h1>
+                    <p class="text-sm text-gray-500">${section.resources[0].description}</p>
+
+                    </div>`
+
+
+                    sectionContainer.appendChild(div)
+                    n++
+                })
+    }
+
+                /* WIP */
+
+
+            )
+
+            // on star hover, change the current and the previous stars to the active color
+            const stars = document.querySelectorAll('.star')
+            const starContainer = document.getElementById('star-container')
+            const starColor = '#FBBF24'
+            const starColorInactive = '#E5E7EB'
+
+            console.log(stars)
+            
+            // loop over the starts and add event listeners to them
+            stars.forEach(star => {
+                star.addEventListener('mouseover', () => {
+                    const starId = star.id
+                    const starNumber = starId.match(/\d+/)[0]
+                    const starsToChange = document.querySelectorAll(`.star:nth-child(-n+${starNumber})`)
+                    starsToChange.forEach(star => {
+                        star.style.fill = starColor
+                    })
+                })
+                 star.addEventListener('click', () => {
+                    const starId = star.id
+                    const starNumber = starId.match(/\d+/)[0]
+                    const ratingInput = document.getElementById('rating')
+                    ratingInput.value = starNumber
+                    // form submit
+                    const form = document.getElementById('rating-form')
+                    form.submit()
+                })
+            })
+
+            // on star mouse leave, change the current and the previous stars to the inactive color
+            stars.forEach(star => {
+                star.addEventListener('mouseleave', () => {
+                    const starId = star.id
+                    const starNumber = starId.match(/\d+/)[0]
+                    const starsToChange = document.querySelectorAll(`.star:nth-child(-n+${starNumber})`)
+                    starsToChange.forEach(star => {
+                        star.style.fill = starColorInactive
+                    })
+                })
+            })
+
+
+            
+
+
+            
+
+
+
+           
+           
+           
+
+
+
+
+
+
+
+
+
+            
+
+
+
+
 
 </script>
 </body>

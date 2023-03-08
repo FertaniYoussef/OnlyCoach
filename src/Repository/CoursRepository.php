@@ -39,6 +39,18 @@ class CoursRepository extends ServiceEntityRepository
         }
     }
 
+    // find cours where coach category is the same as the input category
+    public function findCoursByCategory($category)
+    {
+        return $this->createQueryBuilder('c')
+            ->join('c.IdCoach', 'coach')
+            ->andWhere('coach.categorie = :val')
+            ->setParameter('val', $category)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 //    /**
 //     * @return Cours[] Returns an array of Cours objects
 //     */

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CoursRepository::class)]
 class Cours
@@ -17,9 +18,12 @@ class Cours
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $Titre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 10, max: 255)]
     private ?string $Description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -29,6 +33,7 @@ class Cours
     private ?int $nbVues = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank]
     private ?string $cours_photo = null;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Adherents::class)]
@@ -37,8 +42,11 @@ class Cours
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
     private Collection $id_rating;
 
-    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ["PERSIST"])]
+    #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ['persist', 'remove'])]
     private Collection $id_sections;
+
+    #[ORM\ManyToOne(inversedBy: 'cours')]
+    private ?Coach $IdCoach = null;
 
     public function __construct()
     {
@@ -199,6 +207,18 @@ class Cours
                 $idSection->setCours(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIdCoach(): ?Coach
+    {
+        return $this->IdCoach;
+    }
+
+    public function setIdCoach(?Coach $IdCoach): self
+    {
+        $this->IdCoach = $IdCoach;
 
         return $this;
     }
