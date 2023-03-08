@@ -7,6 +7,7 @@ use App\Entity\Abonnement;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\UserRepository;
 use App\Repository\AbonnementRepository;
+use App\Repository\AdherentsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
@@ -64,7 +65,7 @@ class AbonnementController extends AbstractController
             ]);
     }
     #[Route('/cancel/{subscriptionid}',name:'unsubscribe_from_coach')]
-        public function unsubscribeToCoach(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine,CategorieRepository $categorieRepository, CoursRepository $coursRepo,CoachRepository $coachRepository)
+        public function unsubscribeToCoach(Request $request, $subscriptionid,AbonnementRepository $aborepo,ManagerRegistry $doctrine,CategorieRepository $categorieRepository, CoursRepository $coursRepo,CoachRepository $coachRepository,AdherentsRepository $adhrepo)
         {
 
             $user = $this->getUser();
@@ -73,14 +74,16 @@ class AbonnementController extends AbstractController
                 throw $this->createNotFoundException('The subscription does not exist');
             }
             $user->removeIdAbonnement($abonnement);
+            $adherent=$adhrepo->findOneBy(['user'=>$user]);
             $em = $doctrine->getManager();
             $em->remove($abonnement);
+            $em->remove($adherent);
             $em->flush();
             $cours = $coursRepo->FindBy(array(), array('nbVues' => 'DESC'), 3, 0);
 
         /* fin cours fetching */
         if ($this->getUser()){
-            return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll()));
+            return $this->redirectToRoute("app_main");
         }
         else{
 

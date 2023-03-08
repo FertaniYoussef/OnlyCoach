@@ -20,6 +20,7 @@ use App\Repository\UserRepository;
 use App\Entity\Adherents;
 use App\Repository\AdherentsRepository;
 use App\Repository\AbonnementRepository;
+use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -43,11 +44,11 @@ class DashboardController extends AbstractController
     public function index(Request $request, AbonnementRepository $rep, CoachRepository $coachRep,ChartBuilderInterface $chartBuilder): Response
     {
         $user = $this->getUser();
-        $coach = $coachRep->findBy(['id_user' => $user]);
+        $coach = $coachRep->findOneBy(['id_user' => $user]);
         $abonnements = $rep->findBy(['coach' => $coach], [], 10, 0);
-        $courses = $coach[0]->getCours()->getValues();
+        $courses = $coach->getCours()->getValues();
 
-        $abonnementsChart = $rep->findAbonnementByCoach($coach[0]->getId());
+        $abonnementsChart = $rep->findAbonnementByCoach($coach->getId());
         dump($abonnementsChart);
         // extract the date and count from the array in two arrays
         $dates = [];
@@ -89,6 +90,7 @@ class DashboardController extends AbstractController
 
 
         return $this->render('dashboard/coach/index.html.twig', [
+            'coach' => $coach,
             'user' => $this->getUser(),
             'abonnements' => $abonnements,
             'courses' => $courses,
@@ -327,7 +329,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
-
+    
     #[Route('/coach/dashboard/api/addCourse', name: 'app_dashboard_addCourseApi')]
     public function AddCourseApi(ManagerRegistry $doctrine, CoursRepository $repository) {
 
@@ -364,7 +366,60 @@ class DashboardController extends AbstractController
 
         return $this->json(['message' => 'Course added successfully']);
     }
+#[Route('/coach/dashboard/modifycoach', name: 'app_dashboard_modifycoach')]
+public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRepository $repository,UserRepository $userrepo,ValidatorInterface $validator)
+{
+ 
+    if ($request->getMethod() === 'POST') {
+        $inputs = $request->request->all();
+      $user= $this->getUser();
+      $user->setNom($inputs['coach-name']);
+      $user->setPrenom($inputs['coach-prename']);
+      $user->setDescription($inputs['coach-description']);
 
+        
+
+        $coach = $repository->findOneBy(['id_user' => $user]);
+        $coach->setNom($inputs['coach-name']);
+        $coach->setPrenom($inputs['coach-prename']);
+        $coach->setPrix($inputs['coach-price']);
+        $coach->setDescription($inputs['coach-description']);
+        $target_dir = "./images/"; // update if needed with coach/user name
+        $target_file = $target_dir . basename($_FILES["coach-picture"]["name"]);
+        move_uploaded_file($_FILES["coach-picture"]["tmp_name"], $target_file);
+        $coach->setPicture($target_file);
+        $user->setPicture($target_file);
+        array_shift($inputs);
+        array_shift($inputs);
+        $em = $doctrine->getManager();
+        $errors = $validator->validate($coach);
+        try {
+            $errorString = (string) $errors[0];
+                }
+            catch (\Exception $e) {
+                $errorString = "";
+            }
+            // replace "Object(App\Entity\Cours)." with ""
+            $errorString = str_replace('Object(App\Entity\Cours).', '', $errorString);
+
+            if (count($errors) > 0) {
+                    // check if errorString contains "cours_photo" if so, replace it with "background"
+                    if (strpos($errorString, 'Picture') !== false) {
+                            $errorString = str_replace('Picture', 'background', $errorString);
+                            $errorString = str_replace('This value should not be blank.', 'This value should not be blank. Please upload a profile picture.', $errorString);
+                    }
+                return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
+            }
+            $em = $doctrine->getManager();
+
+            $em->flush();
+            $em->clear();
+            return $this->redirectToRoute('app_dashboard', ['success' => "Coach Modified successfully!"]);
+        }
+        return $this->redirectToRoute('app_login');
+
+    
+}
     #[Route('/coach/dashboard/addCourse', name: 'app_dashboard_addcourse')]
     public function AddCourse(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, CoachRepository $repository)
     {
