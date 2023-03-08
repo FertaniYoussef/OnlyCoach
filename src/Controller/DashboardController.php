@@ -13,6 +13,8 @@ use App\Form\CoachType;
 use App\Form\OfferType;
 use App\Form\FeedbackType;
 use App\Repository\CoursRepository;
+use App\Repository\OffreRepository;
+
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
@@ -25,13 +27,20 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use DateTime;
 use App\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 use App\Entity\User;
-use App\Repository\OffreRepository;
+use Dompdf\Dompdf as Dompdf;
+use Dompdf\Options;
 use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+<<<<<<< Updated upstream
 use Knp\Component\Pager\PaginatorInterface;
+=======
+use Symfony\Component\OptionsResolver;
+
+>>>>>>> Stashed changes
 
 class DashboardController extends AbstractController
 { private $paginator;
@@ -406,6 +415,7 @@ class DashboardController extends AbstractController
     
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
+<<<<<<< Updated upstream
     public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine): Response
     { 
         $page = $request->query->getInt('page',1);
@@ -417,9 +427,21 @@ class DashboardController extends AbstractController
         $offres = $paginator->paginate($repository->findAll(), $page, $limit);
         
         $offre = new offre();
+=======
+    public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine, SerializerInterface $serializer): Response
+    {  
+        
+        $offres = $repository->findAll();
+>>>>>>> Stashed changes
 
-        $form = $this->createForm(OfferType::class, $offre);
 
+
+
+        $json = $serializer->serialize($offres, 
+        'json', ['groups' => ['offre']]);
+
+        $offres = new offre();
+        $form = $this->createForm(OfferType::class, $offres);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -430,17 +452,24 @@ class DashboardController extends AbstractController
             $em = $doctrine->getManager();
             $em->persist($offre);
             $em->flush();
+<<<<<<< Updated upstream
             $this->addFlash('success','Offre Added Successfully !');
 
             return $this->redirectToRoute('app_dashboard_adminOffers', [], Response::HTTP_SEE_OTHER);        }
+=======
+           
 
+            return $this->JsonReponse($offre);
+        }
+>>>>>>> Stashed changes
 
+       
         return $this->render('dashboard/admin/offers/offers.html.twig', [
             'form' => $form->createView(),
             'offres' => $offres
         ]);
     }
-
+    
 
 
 
@@ -459,7 +488,7 @@ class DashboardController extends AbstractController
 
             $em->flush();
 
-            return $this->redirectToRoute('app_dashboard_adminOffers');
+            return $this->JsonReponse($offre);;
         } else
             return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
                 'form' => $form->createView(),
@@ -481,9 +510,52 @@ class DashboardController extends AbstractController
         $em = $doctrine->getManager();
         $em->remove($offre);
         $em->flush();
-        return $this->redirectToRoute('app_dashboard_adminOffers');
+        return $this->JsonReponse($offre);;
 
     }
+    #[Route('/offre/data/download', name: 'users_data_download')]
+
+public function usersDataDownload(OffreRepository $offres)
+{
+    // On définit les options du PDF
+    $pdfOptions = new Options();
+    // Police par défaut
+    $pdfOptions->set('defaultFont', 'Arial');
+    $pdfOptions->setIsRemoteEnabled(true);
+
+    // On instancie Dompdf
+    $dompdf = new Dompdf($pdfOptions);
+    $offres= $offres->findAll();
+   
+    // $classrooms= $this->getDoctrine()->getRepository(classroomRepository::class)->findAll();
+
+    $context = stream_context_create([
+        'ssl' => [
+            'verify_peer' => FALSE,
+            'verify_peer_name' => FALSE,
+            'allow_self_signed' => TRUE
+        ]
+    ]);
+    $dompdf->setHttpContext($context);
+
+    // On génère le html
+    $html =$this->renderView('dashboard/admin/offers/pdf.html.twig',[
+        'offres' => $offres    ]);
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // On génère un nom de fichier
+    $fichier = 'Liste-produit' .'.pdf';
+
+    // On envoie le PDF au navigateur
+    $dompdf->stream($fichier, [
+        'Attachment' => true
+    ]);
+
+    return new Response() ;
+}
   
 
     // Partie feedbacks

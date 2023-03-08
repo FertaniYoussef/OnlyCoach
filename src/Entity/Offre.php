@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Entity;
-
+use App\Repository\OffreRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Offre
@@ -20,6 +25,7 @@ class Offre
      * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("offre")
      */
     private $id;
 
@@ -27,27 +33,34 @@ class Offre
     /**
      * @Assert\NotBlank(message=" nom  est obligatoire")
      * @Assert\Type(type="string")
+    * @Groups("offre")
+
      * @var string|null
      *
      * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+     * @Groups("offre")
      */
     private $nom;
 
     /**
      * @Assert\NotBlank(message=" prix  est obligatoire")
      * @Assert\Type(type="float")
+     * @Groups("offre")
      * @var float|null
      *
      * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=true)
+     * @Groups("offre")
      */
     private $prix;
 
     /**
      * @Assert\NotBlank(message=" discount  est obligatoire")
      * @Assert\Type(type="float")
+     * @Groups("offre")
      * @var float|null
      *
      * @ORM\Column(name="discount", type="float", precision=10, scale=0, nullable=true)
+     * @Groups("offre")
      */
     private $discount;
 
@@ -62,6 +75,7 @@ class Offre
      * @var \DateTime|null
      *
      * @ORM\Column(name="date_deb", type="date", nullable=true)
+     * @Groups("offre")
      */
 
 
@@ -72,6 +86,7 @@ class Offre
      * @var \DateTime|null
      *
      * @ORM\Column(name="date_fin", type="date", nullable=true)
+     * @Groups("offre")
      */
     private $dateFin;
 

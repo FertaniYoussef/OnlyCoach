@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,6 +11,18 @@ use App\Entity\Commentaire;
 use App\Entity\Cours;
 use App\Form\CommentaireType;
 use App\Repository\CategorieRepository;
+use App\Repository\OffreRepository;
+use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\Request;
+
+
+
+
+
+use App\Repository\CommentaireRepository;
+
+
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
@@ -31,6 +42,7 @@ class CoursesController extends AbstractController
     }
 
 
+<<<<<<< Updated upstream
 
 
 
@@ -56,6 +68,9 @@ class CoursesController extends AbstractController
 
 
     #[Route('/courses/{slug}', name: 'app_course')]
+=======
+    #[Route('/courses/{slug}', name: 'offredetail2')]
+>>>>>>> Stashed changes
     public function indexCourse($slug, EntityManagerInterface $EM, HttpFoundationRequest $request): Response
     {
         $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);
@@ -73,21 +88,47 @@ class CoursesController extends AbstractController
             $EM->persist($Commentaire);
             $EM->flush();
             $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);
+            $this->removeBadWords($Commentaire);
+        }
+            return $this->render('courses/course.html.twig', array('course' => ['f' => $form->createView(), 'Commentaires' => $Commentaires, 'id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
+        return $this->redirectToRoute("courses",array('course'=>$slug));
 
             return $this->render('courses/course.html.twig', array('course' => ['f' => $form->createView(), 'Commentaires' => $Commentaires, 'id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
         }
 
         //fin dajlouter
-
-
-
-
-        return $this->render('courses/course.html.twig', array('course' => ['f' => $form->createView(), 'Commentaires' => $Commentaires, 'id' => '1', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'coachcategory' => 'Resistance', 'background' => 'ResistanceImage.jpg', 'rating' => 4.3, 'totalratings' => 1098, 'members' => 2490, 'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer ipsum diam, ultrices sed eleifend quis, placerat sit amet est. Nam mi mi, lobortis in mi a, condimentum commodo ex. In hac habitasse platea dictumst. Nam lobortis tincidunt auctor nunc.']));
-    }
+       
+ 
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
     public function indexslug($slug ,CategorieRepository $categorieRepository): Response
     {
         return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'coach' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'categories' => $categorieRepository->findAll()));
     }
+<<<<<<< Updated upstream
 }
+=======
+
+
+
+
+
+    function removeBadWords($comment) {
+        //hedha tableau taa lklem li thebou yestnahha 
+        $badWords = array("bad", "words");
+        $words = explode(" ", $comment->getContenu());
+        foreach ($words as &$word) { 
+            if (in_array(strtolower($word), $badWords)) { 
+                $word = str_repeat("*", strlen($word)); 
+            }
+        }
+        $newComment = implode(" ", $words); 
+        echo $newComment;
+        $comment->setContenu(  $newComment);
+        return $comment;
+    }
+
+
+  
+}
+>>>>>>> Stashed changes

@@ -308,7 +308,7 @@
             </div>
     {% endfor %}
 
-                                                       {% for offre in offres %}
+                                                       {% for offre in offres%}
                                                         <tr>
                                                             
                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -339,6 +339,7 @@
                                                                 <div class="text-red-600"><a href="{{ path('app_dashboard_adminDeleteOffer', {'id': offre.id()})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
+                                                        
                                                             {% endfor %}
 
 
@@ -529,5 +530,8 @@
 
 
 </script>
+
+	
+	
 </body>
 </html>

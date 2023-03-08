@@ -99,4 +99,18 @@ class CommentaireController extends AbstractController
         $EM->flush();
         return new Response("success");
     }
+    function removeBadWords($comment) {
+        //hedha tableau taa lklem li thebou yestnahha 
+        $badWords = array("bad", "words");
+        $words = explode(" ", $comment->getContenu());
+        foreach ($words as &$word) { 
+            if (in_array(strtolower($word), $badWords)) { 
+                $word = str_repeat("*", strlen($word)); 
+            }
+        }
+        $newComment = implode(" ", $words); 
+        echo $newComment;
+        $comment->setContenu(  $newComment);
+        return $comment;
+    }
 }
