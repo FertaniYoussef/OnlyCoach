@@ -249,7 +249,7 @@
             </div>
                 <h1 class="text-3xl font-bold leading-8 text-white">{{course.titre}}</h1>
                 </div>
-                <a href="{{path("app_course",{'id': course.id})}}"><button class="h-12 px-7 bg-black border-[1px] border-sky-700 rounded-full text-white text-sm hover:scale-105 transition-all duration-200">Public view</button></a>
+                <button id="showMembers" class="h-12 px-7 bg-black border-[1px] border-sky-700 rounded-full text-white text-sm hover:scale-105 transition-all duration-200">View members</button>
                 </div>
             </div>
             </div>
@@ -261,6 +261,43 @@
         </main>
     </div>
 </div>
+
+<div id="modal" class="w-full h-full bg-black/75 backdrop-blur-sm fixed top-0  justify-center items-center  hidden">
+    <div id="container" class="lg:w-1/2 w-5/6  max-h-96 bg-white rounded-md p-4">
+        <div class="flex justify-between items-center border-b-[1px] border-gray-200 -mx-4 px-4 pb-2">
+            <h1 class="text-xl font-bold">Followed by</h1>
+            <button id="closeModal" class="h-6 w-6 bg-gray-200 rounded-full hover:scale-105 transition-all duration-200 flex justify-center items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+</button>
+        </div>
+        <div id="members" class="mt-2 -mx-4 max-h-72 overflow-y-scroll">
+        <!-- Create a table -->
+        <table class="table w-full">
+            <thead class="sticky top-0 left-0 bg-white">
+                <tr>
+                    <th class="px-4 py-2 text-left text-black text-sm">Fullname</th>
+                    <th class="px-4 py-2 text-right text-black text-sm">Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+               {# {% for member in [1..9] %} #}
+               {% for i in range(0, 9) %}
+                <tr>
+                    <td class=" px-4 py-2 text-left text-sm">Amrou Ghribi</td>
+                    <td class=" px-4 py-2 text-right text-sm">8/3/2023</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </div>
+
+    
+    </div>
+</div>
+
+
+
 
 
 <script>
@@ -446,6 +483,20 @@
         }, 2000) */
         }
     }, random)
+
+
+    // add event listener to the showMembers button
+    const showMembers = document.getElementById('showMembers')
+    const modal = document.getElementById('modal')
+    const close = document.getElementById('closeModal')
+    showMembers.addEventListener('click', () => {
+        modal.classList.add('flex')
+        modal.classList.remove('hidden')
+    })
+    close.addEventListener('click', () => {
+        modal.classList.add('hidden')
+        modal.classList.remove('block')
+    })
 
 
 
