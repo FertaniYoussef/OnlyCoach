@@ -166,7 +166,7 @@ $formattedPrice = number_format($total, 2, '.', '');
     }
     // Mobile API for web service
 
-    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach')]
+    #[Route('api/abonnement/{coachId}',name:'subscribe_api_coach',methods:['GET'])]
     public function subscriptionConfirmationJson(Request $request,SerializerInterface $serializer, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $aborepo,ManagerRegistry $doctrine): Response
     {
         {

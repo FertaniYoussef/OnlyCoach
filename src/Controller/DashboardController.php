@@ -153,7 +153,7 @@ class DashboardController extends AbstractController
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
@@ -191,7 +191,7 @@ class DashboardController extends AbstractController
             $em->flush();
             return  $this->redirectToRoute("app_dashboard_modifycourse", ['id' => $idc]);
         }
-        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'user' => $this->getUser(),]);
+        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'userinfo' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/modifycourse/{id}', name: 'app_dashboard_modifycourse')]
@@ -238,7 +238,7 @@ class DashboardController extends AbstractController
 
         // WIP
 
-        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/addCourse', name: 'app_dashboard_addcourse')]
@@ -354,6 +354,7 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
     public function adminIndex(Request $request): Response
     {
+
         return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));
     }
 
@@ -367,7 +368,7 @@ class DashboardController extends AbstractController
         ]);
     }
     
-    #[Route('/admin/dashboard/users', name: 'app_dashboard_adminUsers')]
+    #[Route('api/admin/dashboard/users', name: 'app_api_dashboard_adminUsers')]
     public function userss(Request $request,UserRepository $repository,SerializerInterface $serializer): Response
     {
         $users = $repository->findAll();
@@ -424,7 +425,8 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/admin/coachs/coachs.html.twig', [
             'form' => $form->createView(),
-            'coachs' => $coachs
+            'coachs' => $coachs,
+            'userinfo'=>$this->getUser()
         ]);
     }
 
@@ -458,6 +460,7 @@ class DashboardController extends AbstractController
         }
         return $this->render('dashboard/admin/offers/offers.html.twig', [
             'form' => $form->createView(),
+            'userinfo'=>$this->getUser()
         ]);
     }
 
@@ -486,7 +489,7 @@ class DashboardController extends AbstractController
         $Feedback=$repository->findAll();
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig',[
             'Feedback' => $Feedback,
-
+            'userinfo'=>$this->getUser()
         ]);
     }
 
