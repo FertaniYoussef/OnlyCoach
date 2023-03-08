@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ReponseController extends AbstractController
@@ -41,14 +41,19 @@ class ReponseController extends AbstractController
             return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig',['f'=>$form->createView()]);
 
     }
-    #[Route('/contact/afficherreponse', name: 'afficherreponse')]
-    public function afficherreponse(Request $request,EntityManagerInterface $EM,ReponseRepository $repository): Response
+    public function __construct(RequestStack $requestStack)
     {
-        $reponses=$repository->findAll();
-      //  $reponses= $EM->getRepository(ReponseType::class)->findAll();
+        $this->requestStack = $requestStack;
+    }
+    #[Route('/contact/show', name: 'afficher')]
+    public function afficher(Request $request,RequestStack $requestStack,ReponseRepository $repository): Response
+    {
+
+       $reponses=$repository->findAll();
 
         return $this->render('contact/show.html.twig', [
-            'reponses'=>$reponses
+            'reponses'=>$reponses,
+            'url_retour' => $this->requestStack->getMainRequest()->headers->get('referer'),
         ]);
     }
 

@@ -10,13 +10,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 
 class ContactController extends AbstractController
 {
+
+    function removeBadWords($comment) {
+        //hedha tableau taa lklem li thebou yestnahha
+        $badWords = array("bad", "words");
+        $words = explode(" ", $comment->getDescription());
+        foreach ($words as &$word) {
+            if (in_array(strtolower($word), $badWords)) {
+                $word = str_repeat("*", strlen($word));
+            }
+        }
+        $newComment = implode(" ", $words);
+        echo $newComment;
+        $comment->setDescription(  $newComment);
+        return $comment;
+    }
+
     #[Route('/contact', name: 'app_contact')]
-    public function index(Request $request,FeedbackRepository $rep, ManagerRegistry $doctrine): Response
+    public function index(Request $request,FeedbackRepository $rep, ManagerRegistry $doctrine, ValidatorInterface $validator): Response
     {
         $feedback = new Feedback();
         if ($request->getMethod() === 'POST') {
@@ -29,13 +45,26 @@ class ContactController extends AbstractController
             $feedback->setUser($this->getUser());
             $feedback->setStatus(0);
             $feedback->setDateFeedback(new \DateTime());
+            $this->removeBadWords($feedback);
             $em = $doctrine->getManager();
+
+            //SEND MAIL:
             $em->persist($feedback);
             $em->flush();
-            return $this->redirectToRoute('app_main');
-        }
-        return $this->render('contact/index.html.twig', [
-            'controller_name' => 'ContactController',
+            $this->addFlash('success','Merci pour votre Feedback ! !');
+
+            $errors = $validator->validate($feedback);
+
+            if (count($errors) > 0) {
+                return $this->render('contact/index.html.twig', [
+                    'errors' => $errors,
+                ]);
+            }return $this->redirectToRoute('app_contact', [], Response::HTTP_SEE_OTHER);
+
+        }return $this->render('contact/index.html.twig',
+        ['controller_name' => 'ContactController',
+            'errors'=>null,
         ]);
+
     }
 }
