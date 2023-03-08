@@ -19,6 +19,7 @@ use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
 use App\Entity\Adherents;
 use App\Repository\AdherentsRepository;
+use App\Repository\AbonnementRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -253,7 +254,7 @@ class DashboardController extends AbstractController
             $em->flush();
             return  $this->redirectToRoute("app_dashboard_modifycourse", ['id' => $idc]);
         }
-        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'userinfo' => $this->getUser(),]);
+        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'user' => $this->getUser(),]);
     }
 
 
@@ -323,7 +324,7 @@ class DashboardController extends AbstractController
 
         // WIP
 
-        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
+        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/api/addCourse', name: 'app_dashboard_addCourseApi')]
