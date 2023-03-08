@@ -51,6 +51,19 @@ class AbonnementRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    // find all abonnements for a coach, count them by date
+    public function findAbonnementByCoach($coachId)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('COUNT(a.id) as count, a.date_deb')
+            ->andWhere('a.coach = :coachId')
+            ->setParameter('coachId', $coachId)
+            ->groupBy('a.date_deb')
+            ->getQuery()
+            ->getResult();
+    }
+
+
 
 
 //    /**
