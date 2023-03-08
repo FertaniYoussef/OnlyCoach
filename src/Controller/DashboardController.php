@@ -207,6 +207,7 @@ class DashboardController extends AbstractController
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
+    
         return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
