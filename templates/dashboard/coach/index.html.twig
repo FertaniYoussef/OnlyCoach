@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
+        {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
 <body class="h-full">
@@ -31,8 +32,6 @@
     </button>
   </div>
 </div>
-
-
 
 
 <!-- WIP -->
@@ -68,7 +67,6 @@
 
 <!-- WIP -->
 {% endif %}
-
 
 <div class="min-h-full">
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
@@ -188,13 +186,15 @@
 
 
                     <a href="{{ path('app_dashboard_listCourses') }}"
-                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
+                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md" id="course-tab"> 
                         <!-- Heroicon name: outline/credit-card -->
                         <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
                         </svg>
 
                         Courses
+
+                        <div class="w-2 h-2 bg-emerald-300 rounded-full ml-2 self-center hidden" id="courseadded"></div>
                     </a>
 
                 </div>
@@ -250,7 +250,7 @@
                                                       d="M4 16.5v-13h-.25a.75.75 0 010-1.5h12.5a.75.75 0 010 1.5H16v13h.25a.75.75 0 010 1.5h-3.5a.75.75 0 01-.75-.75v-2.5a.75.75 0 00-.75-.75h-2.5a.75.75 0 00-.75.75v2.5a.75.75 0 01-.75.75h-3.5a.75.75 0 010-1.5H4zm3-11a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zM7.5 9a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1zM11 5.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm.5 3.5a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1z"
                                                       clip-rule="evenodd"/>
                                             </svg>
-                                            Fitness
+                                            {{user.getCoach().getCategorie()}}
                                         </dd>
                                         <dt class="sr-only">Account status</dt>
                                         <dd class="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
@@ -285,11 +285,10 @@
                     <!-- WIP -->
 
                     <div>
-
                         <dl class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                             <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
                                 <dt>
-                                    <div class="absolute rounded-md bg-indigo-500 p-3">
+                                    <div class="absolute rounded-md bg-sky-500 p-3">
                                         <!-- Heroicon name: outline/users -->
                                         <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                                              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -301,23 +300,10 @@
                                     <p class="ml-16 truncate text-sm font-medium text-gray-500">Total Subscribers</p>
                                 </dt>
                                 <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                    <p class="text-2xl font-semibold text-gray-900">71,897</p>
-                                    <p class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                        <!-- Heroicon name: mini/arrow-up -->
-                                        <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                             aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                        <span class="sr-only"> Increased by </span>
-                                        122
-                                    </p>
-                                    <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                                    <p class="text-2xl font-semibold text-gray-900">{{abonnements|length}}</p>
+                                    <div class="absolute inset-x-0 bottom-0 bg-gray-200 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Total Subscribers stats</span></a>
+                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"></span></a>
                                         </div>
                                     </div>
                                 </dd>
@@ -325,7 +311,7 @@
 
                             <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
                                 <dt>
-                                    <div class="absolute rounded-md bg-indigo-500 p-3">
+                                    <div class="absolute rounded-md bg-sky-500 p-3">
                                         <!-- Heroicon name: outline/envelope-open -->
                                         <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                                              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -334,26 +320,20 @@
                                                   d="M21.75 9v.906a2.25 2.25 0 01-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 001.183 1.981l6.478 3.488m8.839 2.51l-4.66-2.51m0 0l-1.023-.55a2.25 2.25 0 00-2.134 0l-1.022.55m0 0l-4.661 2.51m16.5 1.615a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V8.844a2.25 2.25 0 011.183-1.98l7.5-4.04a2.25 2.25 0 012.134 0l7.5 4.04a2.25 2.25 0 011.183 1.98V19.5z"/>
                                         </svg>
                                     </div>
-                                    <p class="ml-16 truncate text-sm font-medium text-gray-500">Balance</p>
+                                    <p class="ml-16 truncate text-sm font-medium text-gray-500">Total earnings</p>
                                 </dt>
                                 <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                    <p class="text-2xl font-semibold text-gray-900">58.16%</p>
-                                    <p class="ml-2 flex items-baseline text-sm font-semibold text-green-600">
-                                        <!-- Heroicon name: mini/arrow-up -->
-                                        <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                             aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                        <span class="sr-only"> Increased by </span>
-                                        5.4%
-                                    </p>
-                                    <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                                {% set total = 0 %}
+                                {% for abonnement in abonnements %}
+                                    {% set total = total + abonnement.prix %}
+                                {% endfor %}
+
+
+
+                                    <p class="text-2xl font-semibold text-gray-900">{{total}}$</p>
+                                    <div class="absolute inset-x-0 bottom-0 bg-gray-200 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Avg. Open Rate stats</span></a>
+                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"></a>
                                         </div>
                                     </div>
                                 </dd>
@@ -361,7 +341,7 @@
 
                             <div class="relative overflow-hidden rounded-lg bg-white px-4 pt-5 pb-12 shadow sm:px-6 sm:pt-6">
                                 <dt>
-                                    <div class="absolute rounded-md bg-indigo-500 p-3">
+                                    <div class="absolute rounded-md bg-sky-500 p-3">
                                         <!-- Heroicon name: outline/cursor-arrow-rays -->
                                         <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
                                              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -370,26 +350,18 @@
                                                   d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"/>
                                         </svg>
                                     </div>
-                                    <p class="ml-16 truncate text-sm font-medium text-gray-500">Avg. View Rate</p>
+                                    <p class="ml-16 truncate text-sm font-medium text-gray-500">Total views</p>
                                 </dt>
+                                {% set views = 0 %}
+                                {% for course in courses %}
+                                    {% set views = views + course.nbVues %}
+                                {% endfor %}
+
                                 <dd class="ml-16 flex items-baseline pb-6 sm:pb-7">
-                                    <p class="text-2xl font-semibold text-gray-900">24.57%</p>
-                                    <p class="ml-2 flex items-baseline text-sm font-semibold text-red-600">
-                                        <!-- Heroicon name: mini/arrow-down -->
-                                        <svg class="h-5 w-5 flex-shrink-0 self-center text-red-500"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                             aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
-                                                  clip-rule="evenodd"/>
-                                        </svg>
-                                        <span class="sr-only"> Decreased by </span>
-                                        3.2%
-                                    </p>
-                                    <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
+                                    <p class="text-2xl font-semibold text-gray-900">{{views}}</p>
+                                    <div class="absolute inset-x-0 bottom-0 bg-gray-200 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Avg. Click Rate stats</span></a>
+                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"></a>
                                         </div>
                                     </div>
                                 </dd>
@@ -405,7 +377,7 @@
             </div>
 
             <h2 class="mx-auto mt-8 max-w-6xl px-4 text-lg font-medium leading-6 text-gray-900 sm:px-6 lg:px-8">Recent
-                subscribers</h2>
+                transactions</h2>
 
             <!-- Activity list (smallest breakpoint only) -->
             <div class="shadow sm:hidden">
@@ -422,9 +394,7 @@
                             clip-rule="evenodd"/>
                     </svg>
                     <span class="flex flex-col truncate text-sm text-gray-500">
-                      <span class="truncate">Payment to Molly Sanders</span>
-                      <span><span class="font-medium text-gray-900">$20,000</span> USD</span>
-                      <time datetime="2020-07-11">July 11, 2020</time>
+                      <span class="truncate">Payment to {{user.nom}} {{user.prenom}}</span>
                     </span>
                   </span>
                     <!-- Heroicon name: mini/chevron-right -->
@@ -475,6 +445,7 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
+                                {% for abonnement in abonnements %}
                                 <tr class="bg-white">
                                     <td class="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                         <div class="flex">
@@ -487,23 +458,23 @@
                                                           d="M1 4a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4zm12 4a3 3 0 11-6 0 3 3 0 016 0zM4 9a1 1 0 100-2 1 1 0 000 2zm13-1a1 1 0 11-2 0 1 1 0 012 0zM1.75 14.5a.75.75 0 000 1.5c4.417 0 8.693.603 12.749 1.73 1.111.309 2.251-.512 2.251-1.696v-.784a.75.75 0 00-1.5 0v.784a.272.272 0 01-.35.25A49.043 49.043 0 001.75 14.5z"
                                                           clip-rule="evenodd"/>
                                                 </svg>
-                                                <p class="truncate text-gray-500 group-hover:text-gray-900">Payment to
-                                                    Molly Sanders</p>
+                                                <p class="truncate text-gray-500 group-hover:text-gray-900">Subscription to
+                                                   {{user.nom}} {{user.prenom}}</p>
                                             </a>
                                         </div>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                        <span class="font-medium text-gray-900">$20,000</span>
-                                        USD
+                                        <span class="font-medium text-gray-900">${{abonnement.prix}}</span>
+                                        
                                     </td>
                                     <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">success</span>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                        <time datetime="2020-07-11">July 11, 2020</time>
+                                        <time datetime="2020-07-11">{{abonnement.datedeb|date("d/m/Y")}}</time>
                                     </td>
                                 </tr>
-
+                                {% endfor %}
                                 <!-- More transactions... -->
                                 </tbody>
                             </table>
@@ -512,20 +483,15 @@
                                  aria-label="Pagination">
                                 <div class="hidden sm:block">
                                     <p class="text-sm text-gray-700">
-                                        Showing
-                                        <span class="font-medium">18</span>
-                                        results
+                                        Showing 
+                                        <span class="font-medium">{{abonnements|length}}</span>
+                                        result(s)
                                     </p>
-                                </div>
-                                <div class="flex flex-1 justify-between sm:justify-end">
-                                    <a href="#"
-                                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
-                                    <a href="#"
-                                       class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
                                 </div>
                             </nav>
                         </div>
                     </div>
+                    {{ render_chart(chart, {'class': 'mt-10 p-3 rounded-md bg-white shadow'}) }}
                 </div>
             </div>
         </main>
@@ -536,7 +502,7 @@
 
 <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="formSlide">
     <!-- Background backdrop, show/hide based on slide-over state. -->
-    <div class="fixed inset-0"></div>
+    <div class="fixed inset-0 bg-gradient-to-bl from-teal-800/50 to-indigo-900/50 backdrop-blur-sm"></div>
 
     <div class="fixed inset-0 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden">
@@ -566,7 +532,7 @@
                                         create your new course.</p>
                                 </div>
                             </div>
-                            <div class="flex flex-1 flex-col justify-between">
+                            <div class="flex flex-1 flex-col justify-between" id="inputscontainer">
                                 <div class="divide-y divide-gray-200 px-4 sm:px-6">
                                     <div class="space-y-6 pt-6 pb-5">
                                         <div>
@@ -653,12 +619,16 @@
                             </div>
                         </div>
                         <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                            <button type="button"
+                            <button type="reset"
                                     class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Cancel
+                                Reset
                             </button>
                             <button type="submit"
-                                    class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    class="ml-4 inline-flex justify-center items-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1" id="spinicon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                    </svg>
+
                                 Save
                             </button>
                         </div>
@@ -670,7 +640,6 @@
 </div>
 
 <!-- Slide over panel for creating courses ends here-->
-
 
 <script>
 
@@ -725,12 +694,12 @@
 
                                                         <div class="mt-1">
                                                             <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                            <input type="text" name="${sectionId}-link" id="section1-title"
+                                                            <input type="text" name="${sectionId}-link" id="${sectionId}-link"
                                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
                                                             <div class="mt-2">
                                                                 <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
                                                                 <div class="mt-1">
-                                                <textarea id="description" name="${sectionId}-description" rows="4"
+                                                <textarea id="${sectionId}-description" name="${sectionId}-description" rows="4"
                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                                                                 </div>
                                                             </div>
@@ -748,6 +717,20 @@
         const section = document.getElementById(sectionId);
         section.parentNode.removeChild(section);
         counter--
+    }
+
+    // check if there is success in url
+    const url = window.location.href;
+    if (url.includes('success')) {
+       const courseadded = document.getElementById('courseadded');
+         courseadded.classList.remove('hidden');
+            courseadded.classList.add('block');
+            courseadded.classList.add('animate-pulse');
+            // wait a second
+            setTimeout(() => {
+                const errorcontainer = document.getElementById('errorcontainer');
+                errorcontainer.parentNode.removeChild(errorcontainer);
+            }, 5000)
     }
 
     const formInputs = document.getElementById('courseForm');
@@ -777,7 +760,7 @@
         console.log(groupedSections)
         console.log(data);
 
-       /* if (data['course-name'] === '') {
+        if (data['course-name'] === '') {
             coursename = document.getElementById('course-name');
             coursename.classList.add('border-red-500');
             coursename.classList.add('border-2');
@@ -787,9 +770,9 @@
             coursename = document.getElementById('course-name');
             coursename.classList.remove('border-red-500');
             coursename.classList.remove('border-2');
-        } */
+        } 
 
-      /*  if (data['course-description'] === '') {
+       if (data['course-description'] === '') {
             courseDescription = document.getElementById('course-description');
             courseDescription.classList.add('border-red-500');
             courseDescription.classList.add('border-2');
@@ -799,12 +782,12 @@
             courseDescription = document.getElementById('course-description');
             courseDescription.classList.remove('border-red-500');
             courseDescription.classList.remove('border-2');
-        } */
+        }  
 
-      /*  if (data['course-background'].name === '') {
+       if (data['course-background'].name === '') {
             alert('Course background is required');
             return;
-        } */
+        }  
 
         // validate grouped sections
         for (let i = 0; i < groupedSections.length; i++) {
@@ -847,9 +830,19 @@
 
 
 
+        const spinicon = document.getElementById('spinicon');
+        spinicon.classList.add('animate-spin');
+        const inputscontainer = document.getElementById('inputscontainer');
+        inputscontainer.classList.add('animate-pulse');
+
     // submit form
     const form = document.getElementById('courseForm');
-    form.submit();
+
+        setTimeout(() => {
+            form.submit()
+        }, 2500)
+
+   // 
 
 
 

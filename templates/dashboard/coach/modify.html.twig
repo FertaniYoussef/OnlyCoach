@@ -261,6 +261,7 @@
                                                 </div>
                                             </div>
                                             <div id="sections" class="space-y-5">
+                                                {% set counter = 0 %}
                                                 {% for section in sections|sort((a, b) => a.indexsection <=> b.indexsection) %}
 
                                                 <div id="section" class="mt-4">
@@ -270,7 +271,9 @@
                                                             <h1 class="text-white rounded-md">Section {{ section.indexsection }}</h1>
                                                             <div class="flex space-x-2">
                                                             <a href="{{ path('app_dashboard_modifySection',{'idc' : course.id, 'ids' : section.id }) }}"><button type="button" style="background: #d5ef44" class="px-4 text-white text-xs py-1 rounded-md" onclick="removeSection('section{{section.indexsection }}')">Modify Section</button></a>
+                                                            {% if counter > 0 %}
                                                             <a href="{{ path('app_dashboard_deleteSection',{'idc' : course.id, 'ids' : section.id }) }}"><button type="button" style="background: #ef4444" class="px-4 text-white text-xs py-1 rounded-md" onclick="removeSection('section{{section.indexsection }}')">Remove Section</button></a>
+                                                            {% endif %}
                                                             </div>
                                                             </div>
 
@@ -289,18 +292,19 @@
                                                             <div class="mt-1">
                                                                 <h1 class="block text-sm font-medium text-gray-900">Link</h1>
                                                                 <input type="text" name="section1-link" id="section1-title" disabled
-                                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{% if section|length == 1 %} {{ resources[0].lien }} {% else %} {{resources[section.indexsection-1].lien }} {% endif %}"/>
+                                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" value="{% if section|length == 1 %} {{ resources[counter].lien }} {% endif %}"/>
                                                                 <div class="mt-2">
                                                                     <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
                                                                     <div class="mt-1">
                                                 <textarea id="description" name="section1-description" rows="4" disabled
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{% if section|length == 1 %} {{ resources[0].description }} {% else %} {{resources[section.indexsection-1].description }} {% endif %}</textarea>
+                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">{% if section|length == 1 %} {{ resources[counter].description }}  {% endif %}</textarea>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
+                                                {% set counter = counter + 1 %}
                                                 {% endfor %}
                                             </div>
 
@@ -312,7 +316,7 @@
                                             Cancel
                                         </button>
                                         <button type="submit"
-                                                class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                                class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
                                             Update
                                         </button>
                                     </div>
@@ -378,12 +382,12 @@
 
                                                         <div class="mt-1">
                                                             <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                            <input type="text" name="${sectionId}-link" id="section1-title"
+                                                            <input type="text" name="${sectionId}-link" id="${sectionId}-link"
                                                                    class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
                                                             <div class="mt-2">
                                                                 <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
                                                                 <div class="mt-1">
-                                                <textarea id="description" name="${sectionId}-description" rows="4"
+                                                <textarea id="${sectionId}-description" name="${sectionId}-description" rows="4"
                                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
                                                                 </div>
                                                             </div>

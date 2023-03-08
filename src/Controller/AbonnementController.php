@@ -36,7 +36,6 @@ class AbonnementController extends AbstractController
         if (!$coach) {
             throw $this->createNotFoundException('The coach does not exist');
         }
-    
         $subscription = new Abonnement();
         $subscription->setDateDeb(new \DateTime());
         $endDate = (new \DateTime())->modify('+30 days');
@@ -46,6 +45,7 @@ class AbonnementController extends AbstractController
         $subscription->setCoach($coach);
         $subscription->setPrix ($coach -> getPrix() * 1.1);
         $user-> addIdAbonnement($subscription);
+        $coach->addIdAbonnement($subscription);
       
          
           $entityManager = $doctrine->getManager();

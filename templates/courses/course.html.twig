@@ -189,17 +189,16 @@
 
                 <p class="mt-6 text-gray-500">{{ course.description }}</p>
 
-
-                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2 items-end">
                 {% if abonnement is empty %}
                 <form action="{{ path('subscribe_coach' , {'coachId': course.IdCoach})}}">
-                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }} for {{course.IdCoach.prix}}$</button>
+                    <button type="submit"  class="flex w-full whitespace-pre items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Subscribe to {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }} for ${{course.IdCoach.prix}}</button>
                  </form>
                  {% endif %}
 
                  {% if abonnement %}
-                <form action="{{ path('unsubscribe_from_coach' , {'subscriptionid': abonnement.id})}}">
-                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Remove subscription from {{ course.IdCoach.nom}} {{ course.IdCoach.prenom }}</button>
+                <form action="{{ path('unsubscribe_from_coach' , {'subscriptionid': abonnement.id})}}" >
+                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Unsubscribe</button>
                  </form>
                  {% endif %}
                     {% if adherent is empty and abonnement %}
@@ -259,7 +258,7 @@
             </div>
     {% if adherent %}
         <!-- WIP SECTIONS -->
-            <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none" id="sections">
+            <div class="mx-auto mt-16 w-full max-w-2xl lg:col-span-4 lg:mt-0 lg:max-w-none space-y-3" id="sections">
             </div>
         <!-- END WIP SECTIONS -->
     {% endif %}
@@ -281,7 +280,7 @@
 
 <div class="flex items-start space-x-4 relative inset-y-4 pb-4">
   <div class="flex-shrink-0">
-    <div class="inline-block h-10 w-10 rounded-full bg-cover" style="background-image: url('/images/{{ course.IdCoach.picture }}')" alt=""></div>
+    <div class="inline-block h-10 w-10 rounded-full bg-cover" style="background-image: url('/images/{{ user.picture }}')" alt=""></div>
   </div>
   <div class="min-w-0 flex-1">
     <form action="#" class="relative">
