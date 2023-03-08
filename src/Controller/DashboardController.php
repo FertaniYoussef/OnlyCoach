@@ -35,12 +35,9 @@ use Dompdf\Options;
 use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-<<<<<<< Updated upstream
 use Knp\Component\Pager\PaginatorInterface;
-=======
 use Symfony\Component\OptionsResolver;
 
->>>>>>> Stashed changes
 
 class DashboardController extends AbstractController
 { private $paginator;
