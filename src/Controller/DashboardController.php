@@ -28,6 +28,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -750,6 +751,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
 
     // Partie feedbacks
 
+
     #[Route('/admin/dashboard/feedbacks', name: 'app_dashboard_adminFeedbacks')]
     public function feedbacks(Request $request,FeedbackRepository $repository): Response
     {
@@ -771,7 +773,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
             // ajouter reponse
             $EM->persist($reponse);
             $EM->flush();
-             $reponse->getIdFeedback();
+            $reponse->getIdFeedback();
              $feedback->setStatus(1);
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
@@ -814,11 +816,11 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
     /**
      * @Route("/admin/dashboard/feedbacks/search", name="feedback_search", methods={"GET"})
      */
-    public function search(Request $request)
+    public function search(Request $request,EntityManagerInterface $entityManager)
     {
         $query = $request->query->get('q');
 
-        $repository = $this->entityManager->getRepository(Feedback::class);
+        $repository = $entityManager->getRepository(Feedback::class);
 
         if (is_numeric($query)) {
             $results = $repository->findBy(['id' => $query]);
@@ -827,7 +829,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
         }
 
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
-            'Feedback' => $results,
+            'Feedback' => $results, 'user'=>$this->getUser(),
         ]);
     }
 
@@ -846,9 +848,11 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
 
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
             'Feedback' => $feedbacks,
-            'sort' => $sort
+            'sort' => $sort,
+             'user'=>$this->getUser(),
         ]);
     }
+
 
     // fin partie admin
 
