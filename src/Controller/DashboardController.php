@@ -371,7 +371,7 @@ class DashboardController extends AbstractController
          // Retourner les résultats dans une vue Twig
         
         return $this->render('dashboard/admin/index.html.twig', [
-            'user' => $this->getUser(),
+            'userinfo' => $this->getUser(),
             'coachsInscrits' => $coachsInscrits,
             'inscrits'=> $inscrits,
             'abonnesInscrits' => $abonnesInscrits,
@@ -446,7 +446,8 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/admin/coachs/coachs.html.twig', [
             'form' => $form->createView(),
-            'coachs' => $coachs
+            'coachs' => $coachs,
+            'userinfo' => $this->getUser()
         ]);
     }
     
