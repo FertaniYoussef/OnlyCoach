@@ -24,6 +24,7 @@ class Coach
      */
     #[ORM\Column(length: 255, nullable: true)]
     
+    
     private ?string $Nom = null;
 
     
@@ -60,10 +61,6 @@ class Coach
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Description = null;
-    
-    /*
-    @Assert\NotBlank
-    */
 
     /**
      * @Groups({"coach_list"})

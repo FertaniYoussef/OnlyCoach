@@ -37,7 +37,6 @@ class CoachController extends AbstractController
         'currentCategory' => $currentCategory,
         ]);
         }
-        
     
     #[Route('coach/search', name: 'app_coach_search', methods: ['GET', 'POST'])]
     public function search( Request $request, CoachRepository $coachRepository)
