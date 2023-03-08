@@ -283,11 +283,13 @@
                 </tr>
             </thead>
             <tbody>
-               {# {% for member in [1..9] %} #}
-               {% for i in range(0, 9) %}
-                <tr>
-                    <td class=" px-4 py-2 text-left text-sm">Amrou Ghribi</td>
-                    <td class=" px-4 py-2 text-right text-sm">8/3/2023</td>
+            
+               {% for user in users %}
+                <tr>    
+                
+                
+                    <td class=" px-4 py-2 text-left text-sm">{{user.Nom}}</td>
+                    <td class=" px-4 py-2 text-right text-sm">{{user.Date}}</td>
                 </tr>
                 {% endfor %}
             </tbody>

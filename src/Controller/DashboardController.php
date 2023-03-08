@@ -192,6 +192,7 @@ class DashboardController extends AbstractController
     {
         $course = $repository->find($id);
         $adherents=$adhrepo->findByCourse($course);
+       
 
 
         $users=[];
@@ -200,8 +201,15 @@ class DashboardController extends AbstractController
             $userProxy= $adherent->getUser();
 
             $entityManager->initializeObject($userProxy);
+            $Nom = $userProxy->getNom() . ' ' . $userProxy->getPrenom();
+        
+            $adherentDate = $adherent->getDate()->format('d/m/y');
+            $users[]=array(
+         
+                'Nom' => $Nom,
+                'Date' =>  $adherentDate,
+            );
 
-            $users[]=$userProxy;
         }
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
