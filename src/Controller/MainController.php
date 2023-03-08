@@ -16,13 +16,22 @@ class MainController extends AbstractController
     #[Route('/main', name: 'app_main')]
     public function index(CoachRepository $coachRepository, CategorieRepository $categorieRepository, CoursRepository $coursRepo): Response
     {
+        $user = $this->getUser();
         /* Cours fetching */
 
         $cours = $coursRepo->FindBy(array(), array('nbVues' => 'DESC'), 3, 0);
 
         /* fin cours fetching */
         if ($this->getUser()){
-            return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll()));    
+            if($user->getRoles()[0]=="ROLE_USER"){
+                return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()));    
+            }elseif($user->getRoles()[0]=="ROLE_COACH"){
+                return $this->render('dashboard/coach/index.html.twig', [
+                    'controller_name' => 'DashboardController','userinfo'=>$this->getUser()
+                ]);
+            }elseif($user->getRoles()[0]=="ROLE_ADMIN"){
+                {return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));}
+            }
         }
         else{
             return $this->redirectToRoute("app_login");
