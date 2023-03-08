@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -52,6 +52,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     private ?string $Prenom = null;
 
     #[ORM\OneToOne(mappedBy: 'id_user', cascade: ['persist', 'remove'])]
+    #[Groups("user:read")]
     private ?Coach $coach = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Abonnement::class)]
@@ -367,6 +368,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
         $this->picture = $picture;
 
         return $this;
+    }
+    public function __toString() {
+        return $this->id;
     }
 
     public function jsonSerialize(): array

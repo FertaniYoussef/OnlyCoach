@@ -26,9 +26,7 @@ class MainController extends AbstractController
             if($user->getRoles()[0]=="ROLE_USER"){
                 return $this->render('main/index.html.twig', array('popular' => $cours,  'coaches' => $coachRepository->findAll(), 'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()));    
             }elseif($user->getRoles()[0]=="ROLE_COACH"){
-                return $this->render('dashboard/coach/index.html.twig', [
-                    'controller_name' => 'DashboardController','userinfo'=>$this->getUser()
-                ]);
+                return $this->redirectToRoute('app_dashboard');
             }elseif($user->getRoles()[0]=="ROLE_ADMIN"){
                 {return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));}
             }
