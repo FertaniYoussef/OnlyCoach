@@ -1,13 +1,37 @@
 <!doctype html>
-<html class="h-full bg-gray-100">
+<html class="h-full bg-black">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
+    <title>{{course.titre}}</title>
 </head>
 <body class="h-full">
+<div id="overlay" class="bg-gradient-to-br from-black to-gray-900 w-full h-full fixed z-10 transition-[height] duration-1000 flex items-center justify-center">
+<div class="h-1 absolute left-0 top-0 transition-[width/height]" id="progress"></div>
+<div class="flex flex-col items-center justify-center space-y-3 visible transition-all duration-500 z-10" id="overlayinner">
+<h1 class="text-3xl text-white block" id="loading">
+  👨‍💻
+</h1>
+<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7 text-emerald-400 animate-none hidden" id="done">
+
+  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+<h1 class="text-white text-base" id="counter"></h1>
+<button id="opencourse"class="px-4 py-2 rounded-full bg-slate-200  text-xs hover:bg-slate-300 animate-pulse hover:animate-none duration-500 hidden">Proceed to course &uarr;</button>
+
+
+<div class="absolute bottom-24 lg:flex flex-col space-y-3 items-center w-full  hidden">
+<h1 class="text-white text-sm">Here is a playlist for your contribution to our community! ✨</h1>
+
+<iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/37i9dQZF1DZ06evO2PKuJy?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy" class="max-w-lg max-h-36" id="spotify"></iframe>
+</div>
+</div>
+
+</div>
 <div class="min-h-full">
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="relative z-40 hidden lg:hidden" role="dialog" aria-modal="true" id="mobileMenu">
@@ -34,7 +58,7 @@
                 From: "translate-x-0"
                 To: "-translate-x-full"
             -->
-            <div class="relative flex w-full max-w-xs flex-1 flex-col bg-cyan-700 pt-5 pb-4">
+            <div class="relative flex w-full max-w-xs flex-1 flex-col bg-black pt-5 pb-4">
                 <!--
                   Close button, show/hide based on off-canvas menu state.
 
@@ -103,12 +127,12 @@
     <!-- Static sidebar for desktop -->
     <div class="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <!-- Sidebar component, swap this element with another sidebar if you like -->
-        <div class="flex flex-grow flex-col overflow-y-auto bg-cyan-700 pt-5 pb-4">
+        <div class="flex flex-grow flex-col overflow-y-auto bg-black pt-5 pb-4">
             <div class="flex flex-shrink-0 items-center px-4">
                 <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=cyan&shade=300"
                      alt="Easywire logo">
             </div>
-            <nav class="mt-5 flex flex-1 flex-col divide-y divide-cyan-800 overflow-y-auto" aria-label="Sidebar">
+            <nav class="mt-5 flex flex-1 flex-col  overflow-y-auto" aria-label="Sidebar" id="nav">
                 <div class="space-y-1 px-2">
                     <!-- Current: "bg-cyan-800 text-white", Default: "text-cyan-100 hover:text-white hover:bg-cyan-600" -->
                     <a href="{{path('app_dashboard')}}"
@@ -136,12 +160,13 @@
                     </a>
 
                 </div>
+                <div id="player"></div>
             </nav>
         </div>
     </div>
 
     <div class="flex flex-1 flex-col lg:pl-64">
-        <div class="flex h-16 flex-shrink-0 border-b border-gray-200 bg-white lg:border-none">
+        <div class="flex h-16 flex-shrink-0 border-b border-white bg-black lg:border-none">
             <button type="button" id="openMenuMobile"
                     class="border-r border-gray-200 px-4 text-gray-400 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-cyan-500 lg:hidden">
                 <span class="sr-only">Open sidebar</span>
@@ -158,24 +183,24 @@
                 </div>
             </div>
         </div>
-        <main class="flex-1 pb-8">
+        <main class="flex-1">
             <!-- Page header -->
-            <div class="bg-white shadow">
+            <div class="bg-black shadow">
                 <div class="px-4 sm:px-6 lg:mx-auto lg:max-w-6xl lg:px-8">
-                    <div class="py-6 md:flex md:items-center md:justify-between lg:border-t lg:border-gray-200">
+                    <div class="py-6 md:flex md:items-center md:justify-between  lg:border-black">
                         <div class="min-w-0 flex-1">
                             <!-- Profile -->
                             <div class="flex items-center">
                                 <img class="hidden h-16 w-16 rounded-full sm:block"
-                                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                   src="{{asset(userinfo.getpicture())}}"
                                      alt="">
                                 <div>
                                     <div class="flex items-center">
                                         <img class="h-16 w-16 rounded-full sm:hidden"
                                              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                                              alt="">
-                                        <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                           Welcome, {{user.nom}} {{user.prenom}}</h1>
+                                        <h1 class="ml-3 text-2xl font-bold leading-7 text-white sm:truncate sm:leading-9">
+                                           Welcome, {{userinfo.nom}} {{userinfo.prenom}}</h1>
                                     </div>
                                     <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                         <dt class="sr-only">Company</dt>
@@ -188,7 +213,7 @@
                                                       d="M4 16.5v-13h-.25a.75.75 0 010-1.5h12.5a.75.75 0 010 1.5H16v13h.25a.75.75 0 010 1.5h-3.5a.75.75 0 01-.75-.75v-2.5a.75.75 0 00-.75-.75h-2.5a.75.75 0 00-.75.75v2.5a.75.75 0 01-.75.75h-3.5a.75.75 0 010-1.5H4zm3-11a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zM7.5 9a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1zM11 5.5a.5.5 0 01.5-.5h1a.5.5 0 01.5.5v1a.5.5 0 01-.5.5h-1a.5.5 0 01-.5-.5v-1zm.5 3.5a.5.5 0 00-.5.5v1a.5.5 0 00.5.5h1a.5.5 0 00.5-.5v-1a.5.5 0 00-.5-.5h-1z"
                                                       clip-rule="evenodd"/>
                                             </svg>
-                                            Fitness
+                                            {{userinfo.getCoach().getCategorie()}}
                                         </dd>
                                         <dt class="sr-only">Account status</dt>
                                         <dd class="mt-3 flex items-center text-sm font-medium capitalize text-gray-500 sm:mr-6 sm:mt-0">
@@ -207,37 +232,29 @@
                             </div>
                         </div>
                         <div class="mt-6 flex space-x-3 md:mt-0 md:ml-4">
-                            <button type="button" id="openForm"
-                                    class="inline-flex items-center rounded-md border border-transparent bg-cyan-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
-                                New Course
-                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {{ dump(sections|json_encode ) }}
 
-            <div id="course" class="mt-8" data-sections="{{ sections | json_encode | raw }}" data-resources="{{ resources|json_encode() }}">
-                <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-
-                    <div id="course__container" class="flex flex-col">
-                        <div class="flex  justify-between">
-                            <div class="flex flex-col">
-                        <h1 class="text-2xl font-bold leading-6 text-gray-900 mb-6">{{ course.titre }}</h1>
-                            <h1>Published on {{ course.datecreation|date('d-m-Y') }}</h1>
-                                <div id="buttons__container" class="flex mt-4 space-x-4">
-                                    <a href="{{ path('app_dashboard_modifycourse',{id : course.id}) }}"><button id="modifycourse"  class="px-4 py-2 rounded text-white bg-sky-600">Modify course</button></a>
-                                    <a href="{{ path('app_dashboard_deleteCourse',{id : course.id}) }}"><button id="deletecourse" class="px-4 py-2 rounded text-white bg-red-600">Delete course</button></a>
-                                </div>
-                                    <!-- table of adherents here later -->
-                            </div>
-                        <div class="w-[35rem] h-[20rem] overflow-hidden rounded-lg bg-gray-100 bg-cover" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
-                        </div>
-                    </div>
-
-                    <!-- More items... -->
+            <div id="course" class="bg-cover h-80 flex flex-col justify-end px-4 py-10 shadow-lg" style="background-image: url('/images/{{ course.coursphoto }}')">
+            <div id="course-data-container">
+            <div class="flex justify-between items-center">
+            <div>
+            <div id="status" class="flex space-x-2 items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="lightgreen" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-emerald-500 ">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z" />
+            </svg>
+            <span class="font-medium text-white text-sm">Published on {{ course.datecreation|date("d M Y") }}</span>
+            </div>
+                <h1 class="text-3xl font-bold leading-8 text-white">{{course.titre}}</h1>
                 </div>
+                <button id="showMembers" class="h-12 px-7 bg-black border-[1px] border-sky-700 rounded-full text-white text-sm hover:scale-105 transition-all duration-200">View members</button>
+                </div>
+            </div>
+            </div>
+            <div class="w-full bg-black" id="sections">
             </div>
 
 
@@ -246,159 +263,47 @@
     </div>
 </div>
 
-
-<!-- Slide over for creating courses starts here -->
-
-<div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="formSlide">
-    <!-- Background backdrop, show/hide based on slide-over state. -->
-    <div class="fixed inset-0"></div>
-
-    <div class="fixed inset-0 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden">
-            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
-                <div class="pointer-events-auto w-screen max-w-md">
-                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
-                        <div class="h-0 flex-1 overflow-y-auto">
-                            <div class="bg-sky-700 py-6 px-4 sm:px-6">
-                                <div class="flex items-center justify-between">
-                                    <h2 class="text-lg font-medium text-white" id="slide-over-title">New Course</h2>
-                                    <div class="ml-3 flex h-7 items-center">
-                                        <button id="closebutton" type="button"
-                                                class="rounded-md bg-sky-700 text-sky-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
-                                            <span class="sr-only">Close panel</span>
-                                            <!-- Heroicon name: outline/x-mark -->
-                                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-                                                 aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                      d="M6 18L18 6M6 6l12 12"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="mt-1">
-                                    <p class="text-sm text-sky-300">Get started by filling in the information below to
-                                        create your new course.</p>
-                                </div>
-                            </div>
-                            <div class="flex flex-1 flex-col justify-between">
-                                <div class="divide-y divide-gray-200 px-4 sm:px-6">
-                                    <div class="space-y-6 pt-6 pb-5">
-                                        <div>
-                                            <label for="course-name" class="block text-sm font-medium text-gray-900">Course
-                                                title</label>
-                                            <div class="mt-1">
-                                                <input type="text" name="course-name" id="course-name"
-                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="description" class="block text-sm font-medium text-gray-900">Course description</label>
-                                            <div class="mt-1">
-                                                <textarea id="description" name="course-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="small_size">Course background</label>
-
-                                            <div class="mt-1">
-                                                <div class="flex items-center justify-center w-full">
-                                                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-                                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
-                                                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
-                                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
-                                                            <p class="text-xs text-gray-500 dark:text-gray-400">PNG JPG or JPEG</p>
-                                                        </div>
-                                                        <input id="dropzone-file" name="course-background" type="file" class="hidden" />
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div id="sections" class="space-y-5">
-                                            <div class="flex justify-between">
-                                                <h1 class="block text-sm font-medium text-gray-900">Add new
-                                                    section</h1>
-                                                <div id="buttons__container" class="flex space-x-1">
-                                                    <div id="plus"
-                                                         class="px-4 py-1 flex items-center justify-center text-xs text-white bg-orange-600 rounded-md cursor-pointer"
-                                                         onclick="{ addSection() }">+
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div id="section1" class="mt-4">
-                                                <div>
-                                                    <div class="w-full bg-sky-700 px-2 py-3 mb-4 rounded-md">
-                                                        <h1 class="text-white rounded-md">Section 1</h1>
-                                                    </div>
-
-                                                    <label for="section1-title"
-                                                           class="block text-sm font-medium text-gray-900">Section 1
-                                                        Title</label>
-                                                    <div class="mt-1">
-                                                        <input type="text" name="section1-title" id="section1-title"
-                                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div id="resources1" class="mt-4">
-                                                        <h1 class="w-full bg-sky-700 px-2 py-3 mb-4 text-white rounded-md">Section 1 Resource</h1>
-
-                                                        <div class="mt-1">
-                                                            <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                            <input type="text" name="section1-link" id="section1-title"
-                                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
-                                                            <div class="mt-2">
-                                                                <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
-                                                                <div class="mt-1">
-                                                <textarea id="description" name="section1-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex flex-shrink-0 justify-end px-4 py-4">
-                            <button type="button"
-                                    class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Cancel
-                            </button>
-                            <button type="submit"
-                                    class="ml-4 inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                Save
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<div id="modal" class="w-full h-full bg-black/75 backdrop-blur-sm fixed top-0  justify-center items-center  hidden">
+    <div id="container" class="lg:w-1/2 w-5/6  max-h-96 bg-white rounded-md p-4">
+        <div class="flex justify-between items-center border-b-[1px] border-gray-200 -mx-4 px-4 pb-2">
+            <h1 class="text-xl font-bold">Followed by</h1>
+            <button id="closeModal" class="h-6 w-6 bg-gray-200 rounded-full hover:scale-105 transition-all duration-200 flex justify-center items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+</button>
         </div>
+        <div id="members" class="mt-2 -mx-4 max-h-72 overflow-y-scroll">
+        <!-- Create a table -->
+        <table class="table w-full">
+            <thead class="sticky top-0 left-0 bg-white">
+                <tr>
+                    <th class="px-4 py-2 text-left text-black text-sm">Fullname</th>
+                    <th class="px-4 py-2 text-right text-black text-sm">Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+            
+               {% for user in users %}
+                <tr>    
+                
+                
+                    <td class=" px-4 py-2 text-left text-sm">{{user.Nom}}</td>
+                    <td class=" px-4 py-2 text-right text-sm">{{user.Date}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </div>
+
+    
     </div>
 </div>
 
-<!-- Slide over panel for creating courses ends here-->
+
+
+
 
 <script>
-
-    const closeButton = document.getElementById('closebutton')
-    closeButton.addEventListener('click', () => {
-        document.getElementById('formSlide').classList.remove('block')
-        document.getElementById('formSlide').classList.add('hidden')
-    })
-
-    const openButton = document.getElementById('openForm')
-    openButton.addEventListener('click', () => {
-        document.getElementById('formSlide').classList.remove('hidden')
-        document.getElementById('formSlide').classList.add('block')
-    })
 
     const closeMenuButton = document.getElementById('closeMenu')
     closeMenuButton.addEventListener('click', () => {
@@ -410,65 +315,197 @@
         document.getElementById('mobileMenu').classList.remove('hidden')
     })
 
-    const sections = document.getElementById('course').dataset.sections
-    console.log(sections)
+
+               async function getData() {
+                const response = await fetch('/coach/dashboard/api/course/'+{{course.id}}, {
+             method: 'POST',
+                headers: {
+                 'Content-Type': 'application/json',
+                'Accept': 'application/json'
+             },
+            })
+             .then(res => res.json())
+             .catch(err => console.log(err))
+
+             return response
 
 
-    let counter = 2;
+            }
 
-    function addSection() {
-        const form = document.getElementById('sections');
-        const div = document.createElement('div');
-        
-        const sectionId = `section${counter}`;
-        div.id = sectionId;
-        div.innerHTML = `<div id="${sectionId}" class="mt-4">
-                                                <div>
-                                                    <div class="w-full bg-sky-700 px-2 py-3 mb-4 rounded-md flex justify-between items-center">
-                                                        <h1 class="text-white rounded-md">Section ${counter}</h1>
-                                                        <button type="button" style="background: #ef4444" class="px-4 text-white text-xs py-1 rounded-md" onclick="removeSection('${sectionId}')">Remove Section</button>
-                                                    </div>
+            // call the function then group sections and resources by section id
+           const data = getData().then(data => {
+                // extract section and group it with its resources by section id
+                const sections = data.sections.map(section => {
+                    const resources = data.resources.filter(resource => resource.id === section.id)
+                    return { ...section, resources }
+                })
+                // append sections to the dom
+                const sectionContainer = document.getElementById('sections')
 
-                                                    <label for="${sectionId}title"
-                                                           class="block text-sm font-medium text-gray-900">Section ${counter}
-                                                        Title</label>
-                                                    <div class="mt-1">
-                                                        <input type="text" name="${sectionId}-title" id="${sectionId}-title"
-                                                               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div id="resources${counter}" class="mt-4">
-                                                        <h1 class="w-full bg-sky-700 px-2 py-3 mb-4 text-white rounded-md">Section ${counter} Resource</h1>
 
-                                                        <div class="mt-1">
-                                                            <h1 class="block text-sm font-medium text-gray-900">Link</h1>
-                                                            <input type="text" name="${sectionId}-link" id="section1-title"
-                                                                   class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"/>
-                                                            <div class="mt-2">
-                                                                <label for="description" class="block text-sm font-medium text-gray-900">Description</label>
-                                                                <div class="mt-1">
-                                                <textarea id="description" name="${sectionId}-description" rows="4"
-                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                
-                                            </div>
-  `;
+                /* WIP */
+                var n = 1
+                sections.forEach(section => {
+                    var link = /[^/]*$/.exec(section.resources[0].link)[0];
+                    link = link.replace("watch?v=", "");
+                    const div = document.createElement('div');
+                    const sectionId = `section${section.id}`;
+                    div.id = sectionId;
+                    div.innerHTML = `<div id="${sectionId}" class="pb-8">
+                    <div class="bg-black w-full py-4 shadow-md flex justify-between items-center px-4 border-b-[1px] border-indigo-900">
+                    <h1 class="text-lg text-white font-medium">Section ${n} : ${section.title}</h1>
+                    <span class="text-sm text-sky-200">${n}/${sections.length}</span></div>
+                    <iframe class="w-full h-[35rem]" src="https://www.youtube.com/embed/${link}" id="player" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
-        form.appendChild(div);
-        counter++;
-    }
+                    <h1 class="text-lg font-medium mt-4 ml-4 text-white">Description</h1>
+                    <p class="text-sm  ml-4 text-white">${section.resources[0].description}</p>
 
-    function removeSection(sectionId) {
-        const section = document.getElementById(sectionId);
-        section.parentNode.removeChild(section);
-        counter--
-    }
+                    </div>`
+
+
+                    sectionContainer.appendChild(div)
+                    n++
+                })
+    })
+
+    var overlay = document.getElementById('overlay')
+    var overlayinner = document.getElementById('overlayinner')
+    var player = document.getElementById('player')
+    const loading = document.getElementById('loading')
+    var done = document.getElementById('done')
+
+    // make a counter from 0 to 100
+    let counter = 0
+    const intervales = [40,70,65]
+    // pick a random number from the array
+    const random = intervales[Math.floor(Math.random() * intervales.length)]
+    const skews = ['skew-y-12','-skew-y-12']
+    const randomskew = skews[Math.floor(Math.random() * skews.length)]
+    const interval = setInterval(() => {
+        counter++
+        const progress = document.getElementById('progress')
+        progress.classList.add('bg-red-500')
+        progress.style.width = counter+"%"
+            progress.classList.add('duration-1000')
+
+       if (counter < 30)
+        document.getElementById('counter').innerHTML = "Fetching course data.. "+counter+"%"+" 👀"
+        if (counter >= 30) {
+             document.getElementById('counter').innerHTML = "Making sure everything looks amazing..."+counter+"%"+" 🙉"
+        }
+        if (counter >= 50) {
+             document.getElementById('counter').innerHTML = "Adding some magic..."+counter+"%"+" 🪄"
+             progress.classList.add('bg-yellow-400')
+            progress.classList.remove('bg-red-500')
+        }
+        if (counter >= 80) {
+             document.getElementById('counter').innerHTML = "Almost there..."+counter+"%"+" 🚀"
+        }
+        if (counter === 100) {
+            clearInterval(interval)
+            progress.classList.add('bg-lime-700')
+            progress.classList.remove('bg-yellow-400')
+
+            setTimeout(() => {
+            progress.style.height = 90+"%"
+            }, 1000)
+            setTimeout(() => {
+            progress.classList.add(randomskew)
+            }, 2000)
+
+            // create an interval to dynamically change the bg color of the progress bar
+            const interval2 = setInterval(() => {
+                const colors = ['bg-indigo-700','bg-pink-800','bg-lime-700']
+                const random = colors[Math.floor(Math.random() * colors.length)]
+
+                progress.classList.remove('bg-indigo-700')
+                progress.classList.remove('bg-pink-800')
+                progress.classList.remove('bg-lime-700')
+                progress.classList.add(random)
+                // do the same for opencourse button
+                opencourse.classList.remove('text-indigo-700')
+                opencourse.classList.remove('text-pink-800')
+                opencourse.classList.remove('text-lime-700')
+                opencourse.classList.add(random.replace('bg-', 'text-'))
+
+               // progress.classList.add(random)
+            }, 2300)
+
+
+                setTimeout(() => {
+                document.getElementById('counter').innerHTML = "Voila! 🎉"
+                }, 300)
+            loading.classList.add('hidden')
+            loading.classList.remove('block')
+            done.classList.add('block')
+            done.classList.remove('hidden')
+
+            const opencourse = document.getElementById('opencourse')
+            var spotify = document.getElementById('spotify')
+            setTimeout(() => {
+            opencourse.classList.add('block')
+            opencourse.classList.remove('hidden')
+            }, 2200)
+
+
+            opencourse.addEventListener('click', () => {
+                opencourse.classList.remove('animate-pulse')
+            progress.classList.remove(randomskew)
+            progress.style.height = 100+"%"
+            progress.classList.add('bg-lime-600')
+
+                                setTimeout(() => {
+                var audio = new Audio('/assets/success.mp3');
+                audio.play();
+                                }, 100)
+               setTimeout(() => {
+                // change spotify height
+            spotify.classList.remove('max-h-36')
+            spotify.classList.add('max-h-full')
+            document.getElementById('nav').classList.add('justify-between')
+            spotify.classList.add('mb-4')
+            spotify.classList.add('px-2')
+            player.appendChild(spotify)
+            overlayinner.classList.add('invisible')
+            overlayinner.classList.remove('visible')
+            overlay.classList.add('h-0')
+            overlay.classList.remove('h-full')
+            setTimeout(() => {
+            overlay.remove()
+            }, 1000)
+        }, 800)
+            })
+
+        // remove overlay from dom
+        /* setTimeout(() => {
+            overlayinner.classList.add('invisible')
+            overlayinner.classList.remove('visible')
+            overlay.classList.add('h-0')
+            overlay.classlist.remove('h-full')
+            overlay.remove()
+        }, 2000) */
+        }
+    }, random)
+
+
+    // add event listener to the showMembers button
+    const showMembers = document.getElementById('showMembers')
+    const modal = document.getElementById('modal')
+    const close = document.getElementById('closeModal')
+    showMembers.addEventListener('click', () => {
+        modal.classList.add('flex')
+        modal.classList.remove('hidden')
+    })
+    close.addEventListener('click', () => {
+        modal.classList.add('hidden')
+        modal.classList.remove('block')
+    })
+
+
+
+
+
 </script>
- 
+
 </body>
 </html>
