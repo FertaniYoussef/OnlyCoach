@@ -289,51 +289,73 @@
                                                         <tr>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id Coach</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Prix</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Discount</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Starts</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ends</th>
+
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date debut</th>
+                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Fin</th>
+
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Edit</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Delete</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
+                                                       <!-- boucle for ici-->
+  {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+    {% endfor %}
+
+                                                       {% for offre in offres%}
                                                         <tr>
-                                                            <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
-                                                                <div class="flex items-center">
-                                                                    <div>
-                                                                        <div class="font-medium text-gray-900">{# id coach ici #}Id coach</div>
-                                                                    </div>
-                                                                </div>
+                                                            
+                                                           <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Nom ici #}{{ offre.IdCoach }}</div>
+                                                            </td>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Nom ici #}Nom</div>
+                                                                <div class="text-gray-900">{# Nom ici #}{{ offre.nom }}</div>
+                                                            </td>
+                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# prix ici #}{{ offre.prix}}$</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Discount ici #}Discount</div>
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.Discount }}$</div>
+                                                          
+                                                              
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.DateDeb|date('d-m-Y') }}</div>
+                                                            </td>
+                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{# Discount ici #}{{ offre.DateFin|date('d-m-Y') }}</div>
+                                                            </td>
+                                                            
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminModifierOffer', {id :offre.id()})}}">{# Changer l'id (dynamique) #}Edit</a></div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date debut ici #}Date debut</div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date fin ici #}Date fin</div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminModifierOffer', {id : 1})}}">{# Changer l'id (dynamique) #}Edit</a></div>
-                                                            </td>
-                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-red-600"><a href="{# Path pour suppression ici (vers controlleur) #}">Delete</a></div>
+                                                                <div class="text-red-600"><a href="{{ path('app_dashboard_adminDeleteOffer', {'id': offre.id()})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
+                                                        
+                                                            {% endfor %}
+
+
+                                                        <!-- end boucle for ici-->
                                                         <!-- Rendre cette partie dynamique avec twig -->
                                                         </tbody>
                                                     </table>
+                                                   
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
+ <br>
+                                                    <br>
+                                                      {{ knp_pagination_render(offres,"pagination/pagination.html.twig") }}
                                 <!-- WIP -->
 
                             </div>
@@ -360,7 +382,7 @@
         <div class="absolute inset-0 overflow-hidden">
             <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
                 <div class="pointer-events-auto w-screen max-w-md">
-                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_addcourse') }}" method="post" enctype="multipart/form-data">
+                    <div class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl">
                         <div class="h-0 flex-1 overflow-y-auto">
                             <div class="bg-sky-700 py-6 px-4 sm:px-6">
                                 <div class="flex items-center justify-between">
@@ -388,7 +410,74 @@
                                 <div class="divide-y divide-gray-200 px-4 sm:px-6">
                                     <div class="pt-6 pb-5 space-y-4">
 
-                                        {{form(form)}}
+      
+        <h1 style="text-align: center;"> Ajouter offre </h1> 
+
+ {{ form_start(form,{attr:{novalidate:'novalidate'}}) }}
+
+
+
+        <div class="card">
+            <div class="card-body">
+
+              <!-- Vertical Form -->
+              <form class="row g-3">
+                <div class="col-12">
+                  <label for="inputNanme4" class="form-label">Nom</label>
+                      {{ form_widget(form.Nom, {'attr': {'class': 'form-control','type':'text', 'placeholder': 'Enter  Nom'}}) }}
+                                                                            {{ form_errors(form.Nom,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+                <div class="col-12">
+                  <label for="inputAddress" class="form-label">Prix</label>
+                      {{ form_widget(form.Prix, {'attr': {'class': 'form-control','type':'number', 'placeholder': 'Enter  Prix'}}) }}
+                                                      {{ form_errors(form.Prix,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+                 <div class="col-12">
+                  <label for="inputAddress" class="form-label">Discount</label>
+                      {{ form_widget(form.Discount, {'attr': {'class': 'form-control','type':'number', 'placeholder': 'Enter  Discount'}}) }}
+                                                      {{ form_errors(form.Discount,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+                 <div class="col-12">
+                  <label for="inputAddress" class="form-label">date_deb</label>
+                      {{ form_widget(form.dateDeb, {'attr': {'class': 'form-control','type':'date', 'placeholder': 'Enter  date_deb'}}) }}
+                                                      {{ form_errors(form.dateDeb,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+                     <div class="col-12">
+                  <label for="inputAddress" class="form-label">date_fin</label>
+                      {{ form_widget(form.dateFin, {'attr': {'class': 'form-control','type':'date', 'placeholder': 'Enter  date_fin'}}) }}
+                                                      {{ form_errors(form.dateFin,{ 'attr':{'class':'text-danger'}}) }}
+
+                </div>
+
+
+               <div class="col-12">
+                  <label for="inputAddress" class="form-label"> id_coach</label>
+                      {{ form_widget(form.id_coach) }}
+                </div>
+                
+                <div class="text-center">
+
+          {{ form_widget(form) }}
+
+                </div>
+              </form><!-- Vertical Form -->
+
+            </div>
+          </div>
+{{ form_end(form) }}
+
+
+
+
+
+                                            
+<form action="" method="">
 
 
                                     </div>
@@ -406,7 +495,7 @@
                                 Save
                             </button>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -441,5 +530,8 @@
 
 
 </script>
+
+	
+	
 </body>
 </html>

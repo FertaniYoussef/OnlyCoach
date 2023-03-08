@@ -1,18 +1,21 @@
 <?php
 
 namespace App\Controller;
-use App\Entity\User;
+
 use App\Entity\Cours;
 use App\Entity\Ressources;
 use App\Entity\Sections;
 use App\Entity\Coach;
 use App\Entity\Offre;
+use App\Entity\Commentaire;
 use App\Entity\Feedback;
 use App\Form\CoachType;
 use App\Form\OfferType;
 use App\Form\FeedbackType;
 use App\Repository\CoursRepository;
 use App\Repository\FeedbackRepository;
+use App\Repository\OffreRepository;
+
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
@@ -24,17 +27,33 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use DateTime;
+use App\EntityManagerInterface;
+use Symfony\Component\Serializer\SerializerInterface;
+
+use App\Entity\User;
+use Dompdf\Dompdf as Dompdf;
+use Dompdf\Options;
+use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\OptionsResolver;
+
 
 class DashboardController extends AbstractController
-{
+{ private $paginator;
+
+    public function __construct(PaginatorInterface $paginator)
+    {
+        $this->paginator = $paginator;
+    }
     #[Route('/coach/dashboard', name: 'app_dashboard')]
     public function index(Request $request): Response
     {
@@ -51,7 +70,7 @@ class DashboardController extends AbstractController
     public function apiCourse(Request $request, CoursRepository $repository, int $id): Response
     {
         $course = $repository->find($id);
-       
+
         // loop through the course sections and extract the resources
         $sections = $course->getIdSections()->getValues();
         $resources = [];
@@ -138,23 +157,86 @@ class DashboardController extends AbstractController
     {
         $course = $repository->find($id);
         $adherents=$adhrepo->findByCourse($course);
-   
+
 
         $users=[];
         $entityManager = $doctrine->getManager();
         foreach($adherents as $adherent) {
             $userProxy= $adherent->getUser();
-            
+
             $entityManager->initializeObject($userProxy);
-           
+
             $users[]=$userProxy;
         }
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
+        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources]);
     }
+    //Cours commentaire
+
+    #[Route('/coach/dashboard/Commentairecourses', name: 'app_dashboard_ommentairecourses')]
+
+    public function afficherCommentaire(Request $request,CoursRepository $repository): Response
+    {
+        $Commentaires= $this->$repository()->getManager()->getRepository(Commentaire::class)->findAll();
+
+        return $this->render('dashboard/coach/course.html.twig', [
+            'b'=>$Commentaires
+        ]);
+    }
+    public function addCommentaire(Request $request,CoursRepository $repository): Response
+    {
+
+       $Commentaire=new Commentaire();
+       $form=$this->createForm(CommentaireType::class,$Commentaire);
+       $form->handleRequest($request);
+       if($form->isSubmitted() && $form->isValid()){
+           $Commentaire->setDate(new DateTime());
+         $em = $this->$repository()->getManager();
+           $em->persist($Commentaire);
+           $em->flush();
+
+           return $this->redirectToRoute('displayCommentaire');
+       }
+       else
+       return $this->render('commentaire/createCommentaire.html.twig',['f'=>$form->createView()]);
+
+    }
+
+
+    public function modifierCommentaire(Request $request,CoursRepository $repository,$id): Response
+    {
+
+       $Commentaires=$this->$repository()->getManager()->getRepository(Commentaire::class)->find($id);
+       $form=$this->createForm(CommentaireType::class,$Commentaires);
+       $form->handleRequest($request);
+       if($form->isSubmitted() && $form->isValid()){
+
+
+           $em = $this->$repository()->getManager();
+
+           $em->flush();
+
+           return $this->redirectToRoute('displayCommentaire');
+       }
+       else
+       return $this->render('commentaire/modifierCommentaire.html.twig',['f'=>$form->createView()]);
+
+    }
+
+    public function deleteCommentaire( Request $request,CoursRepository $repository){
+
+        $Commentaire=$this->$repository()->getRepository(Commentaire::class)->findOneBy(array('id'=>$request->query->get("id")));
+        $em=$this->$repository ->getManager();
+        $em->remove($Commentaire);
+        $em->flush();
+        return new Response("success");
+
+    }
+
+
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
     public function DeleteCourse(ManagerRegistry $doctrine, CoursRepository $repository, int $id) {
@@ -333,6 +415,13 @@ class DashboardController extends AbstractController
                 $em->persist($resource);
             }
 
+            // validate $cours
+            $errors = $validator->validate($cours);
+
+            dump($errors);
+            if (count($errors) > 0) {
+                return new Response((string) $errors, 400);
+            }
 
 
 
@@ -444,42 +533,162 @@ class DashboardController extends AbstractController
     }
 
 
-    // Partie Offers
+    // Partie Offers afiichage
+
+
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
-    public function offers(Request $request): Response
+
+    public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine): Response
     {
-        $offre = new Offre();
-        $form = $this->createForm(OfferType::class, $offre);
+        $page = $request->query->getInt('page', 1);
 
+        $limit = 2;
+        $paginator = $this->paginator;
+
+
+        $offres = $paginator->paginate($repository->findAll(), $page, $limit);
+
+        $offre = new offre();
+        $form = $this->createForm(OfferType::class, $offres);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
+            $offre = $form->getData();
+            // get user data and put them in coach (only in coach table)
+            $offre->setNom($offre->getNom());
 
+            $em = $doctrine->getManager();
+            $em->persist($offre);
+            $em->flush();
+            $this->addFlash('success','Offre Added Successfully !');
             return $this->redirectToRoute('app_dashboard_adminOffers');
         }
         return $this->render('dashboard/admin/offers/offers.html.twig', [
             'form' => $form->createView(),
             'userinfo'=>$this->getUser()
         ]);
+
     }
+        #[Route('api/admin/dashboard/offers', name: 'app_api_dashboard_adminOffers')]
 
-    #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
-    public function offersModify(Request $request,int $id): Response
+    public function offers_api(Request $request,OffreRepository $repository, ManagerRegistry $doctrine, SerializerInterface $serializer): Response
     {
-        $offre = new Offre();
-        $form = $this->createForm(OfferType::class, $offre);
 
+        $offres = $repository->findAll();
+
+
+
+
+
+        $json = $serializer->serialize($offres,
+        'json', ['groups' => ['offre']]);
+
+        $offres = new offre();
+        $form = $this->createForm(OfferType::class, $offres);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $offre = $form->getData();
+            // get user data and put them in coach (only in coach table)
+            $offre->setNom($offre->getNom());
 
-            return $this->redirectToRoute('app_dashboard_adminOffers');
+            $em = $doctrine->getManager();
+            $em->persist($offre);
+            $em->flush();
+
+            $this->addFlash('success', 'Offre Added Successfully !');
+            'offres' => $offres
         }
-        return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
-            'form' => $form->createView(),
-        ]);
+        return $this->JsonReponse($offre);
+        }
+
+
+
+
+
+    #[Route('/admin/dashboard/offers/modify/{id}', name: 'app_dashboard_adminModifierOffer')]
+    public function offersModify(Request $request, int $id, ORMEntityManagerInterface $em): Response
+    {
+
+        $Offres = $em->getRepository(Offre::class)->find($id);
+        $form = $this->createForm(OfferType::class, $Offres);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+
+
+
+
+            $em->flush();
+
+            return $this->JsonReponse($offre);;
+        } else
+            return $this->render('dashboard/admin/offers/modifyoffer.html.twig', [
+                'form' => $form->createView(),
+            ]);
     }
+
+
+
+
+
+
+    //delete offer
+    #[Route('/admin/dashboard/offers/delete/{id}', name: 'app_dashboard_adminDeleteOffer')]
+    public function deleteOffer(Request $request, ManagerRegistry $doctrine, OffreRepository $repository, int $id): Response
+    {
+
+        $offre = $repository->find($id);
+        $offre = $repository->find($offre->getId());
+        $em = $doctrine->getManager();
+        $em->remove($offre);
+        $em->flush();
+        return $this->JsonReponse($offre);;
+
+    }
+    #[Route('/offre/data/download', name: 'users_data_download')]
+
+public function usersDataDownload(OffreRepository $offres)
+{
+    // On définit les options du PDF
+    $pdfOptions = new Options();
+    // Police par défaut
+    $pdfOptions->set('defaultFont', 'Arial');
+    $pdfOptions->setIsRemoteEnabled(true);
+
+    // On instancie Dompdf
+    $dompdf = new Dompdf($pdfOptions);
+    $offres= $offres->findAll();
+
+    // $classrooms= $this->getDoctrine()->getRepository(classroomRepository::class)->findAll();
+
+    $context = stream_context_create([
+        'ssl' => [
+            'verify_peer' => FALSE,
+            'verify_peer_name' => FALSE,
+            'allow_self_signed' => TRUE
+        ]
+    ]);
+    $dompdf->setHttpContext($context);
+
+    // On génère le html
+    $html =$this->renderView('dashboard/admin/offers/pdf.html.twig',[
+        'offres' => $offres    ]);
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    // On génère un nom de fichier
+    $fichier = 'Liste-produit' .'.pdf';
+
+    // On envoie le PDF au navigateur
+    $dompdf->stream($fichier, [
+        'Attachment' => true
+    ]);
+
+    return new Response() ;
+}
+
 
     // Partie feedbacks
 

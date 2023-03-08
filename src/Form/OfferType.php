@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Coach;
 use App\Entity\Offre;
+use DateTime;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,14 +16,26 @@ class OfferType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+       
             ->add('Nom')
             ->add('Prix')
             ->add('Discount')
-            ->add('date_deb')
-            ->add('date_fin')
-            ->add('id_coach')
-            ->add('Ajouter', SubmitType::class, [
-                'label' => 'Ajouter',
+
+        ->add('dateDeb')
+            ->add('dateFin')
+
+            ->add('id_coach', EntityType::class, [
+                'class' => Coach::class,
+                'choice_label' => 'id',
+                'attr' => [
+                    'class' => 'form-control',
+
+                ]
+            ])
+            ->add('save', SubmitType::class, [
+                'attr' => [
+                    'class' => 'btn btn-primary',
+                ]
             ])
         ;
     }

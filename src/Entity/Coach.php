@@ -8,7 +8,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[ORM\Entity(repositoryClass: CoachRepository::class)]
+/**
+ * Coach
+ *
+ * @ORM\Table(name="coach", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_3F596DCC79F37AE5", columns={"id_user_id"})}, indexes={@ORM\Index(name="IDX_3F596DCCBCF5E72D", columns={"categorie_id"})})
+ * @ORM\Entity
+ */
 class Coach
 {
     /**
@@ -244,9 +249,7 @@ class Coach
 
 
 
-    public function __toString() {
-        return $this->id;
-    }
+
 
     /**
      * @return Collection<int, Cours>
@@ -276,5 +279,8 @@ class Coach
         }
 
         return $this;
+    }
+    public function __toString() {
+        return (string)$this->id;
     }
 }

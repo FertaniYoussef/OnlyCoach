@@ -2,29 +2,31 @@
 
 namespace App\Entity;
 
-use App\Repository\CategorieRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CategorieRepository::class)]
+/**
+ * Categorie
+ *
+ * @ORM\Table(name="categorie")
+ * @ORM\Entity
+ */
 class Categorie
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Type = null;
-
-    #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Coach::class)]
-    private Collection $id_coach;
-
-    public function __construct()
-    {
-        $this->id_coach = new ArrayCollection();
-    }
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     */
+    private $type;
 
     public function getId(): ?int
     {

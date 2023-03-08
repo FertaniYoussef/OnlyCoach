@@ -1,36 +1,106 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\OffreRepository;
+use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OffreRepository::class)]
+use Symfony\Component\Serializer\Annotation\Groups;
+
+/**
+ * Offre
+ *
+ * @ORM\Table(name="offre", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_AF86866F6CCBBA04", columns={"id_coach_id"})})
+ * @ORM\Entity
+ */
 class Offre
 {
-    #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
-    private ?int $id = null;
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups("offre")
+     */
+    private $id;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $Nom = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?float $Prix = null;
+    /**
+     * @Assert\NotBlank(message=" nom  est obligatoire")
+     * @Assert\Type(type="string")
+    * @Groups("offre")
 
-    #[ORM\Column(nullable: true)]
-    private ?float $Discount = null;
+     * @var string|null
+     *
+     * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+     * @Groups("offre")
+     */
+    private $nom;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_deb = null;
+    /**
+     * @Assert\NotBlank(message=" prix  est obligatoire")
+     * @Assert\Type(type="float")
+     * @Groups("offre")
+     * @var float|null
+     *
+     * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=true)
+     * @Groups("offre")
+     */
+    private $prix;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $date_fin = null;
+    /**
+     * @Assert\NotBlank(message=" discount  est obligatoire")
+     * @Assert\Type(type="float")
+     * @Groups("offre")
+     * @var float|null
+     *
+     * @ORM\Column(name="discount", type="float", precision=10, scale=0, nullable=true)
+     * @Groups("offre")
+     */
+    private $discount;
 
-    #[ORM\OneToOne(inversedBy: 'offre', cascade: ['persist', 'remove'])]
-    private ?Coach $id_coach = null;
+    
+
+
+
+
+
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_deb", type="date", nullable=true)
+     * @Groups("offre")
+     */
+
+
+     
+    private $dateDeb;
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="date_fin", type="date", nullable=true)
+     * @Groups("offre")
+     */
+    private $dateFin;
+
+    /**
+     * @var \Coach
+     *
+     * @ORM\ManyToOne(targetEntity="Coach")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_coach_id", referencedColumnName="id")
+     * })
+     * 
+     * 
+     */
+    private $idCoach;
 
     public function getId(): ?int
     {
@@ -39,73 +109,82 @@ class Offre
 
     public function getNom(): ?string
     {
-        return $this->Nom;
+        return $this->nom;
     }
 
-    public function setNom(?string $Nom): self
+    public function setNom(?string $nom): self
     {
-        $this->Nom = $Nom;
+        $this->nom = $nom;
 
         return $this;
     }
 
     public function getPrix(): ?float
     {
-        return $this->Prix;
+        return $this->prix;
     }
 
-    public function setPrix(?float $Prix): self
+    public function setPrix(?float $prix): self
     {
-        $this->Prix = $Prix;
+        $this->prix = $prix;
 
         return $this;
     }
 
     public function getDiscount(): ?float
     {
-        return $this->Discount;
+        return $this->discount;
     }
 
-    public function setDiscount(?float $Discount): self
+    public function setDiscount(?float $discount): self
     {
-        $this->Discount = $Discount;
+        $this->discount = $discount;
 
         return $this;
     }
 
+  
+
+
+
     public function getDateDeb(): ?\DateTimeInterface
     {
-        return $this->date_deb;
+        return $this->dateDeb;
     }
 
-    public function setDateDeb(?\DateTimeInterface $date_deb): self
+    public function setDateDeb(?\DateTimeInterface $dateDeb): self
     {
-        $this->date_deb = $date_deb;
+        $this->dateDeb = $dateDeb;
 
         return $this;
     }
 
     public function getDateFin(): ?\DateTimeInterface
     {
-        return $this->date_fin;
+        return $this->dateFin;
     }
 
-    public function setDateFin(?\DateTimeInterface $date_fin): self
+    public function setDateFin(?\DateTimeInterface $dateFin): self
     {
-        $this->date_fin = $date_fin;
+        $this->dateFin = $dateFin;
 
         return $this;
     }
 
     public function getIdCoach(): ?Coach
     {
-        return $this->id_coach;
+        return $this->idCoach;
     }
-
-    public function setIdCoach(?Coach $id_coach): self
+    public function id_coach(): ?Coach
     {
-        $this->id_coach = $id_coach;
+        return $this->idCoach;
+    }
+    public function setIdCoach(?Coach $idCoach): self
+    {
+        $this->idCoach = $idCoach;
 
         return $this;
     }
+
+
 }
