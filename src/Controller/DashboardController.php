@@ -17,7 +17,8 @@ use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
-use App\Repository\AbonnementRepository;
+use App\Entity\Adherents;
+use App\Repository\AdherentsRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +27,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
@@ -37,7 +43,7 @@ class DashboardController extends AbstractController
     {
         $user = $this->getUser();
         $coach = $coachRep->findBy(['id_user' => $user]);
-        $abonnements = $rep->findBy(['coach' => $coach], [], 10, 0); 
+        $abonnements = $rep->findBy(['coach' => $coach], [], 10, 0);
         $courses = $coach[0]->getCours()->getValues();
 
         $abonnementsChart = $rep->findAbonnementByCoach($coach[0]->getId());
@@ -52,8 +58,8 @@ class DashboardController extends AbstractController
             $counts[] = $abonnement['count'];
         }
 
-        
-        
+
+
         dump($dates);
         dump($counts);
 
@@ -74,7 +80,7 @@ class DashboardController extends AbstractController
         $chart->setOptions([
             'scales' => [
                 'y' => [
-                    'suggestedMin' => $counts ? min($counts) : 0, 
+                    'suggestedMin' => $counts ? min($counts) : 0,
                     'suggestedMax' => $counts ? max($counts) + 1 : 1,
                 ],
             ],
@@ -181,14 +187,26 @@ class DashboardController extends AbstractController
     }
 
     #[Route('/coach/dashboard/courses/{id}', name: 'app_dashboard_course')]
-    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id): Response
+    public function Course(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id,AdherentsRepository $adhrepo,UserRepository $userrepo,ManagerRegistry $doctrine): Response
     {
         $course = $repository->find($id);
+        $adherents=$adhrepo->findByCourse($course);
+
+
+        $users=[];
+        $entityManager = $doctrine->getManager();
+        foreach($adherents as $adherent) {
+            $userProxy= $adherent->getUser();
+
+            $entityManager->initializeObject($userProxy);
+
+            $users[]=$userProxy;
+        }
         $sections = $course->getIdSections()->getValues();
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-        return $this->render('dashboard/coach/course.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/deleteCourse/{id}', name: 'app_dashboard_deleteCourse')]
@@ -235,14 +253,14 @@ class DashboardController extends AbstractController
             $em->flush();
             return  $this->redirectToRoute("app_dashboard_modifycourse", ['id' => $idc]);
         }
-        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'user' => $this->getUser(),]);
+        return  $this->render('dashboard/coach/modifysection.html.twig', ['course' => $cours, 'section' => $section, 'resource' => $resource,'userinfo' => $this->getUser(),]);
     }
 
-    
+
 
     #[Route('/coach/dashboard/api/modifycourse/{id}', name: 'app_dashboard_modifycourseApi')]
     public function modifyCourseApi(Request $request,ManagerRegistry $doctrine, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository,int $id) {
-        
+
         $inputs = $request->request->all();
         var_dump($inputs);
         $course = $repository->find($id);
@@ -305,7 +323,7 @@ class DashboardController extends AbstractController
 
         // WIP
 
-        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
+        return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
     #[Route('/coach/dashboard/api/addCourse', name: 'app_dashboard_addCourseApi')]
@@ -450,7 +468,8 @@ class DashboardController extends AbstractController
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
     public function adminIndex(Request $request): Response
     {
-        return $this->render('dashboard/admin/index.html.twig');
+
+        return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));
     }
 
     // Partie users
@@ -459,10 +478,18 @@ class DashboardController extends AbstractController
     {
         $users = $repository->findAll();
         return $this->render('dashboard/admin/users/users.html.twig',[
-            'userstab' => $users
+            'userstab' => $users,'userinfo'=>$this->getUser()
         ]);
     }
-    
+
+    #[Route('api/admin/dashboard/users', name: 'app_api_dashboard_adminUsers')]
+    public function userss(Request $request,UserRepository $repository,SerializerInterface $serializer): Response
+    {
+        $users = $repository->findAll();
+        $jsonContent = $serializer->serialize($users, 'json');
+        dd($jsonContent);
+    }
+
     #[Route('/admin/dashboard/users/remove/{id}', name: 'app_dashboard_adminUsersremove')]
     public function usersremove(ManagerRegistry $doctrine,$id,UserRepository $repository)
     {
@@ -512,7 +539,8 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/admin/coachs/coachs.html.twig', [
             'form' => $form->createView(),
-            'coachs' => $coachs
+            'coachs' => $coachs,
+            'userinfo'=>$this->getUser()
         ]);
     }
 
@@ -546,6 +574,7 @@ class DashboardController extends AbstractController
         }
         return $this->render('dashboard/admin/offers/offers.html.twig', [
             'form' => $form->createView(),
+            'userinfo'=>$this->getUser()
         ]);
     }
 
@@ -574,7 +603,7 @@ class DashboardController extends AbstractController
         $Feedback=$repository->findAll();
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig',[
             'Feedback' => $Feedback,
-
+            'userinfo'=>$this->getUser()
         ]);
     }
 
