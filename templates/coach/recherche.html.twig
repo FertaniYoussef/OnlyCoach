@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="bg-slate-50">
+<html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -24,7 +24,7 @@
                         <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
                         <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
                         <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                        <a href="{{ path('app_contact') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                        <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
                     </div>
 
 
@@ -38,23 +38,13 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                         </svg>
                     </button>
-                    <a href="{{ path('app_coach_fav_home' ) }}">
-                   <div class="relative ml-3">
-                    <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <span class="sr-only">View notifications</span>
-                        <!-- Heroicon name: outline/bell -->
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-</svg>
-                    </button>
-                    </a>
-                    </div>
+
                     <!-- Profile dropdown -->
                     <div class="relative ml-3">
                         <div>
                             <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="{{asset(userinfo.getpicture())}}" alt="">
+                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
                             </button>
                         </div>
 
@@ -72,7 +62,7 @@
                             <!-- Active: "bg-gray-100", Not Active: "" -->
                             <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Calendar</a>
-                            <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                            <a href="{{ path('app_login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
                         </div>
                     </div>
                 </div>
@@ -124,19 +114,16 @@
                         <div class="text-base font-medium text-gray-800">Amrou Ghribi</div>
                     </div>
                     <button type="button" class="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                        <span class="sr-only">View Favorite List</span>
+                        <span class="sr-only">View notifications</span>
                         <!-- Heroicon name: outline/bell -->
-             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-             </svg>
-             
-
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
+                        </svg>
                     </button>
                 </div>
                 <div class="mt-3 space-y-1">
                     <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Settings</a>
                     <a href="#" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Calendar</a>
-                    <a href="{{ path('app_dashboard') }}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Dashboard</a>
                     <a href="{{ path('app_login') }}" class="block px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800">Sign out</a>
                 </div>
             </div>
@@ -189,26 +176,12 @@
                         </button>
                     </div>
 
-                    <!-- Filters -->
-                    <form class="mt-4 border-t border-gray-200">
-                        <h3 class="sr-only">Categories</h3>
-                        <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-                            {% for cat in categories %}
-                                <a href="{{ path('app_courses_category', {'slug' : cat.type }) }}"><li class=" block hover:bg-gray-100 rounded-sm p-2 hover:cursor-pointer text-gray-800 mb-4" id="{{ cat.id }}" >
-                                        {{ cat.type }}
-                                    </li></a>
-                            {% endfor %}
-                        </ul>
-
-                    </form>
                 </div>
             </div>
         </div>
 
         <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
-                <h1 class="text-4xl font-bold tracking-tight text-gray-900">Welcome</h1>
-    
+            <div class="flex items-baseline justify-between  pt-24 pb-6">
 
                 <div class="flex items-center">
 
@@ -222,159 +195,60 @@
                 </div>
             </div>
 
-
-
             <section aria-labelledby="products-heading" class="pt-6 pb-24">
                 <h2 id="products-heading" class="sr-only">Products</h2>
 
                 <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
-                    <!-- Filters -->
-                    <form class="hidden lg:block">
-                        <h3 class="sr-only">Categories</h3>
-                        <h1 class="text-sm p-2 mb-4 font-medium text-white bg-black rounded-md">Categories</h1>
-                        <ul role="list" class="space-y-4 pb-6 text-sm font-medium text-gray-800">
-
-                            {% for cat in categories %}
-                                <a href="{{ path('app_coach_tri', {'id' : cat.id}) }}" class="block"><li class="hover:bg-gray-300 rounded-md p-2 hover:cursor-pointer" id="{{ cat.id }}" >
-                                    {{ cat.type }}
-                                </li></a>
-                            {% endfor %}
-
-
-                        </ul>
-
-
-                    </form>
 
                     <!-- Product grid -->
-                    <div class="lg:col-span-3">
-                            <div class="h-96 rounded-lg  lg:h-full divide-y divide-gray-100 divide-solid space-y-10"> <!-- Right main container don't touch it // put content inside this -->
-                                <div class="h-[17rem] w-full relative p-7 bg-[url('../../public/images/MainBannerImage.jpg')] bg-cover rounded-md flex items-end shadow-md brightness-[90%] contrast-125">
-                                    <p class="text-3xl sm:text-4xl font-bold text-white z-20">Boost your fitness,<br>
-                                        Enroll in a course now.</p>
-                                    <div class="bg-gradient-to-r from-black/40 rounded-md w-full h-full absolute inset-0 z-10"></div>
-                                </div>
-                                <div id="TrendingContent" class="pt-8">
-                                    <div id="header" class="flex justify-between items-center">
-                                    <span class="text-xl sm:text-2xl font-bold">Trending courses</span>
-                                    </div>
-                                    <span class="text-gray-400 text-sm">Take a look at our most trending courses at the moment.</span>
-                                    <div id="TrendingCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-5 md:gap-x-5 pt-7">
-                                        <!-- Make it dynamic later -->
-                                        {% if popular is empty%}
-                                            <div class="text-center col-span-3 border-2 border-dashed py-5 rounded-md border-gray-200">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-gray-400">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-</svg>
-
-  <h3 class="mt-2 text-sm font-medium text-gray-900">No trending courses.</h3>
-  <p class="mt-1 text-sm text-gray-500">When we have trending courses, you will find them here.</p>
-</div>
-                                        {% else %}
-                                        {% for course in popular %}
-                                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
-                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
-                                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
-                                                    <h1 class="text-xs text-gray-500 pt-1">{{course.IdCoach}} {{course.IdCoach}}</h1>
-                                                   {# {% if course.totalratings > 10 %} #}
-                                                        <div class="flex items-center">
-                                                            <span class="text-amber-600 text-sm font-medium">rating goes here</span>
-                                                           {# {% for i in range(1, course.rating|round(0, 'floor')) %} #}
-                                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                                          {#  {% endfor %} #}
-                                                            <span class="text-xs text-gray-400 ml-1">count ratings here</span>
-                                                        </div>
-                                                   {# {% else %} #}
-                                                        <div class="w-12 h-5 bg-black flex items-center justify-center mt-1">
-                                                            <span class="text-xs text-white font-medium uppercase ">new</span>
-                                                        </div>
-                                                  {#  {% endif %} #}
-                                                </div></a>
-                                        {% endfor %}
-                                        {% endif %}
-
-
-
-
-
-
-                                    </div>
-                                </div>
-
-                                <div id="PopularContent" class="pt-8">
-                                    <div id="header" class="flex justify-between items-center">
-                                        <span class="text-xl sm:text-2xl font-bold">Popular courses</span>
-                                        <a class="text-gray-700 hover:text-white font-bold rounded-sm text-xs border-[1px] border-black hover:bg-black py-1 px-4" href="{{ path('app_courses_popular') }}">View more</a>
-                                    </div>
-                                    <span class="text-gray-400 text-sm">Loved by everyone, take a look at the most popular courses we have to offer!</span>
-                                    <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-0 md:gap-x-5 pt-7">
-
-
-                                    {% if popular is empty %}
-                                            <div class="text-center col-span-3 border-2 border-dashed py-5 rounded-md border-gray-200">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mx-auto h-8 w-8 text-gray-400">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
-</svg>
-
-  <h3 class="mt-2 text-sm font-medium text-gray-900">No popular courses.</h3>
-  <p class="mt-1 text-sm text-gray-500">As courses get more popular, you will find them here.</p>
-</div>
-                                        {% else %}
-                                        <!-- Make it dynamic later -->
-                                        {% for course in popular %}
-                                        <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
-                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
-                                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
-                                                    <h1 class="text-xs text-gray-500 pt-1"></h1>
-                                                   {# {% if course.totalratings > 10 %} #}
-                                                        <div class="flex items-center">
-                                                            <span class="text-amber-600 text-sm font-medium">rating goes here</span>
-                                                           {# {% for i in range(1, course.rating|round(0, 'floor')) %} #}
-                                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                                          {#  {% endfor %} #}
-                                                            <span class="text-xs text-gray-400 ml-1">count ratings here</span>
-                                                        </div>
-                                                   {# {% else %} #}
-                                                        <div class="w-12 h-5 bg-black flex items-center justify-center mt-1">
-                                                            <span class="text-xs text-white font-medium uppercase ">new</span>
-                                                        </div>
-                                                  {#  {% endif %} #}
-                                                </div></a>
-                                        {% endfor %}
-                                        {% endif %}
-
-
-
-                                    </div>
-                                </div>
-
-                                <div id="TopCoaches" class="pt-8">
-                                    <div id="header" class="flex justify-between items-center">
-                                        <span class="text-xl sm:text-2xl font-bold">Top coaches</span>
-                                        <a class="text-gray-700 hover:text-white font-bold rounded-sm text-xs border-[1px] border-black hover:bg-black py-1 px-4" href="{{ path('app_coach') }}">View more</a>
-                                    </div>
-                                    <span class="text-gray-400 text-sm">Earned by their hard work, Discover our top rated coaches.</span>
-                                    <div id="TrendingCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-10 md:gap-y-0 md:gap-x-5 pt-7 place-items-center">
-                                        <!-- Make it dynamic later -->
-
-                                       {% for coach in coaches %}
-                                        <div id="CoachContainer" class="flex flex-col items-center">
-                                            <div class="w-20 h-20 rounded-full" style="background-image: url('/images/{{ coach.picture }}'); background-size: cover;"></div>
-                                            <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
-                                            <span class="text-md pt-2 ">{{ coach.prenom }} {{ coach.nom}}</span>
-                                            <span class="text-sm text-teal-600">{{coach.categorie}}</span>
-                                            </div>
-                                      
-                                     
-                                        </div>
-                                        {% endfor %}
-
-
-
-                                    </div>
-                                </div>
-
+                    <div class="lg:col-span-4">
+                        <div class="h-96 rounded-lg  lg:h-full space-y-10"> <!-- Right main container don't touch it // put content inside this -->
+                            <div class="h-[17rem] w-full relative p-7 bg-[url('../../public/images/gradientbg3.jpg')] bg-cover rounded-md flex items-end shadow-md brightness-[90%] contrast-125">
+                                <p class="text-3xl sm:text-4xl font-bold text-white z-20">Coachs</p>
+                                <div class="bg-gradient-to-r from-black/40 rounded-md w-full h-full absolute inset-0 z-10"></div>
                             </div>
+
+                            <div id="coaches" class="pt-8">
+                               
+                                <div id="TrendingCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-10 md:gap-y-10 md:gap-x-5 pt-10 place-items-stretch">
+                                    <!-- Make it dynamic later -->
+                                    
+
+  <div id="search-results"></div>
+
+
+  <script>
+   
+      $('#search').click(function() {
+        alert('hi');
+        $.ajax({
+          url: '{{ path('app_coach_search') }}',
+          method: 'GET', 'POST'
+          data: { query: $('#query').val() },
+          dataType: 'json',
+          success: function(response) {
+            // Afficher les résultats de la recherche dans la page
+           // $('#search-results').html(response['template']['content']);
+           console.log(response);
+          }
+        });
+      });
+    
+  </script>
+
+
+
+
+
+    
+
+
+                                    
+
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </section>
@@ -403,13 +277,13 @@
         profilemenu.classList.add('block')
     }
     function hideMenu() {
-    profilemenu.classList.remove('block')
-    profilemenu.classList.add('hidden')
+        profilemenu.classList.remove('block')
+        profilemenu.classList.add('hidden')
     }
 
     userprofile.addEventListener('click', () => {
         profilemenu.classList.contains('hidden') ? showMenu() : hideMenu()
-        })
+    })
     // Large screens ends here
 
     // mobile starts here
@@ -456,8 +330,8 @@
     const closeFilterButton = document.getElementById('closeFilterButton')
 
     function showFilters() {
-    filterDialog.classList.remove('hidden')
-    filterDialog.classList.add('block')
+        filterDialog.classList.remove('hidden')
+        filterDialog.classList.add('block')
     }
 
     function hideFilters() {
@@ -482,3 +356,4 @@
 
 </body>
 </html>
+

@@ -12,7 +12,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class UserController extends AbstractController
 {
@@ -121,11 +124,39 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_settings',array('userinfo'=>$this->getUser()));
         }
     }
+    #[Route('/email', name: 'app_email')]
+    public function sendEmail(Request $request,MailerInterface $mailer,UserRepository $repo): Response
+    {
+        if ($request->getMethod() === 'POST'){
+            $request->request->all();
+            $inputs = $request->request->all();
+            $user=$repo->findBy(['email' => $inputs["email"]]);
+            $email = (new TemplatedEmail())
+            ->from('aziz.rezgui@esprit.tn')
+            ->to($inputs["email"])
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->htmlTemplate('mailer/mailer.html.twig')
+            ->context([
+                'pass' => $user[0]->getPassword(),
+            ]);
+            $mailer->send($email);
+            return $this->redirectToRoute('app_login');
+        // ...
+        }
+    }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
     {
         $errors=null;
         return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
+    }
+    #[Route('/user/ForgotPassword', name: 'app_ForgotPassword')]
+    public function indexforgotpass(): Response
+    {
+        return $this->render('user/forgotPassword.html.twig');
     }
 
     #[Route('/user/{id}', name: 'app_user')]
