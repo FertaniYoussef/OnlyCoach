@@ -39,7 +39,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Component\Serializer\SerializerInterface;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -730,18 +731,30 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
     // Récupérer la liste des coachs depuis la base de données
     $coachRepository = $doctrine->getRepository(Coach::class);
     $coaches = $coachRepository->findAll();
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+    $pdfOptions->set('isRemoteEnabled',true);    
 
+    $dompdf = new Dompdf($pdfOptions);
     // Générer le contenu HTML de la liste des coachs
     $html = $this->renderView('dashboard/admin/coachs/liste.html.twig', ['coaches' => $coaches]);
 
     // Générer le PDF à partir du contenu HTML
-    $pdfContent = $pdf->getOutputFromHtml($html);
+    $dompdf->loadHtml($html);
 
+
+
+    $dompdf->setPaper('A4', 'portrait');
+
+    $dompdf->render();
+   $output = $dompdf->output();
+   $filename = 'coach-list.pdf';
     // Retourner le PDF en réponse HTTP
-    return new PdfResponse(
-        $pdfContent,
-        'coach-list.pdf'
-    );
+    $response = new Response($output, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . $filename . '"'
+    ]);
+    return $response;
 
 }
 
