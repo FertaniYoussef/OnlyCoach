@@ -757,8 +757,8 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
     {
         $Feedback=$repository->findAll();
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig',[
-            'Feedback' => $Feedback,
-            'userinfo'=>$this->getUser()
+            'Feedback' => $Feedback,'userinfo' => $this->getUser(),
+
         ]);
     }
 
@@ -771,10 +771,11 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
 
         if ($form->isSubmitted() && $form->isValid()) {
             // ajouter reponse
-            $EM->persist($reponse);
-            $EM->flush();
             $reponse->getIdFeedback();
-             $feedback->setStatus(1);
+            $feedback->setStatus(1);
+            $EM->persist($reponse);
+
+
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
 
@@ -787,7 +788,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
         return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView(),'userinfo' => $this->getUser(),
         ]);
 
     }
@@ -829,7 +830,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
         }
 
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
-            'Feedback' => $results, 'user'=>$this->getUser(),
+            'Feedback' => $results, 'userinfo'=>$this->getUser(),
         ]);
     }
 
@@ -849,7 +850,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
             'Feedback' => $feedbacks,
             'sort' => $sort,
-             'user'=>$this->getUser(),
+             'userinfo'=>$this->getUser(),
         ]);
     }
 
