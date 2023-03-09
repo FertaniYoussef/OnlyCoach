@@ -549,11 +549,16 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
             $coachproxy=$abonnement->getCoach();
             $entityManager->initializeObject($coachproxy);
            
-            $Nom = $coachproxy->getNom() . ' ' . $coachproxy->getPrenom();
+            $Nom = $coachproxy->getNom();
+            $Prenom= $coachproxy->getPrenom();
             $ammount = $abonnement->getPrix();
+
             $date=$abonnement->getDateDeb()->format('d/m/y');;
             $payements[]=array(
+                'id' => $abonnement->getId(),
+                'id_coach'=>$coachproxy->getId(),
                 'Nom' => $Nom,
+                'Prenom' => $Prenom,
                 'ammount' => $ammount,
                 'date' => $date
             );
