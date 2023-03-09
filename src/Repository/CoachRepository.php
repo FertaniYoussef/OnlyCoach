@@ -55,13 +55,46 @@ class CoachRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Coach
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+public function findOneBySearchTerm($searchTerm): ?Coach
+{
+    return $this->createQueryBuilder('c')
+    ->where('c.Nom = :searchTerm')
+    ->orWhere('c.Prenom = :searchTerm')
+    ->setParameter('searchTerm', $searchTerm)
+    ->getQuery()
+    ->getOneOrNullResult();
 }
+public function search($query)
+{
+    $qb = $this->createQueryBuilder('e')
+        ->where('e.Nom LIKE :query')
+        ->orWhere('e.Prenom LIKE :query')
+        ->setParameter('query', '%'.$query.'%')
+        ->orderBy('e.Nom', 'ASC')
+        ->setMaxResults(10);
+
+    return $qb->getQuery()->getResult();
+}
+
+public function findAllByCategory(int $id): array
+{
+    return $this->createQueryBuilder('c')
+        ->join('c.categorie', 'cat')
+        ->andWhere('cat.id = :id')
+        ->setParameter('id', $id)
+        ->orderBy('c.id', 'ASC')
+        ->getQuery()
+        ->getResult();
+
+}
+}
+//public function getcoachByCategory($id)  {
+ //   $qb= $this->createQueryBuilder('s')
+   //     ->join('s.categorie','c')
+   //     ->addSelect('c')
+   //     ->where('c.id=:id')
+    //    ->setParameter('id',$id);
+   // return $qb->getQuery()
+     //   ->getResult();
+// }
+

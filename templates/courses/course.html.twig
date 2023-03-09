@@ -206,7 +206,7 @@
                    <button type="submit"  class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Enroll to this course</button>
                  </form>
                     {% endif %}
-                    {% if adherent %}
+                    {% if adherent and abonnement    %}
                  <form action="{{ path('leave_join' , {'courseId': course.id})}}">
                     <button type="submit" class="flex w-full items-center justify-center rounded-md border border-transparent bg-gray-900 py-3 px-8 text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 focus:ring-offset-gray-50">Leave course</button>
                  </form>

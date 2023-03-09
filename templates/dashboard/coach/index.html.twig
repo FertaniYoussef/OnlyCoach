@@ -247,16 +247,16 @@
                         <div class="min-w-0 flex-1">
                             <!-- Profile -->
                             <div class="flex items-center">
-                                <img class="hidden h-16 w-16 rounded-full sm:block"
+                                <img class="hidden h-16 w-16 rounded-full sm:block hover:cursor-pointer hover:opacity-80 hover:animate-pulse"  onclick="toggleSlide()"
                                      src="{{asset(user.getpicture())}}"
                                      alt="">
                                 <div>
                                     <div class="flex items-center">
-                                        <img class="h-16 w-16 rounded-full sm:hidden"
+                                        <img class="h-16 w-16 rounded-full sm:hidden hover:cursor-pointer hover:opacity-80 hover:animate-pulse" onclick="toggleSlide()"
                                              src="{{asset(user.getpicture())}}"
                                              alt="">
                                         <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                            Welcome, {{user.nom}} {{user.prenom}}</h1>
+                                            Welcome, {{userinfo.nom}} {{userinfo.prenom}}</h1>
                                     </div>
                                     <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                         <dt class="sr-only">Company</dt>
@@ -511,6 +511,121 @@
     </div>
 </div>
 
+<!-- Slide over for changing coach settings here -->
+<div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="coachSlide">
+    <!-- Background backdrop, show/hide based on slide-over state. -->
+    <div class="fixed inset-0 bg-gradient-to-bl from-teal-800/50 to-indigo-900/50 backdrop-blur-sm"></div>
+
+    <div class="fixed inset-0 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden">
+            <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 sm:pl-16">
+                <div class="pointer-events-auto w-screen max-w-md">
+                    <form class="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl" action="{{ path('app_dashboard_modifycoach') }}" method="post" enctype="multipart/form-data" id="coachForm">
+                        <div class="h-0 flex-1 overflow-y-auto">
+                            <div class="bg-sky-700 py-6 px-4 sm:px-6">
+                                <div class="flex items-center justify-between">
+                                 <div class="flex items-center">
+                                      
+                                          <h2 class="text-lg font-medium text-white" id="slide-over-title">
+                                            {{user.nom}} {{user.prenom}}</h1>
+                                    </div>
+                              
+                                    <div class="ml-3 flex h-7 items-center">
+                                        <button onClick="closeSlide()" type="button"
+                                                class="rounded-md bg-sky-700 text-sky-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
+                                            <span class="sr-only">Close panel</span>
+                                            <!-- Heroicon name: outline/x-mark -->
+                                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                 aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="M6 18L18 6M6 6l12 12"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="mt-1">
+                                    <p class="text-sm text-sky-300">Modify your profile</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-1 flex-col justify-between" id="coachcontainer">
+                                <div class="divide-y divide-gray-200 px-4 sm:px-6">
+                                    <div class="space-y-6 pt-6 pb-5">
+                                        <div>
+                                            <label for="coach-name" class="block text-sm font-medium text-gray-900">Coach name</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="coach-name" id="coach-name" Default="{{user.nom}}"
+                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="coach-prename" class="block text-sm font-medium text-gray-900">Coach prename</label>
+                                            <div class="mt-1">
+                                                <input type="text" name="coach-prename" id="coach-prename" Default="{{user.prenom}}" 
+                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label for="description" class="block text-sm font-medium text-gray-900">Coach description</label>
+                                            <div class="mt-1">
+                                                <textarea id="coach-description" name="coach-description" rows="4"
+                                                          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"></textarea>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="small_size">Coach profile picture</label>
+
+                                            <div class="mt-1">
+                                                <div class="flex items-center justify-center w-full">
+                                                    <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+                                                        <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                                            <svg aria-hidden="true" class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                                                            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                                                            <p class="text-xs text-gray-500 dark:text-gray-400">PNG JPG or JPEG</p>
+                                                        </div>
+                                                        <input id="dropzone-file" name="coach-picture" type="file" class="hidden" />
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+<div>
+                                            <label for="coach-price" class="block text-sm font-medium text-gray-900">Coach price</label>
+                                            <div class="mt-1">
+                                                 <input type="number" name="coach-price" id="coach-price" value="0"
+                                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                            </div>
+                                        </div>
+                                      
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-shrink-0 justify-end px-4 py-4">
+                            <button type="reset"
+                                    class="rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                Reset
+                            </button>
+                            <button type="submit"
+                                    class="ml-4 inline-flex justify-center items-center rounded-md border border-transparent bg-sky-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-1" id="spinicon">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                    </svg>
+
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Slide over for changing coach courses end here -->
+
+
 <!-- Slide over for creating courses starts here -->
 
 <div class="relative z-10 hidden" aria-labelledby="slide-over-title" role="dialog" aria-modal="true" id="formSlide">
@@ -656,11 +771,24 @@
 
 <script>
 
+
+function toggleSlide() {
+      document.getElementById('coachSlide').classList.remove('hidden')
+        document.getElementById('coachSlide').classList.add('block')
+}
+
+closeSlide= () => {
+        document.getElementById('coachSlide').classList.remove('block')
+        document.getElementById('coachSlide').classList.add('hidden')
+}
+
     const closeButton = document.getElementById('closebutton')
     closeButton.addEventListener('click', () => {
         document.getElementById('formSlide').classList.remove('block')
         document.getElementById('formSlide').classList.add('hidden')
     })
+
+
 
     const openButton = document.getElementById('openForm')
     openButton.addEventListener('click', () => {
@@ -745,6 +873,77 @@
                 errorcontainer.parentNode.removeChild(errorcontainer);
             }, 5000)
     }
+    const coachInputs = document.getElementById('coachForm');
+    coachInputs.addEventListener('submit', (e)=> {
+         e.preventDefault();
+        const formData = new FormData(coachInputs);
+        const data = Object.fromEntries(formData);
+            console.log("test");
+        if (data['coach-name'] === '') {
+            coachname = document.getElementById('coach-name');
+            coachname.classList.add('border-red-500');
+            coachname.classList.add('border-2');
+            coachname.placeholder = 'Coach name is required';
+            return;
+        } else {
+            coachname = document.getElementById('coach-name');
+            coachname.classList.remove('border-red-500');
+            coachname.classList.remove('border-2');
+            coachname.placeholder = 'Coach name';
+        }
+        if (data['coach-prename'] === '') {
+            coachprename = document.getElementById('coach-prename');
+            coachprename.classList.add('border-red-500');
+            coachprename.classList.add('border-2');
+            coachprename.placeholder = 'Coach prename is required';
+            return;
+        } else {
+            coachprename = document.getElementById('coach-prename');
+            coachprename.classList.remove('border-red-500');
+            coachprename.classList.remove('border-2');
+            coachprename.placeholder = 'Coach prename';
+        }
+          if (data['coach-description'] === '') {
+            coachDescription = document.getElementById('coach-description');
+            coachDescription.classList.add('border-red-500');
+            coachDescription.classList.add('border-2');
+            coachDescription.placeholder = 'Coach description is required';
+            return;
+        } else {
+            coachDescription = document.getElementById('coach-description');
+            coachDescription.classList.remove('border-red-500');
+            coachDescription.classList.remove('border-2');
+        }  
+         if (data['coach-picture'].name === '') {
+            alert('Coach picture is required');
+            return;
+        }  
+         if (data['coach-price'] === "") {
+            coachPrice = document.getElementById('coach-price');
+            coachPrice.classList.add('border-red-500');
+            coachPrice.classList.add('border-2');
+            coachPrice.placeholder = 'Coach price is required';
+            return;
+        } else {
+            coachPrice = document.getElementById('coach-price');
+            coachPrice.classList.remove('border-red-500');
+            coachPrice.classList.remove('border-2');
+        }  
+             const spinicon = document.getElementById('spinicon');
+        spinicon.classList.add('animate-spin');
+        const coachContainer = document.getElementById('coachcontainer');
+        coachContainer.classList.add('animate-pulse');
+
+    // submit form
+    const form = document.getElementById('coachForm');
+
+        setTimeout(() => {
+            form.submit()
+        }, 2500)
+
+   // 
+
+    })
 
     const formInputs = document.getElementById('courseForm');
     formInputs.addEventListener('submit', (e) => {

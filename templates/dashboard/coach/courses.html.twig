@@ -168,13 +168,13 @@
                         <div class="min-w-0 flex-1">
                             <!-- Profile -->
                             <div class="flex items-center">
-                                <img class="hidden h-16 w-16 rounded-full sm:block"
-                                  src="{{asset(user.getpicture())}}"
+                                  <img class="hidden h-16 w-16 rounded-full sm:block hover:cursor-pointer hover:opacity-80 hover:animate-pulse"  onclick="toggleSlide()"
+                                     src="{{asset(user.getpicture())}}"
                                      alt="">
                                 <div>
                                     <div class="flex items-center">
-                                        <img class="h-16 w-16 rounded-full sm:hidden"
-                                            src="{{asset(user.getpicture())}}"
+                                          <img class="h-16 w-16 rounded-full sm:hidden hover:cursor-pointer hover:opacity-80 hover:animate-pulse" onclick="toggleSlide()"
+                                             src="{{asset(user.getpicture())}}"
                                              alt="">
                                         <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
                                             Welcome, {{user.nom}} {{user.prenom}}</h1>
