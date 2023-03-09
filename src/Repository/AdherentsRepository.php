@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use App\Entity\User;
 use App\Entity\Adherents;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -51,7 +51,8 @@ class AdherentsRepository extends ServiceEntityRepository
     // find adherent where adherent id and course id
     public function findAdherentByCourseId($adherentId, $courseId)
     {
-        return $this->createQueryBuilder('a')
+        return $this->createQueryBuilder('a,u')
+        ->select('a.date', 'u.Nom', 'u.Prenom')
             ->andWhere('a.user = :adherentId')
             ->andWhere('a.cours = :courseId')
             ->setParameter('adherentId', $adherentId)
