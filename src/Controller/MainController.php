@@ -28,7 +28,7 @@ class MainController extends AbstractController
             }elseif($user->getRoles()[0]=="ROLE_COACH"){
                 return $this->redirectToRoute('app_dashboard');
             }elseif($user->getRoles()[0]=="ROLE_ADMIN"){
-                {return $this->render('dashboard/admin/index.html.twig',array('userinfo'=>$this->getUser()));}
+                {return $this->redirectToRoute("app_dashboard_adminIndex");}
             }
         }
         else{
