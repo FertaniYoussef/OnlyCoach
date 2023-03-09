@@ -220,6 +220,11 @@
                                             <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
                                             <span class="text-md pt-2 ">{{ coach.prenom }} {{ coach.nom}}</span>
                                             <span class="text-sm text-teal-600">{{coach.id}}</span>
+                                            {% for of in offres %}
+                                            {% if of.idCoach == coach %}
+                                            <span class="text-sm text-teal-600">{{of.prixFin}}</span>
+                                            {% endif %}
+                                            {% endfor %}
                                             </div>
                                         </div>
                                         {% endfor %}

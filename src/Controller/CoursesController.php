@@ -31,6 +31,30 @@ class CoursesController extends AbstractController
     }
 
 
+
+
+
+    function removeBadWords($comment) {
+        //hedha tableau taa lklem li thebou yestnahha 
+        $badWords = array("bad", "words");
+        $words = explode(" ", $comment->getContenu());
+        foreach ($words as &$word) { 
+            if (in_array(strtolower($word), $badWords)) { 
+                $word = str_repeat("*", strlen($word)); 
+            }
+        }
+        $newComment = implode(" ", $words); 
+        echo $newComment;
+        $comment->setContenu(  $newComment);
+        return $comment;
+    }
+
+
+
+
+
+
+
     #[Route('/courses/{slug}', name: 'app_course')]
     public function indexCourse($slug, EntityManagerInterface $EM, HttpFoundationRequest $request): Response
     {
@@ -44,6 +68,8 @@ class CoursesController extends AbstractController
             $Commentaire->setAuteur("imen");
             $Commentaire->setIdCoures($coures);
             $Commentaire->setDate(new DateTime());
+            $this->removeBadWords($Commentaire);
+
             $EM->persist($Commentaire);
             $EM->flush();
             $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);

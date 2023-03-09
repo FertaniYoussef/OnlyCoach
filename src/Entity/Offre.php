@@ -51,11 +51,28 @@ class Offre
      */
     private $discount;
 
+       /**
+     * @Assert\Type(type="float")
+     * @var float|null
+     *
+     * @ORM\Column(name="prix_fin", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $prixFin;
+    
+
+
+
+
+
+
     /**
      * @var \DateTime|null
      *
      * @ORM\Column(name="date_deb", type="date", nullable=true)
      */
+
+
+     
     private $dateDeb;
 
     /**
@@ -72,6 +89,8 @@ class Offre
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_coach_id", referencedColumnName="id")
      * })
+     * 
+     * 
      */
     private $idCoach;
 
@@ -103,6 +122,17 @@ class Offre
 
         return $this;
     }
+    public function getPrixFin(): ?float
+    {
+        return $this->prixFin;
+    }
+
+    public function setPrixFin(?float $prix): self
+    {
+        $this->prixFin = $prix;
+
+        return $this;
+    }
 
     public function getDiscount(): ?float
     {
@@ -115,6 +145,10 @@ class Offre
 
         return $this;
     }
+
+  
+
+
 
     public function getDateDeb(): ?\DateTimeInterface
     {

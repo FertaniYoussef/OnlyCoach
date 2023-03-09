@@ -31,6 +31,8 @@ use App\Repository\OffreRepository;
 use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class DashboardController extends AbstractController
 {
@@ -396,11 +398,14 @@ class DashboardController extends AbstractController
 
 
     // Partie Offers
+    
+    
 
     #[Route('/admin/dashboard/offers', name: 'app_dashboard_adminOffers')]
-    public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine): Response
+    public function offers(Request $request,OffreRepository $repository, ManagerRegistry $doctrine, PaginatorInterface $paginator): Response
     {
         $offres = $repository->findAll();
+        
         $offre = new offre();
 
         $form = $this->createForm(OfferType::class, $offre);
@@ -411,20 +416,37 @@ class DashboardController extends AbstractController
             $offre = $form->getData();
             // get user data and put them in coach (only in coach table)
             $offre->setNom($offre->getNom());
-            
-
+            $offre->setPrixFin($offre->getPrix()-$offre->getDiscount());
             $em = $doctrine->getManager();
             $em->persist($offre);
             $em->flush();
+            $this->addFlash('success','Offre Added Successfully !');
 
-            return $this->redirectToRoute('app_dashboard_adminOffers');
+            return $this->redirectToRoute('app_dashboard_adminOffers', [], Response::HTTP_SEE_OTHER);        
         }
-
-
-        return $this->render('dashboard/admin/offers/offers.html.twig', [
-            'form' => $form->createView(),
-            'offres' => $offres
-        ]);
+        if ($request->isXmlHttpRequest()) { // If it's an AJAX request
+            $page = $request->query->getInt('page', 1);
+            $offres = $paginator->paginate(
+                $repository->findAll(),
+                $page,
+                3
+            );
+            $html = $this->renderView('dashboard/admin/offers/offers.html.twig', [
+                'form' => $form->createView(),
+                'offres' => $offres
+            ]);
+            return new JsonResponse($html);
+        } else {
+            $offres = $paginator->paginate(
+                $repository->findAll(),
+                $request->query->getInt('page', 1),
+                3
+            );
+            return $this->render('dashboard/admin/offers/offers.html.twig', [
+                'form' => $form->createView(),
+                'offres' => $offres
+            ]);
+        }
     }
 
 
@@ -440,7 +462,7 @@ class DashboardController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
 
-
+            $Offres->setPrixFin($Offres->getPrix()-$Offres->getDiscount());
        
 
             $em->flush();
