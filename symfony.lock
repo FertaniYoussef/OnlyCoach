@@ -35,6 +35,15 @@
             "migrations/.gitignore"
         ]
     },
+    "knplabs/knp-snappy-bundle": {
+        "version": "1.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "1.5",
+            "ref": "c81bdcf4a9d4e7b1959071457f9608631865d381"
+        }
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "2.18",
         "recipe": {
@@ -127,6 +136,15 @@
             "src/Controller/.gitignore",
             "src/Kernel.php"
         ]
+    },
+    "symfony/google-mailer": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.4",
+            "ref": "f8fd4ddb9b477510f8f4bce2b9c054ab428c0120"
+        }
     },
     "symfony/mailer": {
         "version": "6.0",
@@ -250,6 +268,9 @@
             "config/packages/twig.yaml",
             "templates/base.html.twig"
         ]
+    },
+    "symfony/ux-chartjs": {
+        "version": "v2.7.1"
     },
     "symfony/validator": {
         "version": "6.0",

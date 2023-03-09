@@ -12,7 +12,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class UserController extends AbstractController
 {
@@ -121,16 +124,44 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_settings',array('userinfo'=>$this->getUser()));
         }
     }
+    #[Route('/email', name: 'app_email')]
+    public function sendEmail(Request $request,MailerInterface $mailer,UserRepository $repo): Response
+    {
+        if ($request->getMethod() === 'POST'){
+            $request->request->all();
+            $inputs = $request->request->all();
+            $user=$repo->findBy(['email' => $inputs["email"]]);
+            $email = (new TemplatedEmail())
+            ->from('aziz.rezgui@esprit.tn')
+            ->to($inputs["email"])
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->htmlTemplate('mailer/mailer.html.twig')
+            ->context([
+                'pass' => $user[0]->getPassword(),
+            ]);
+            $mailer->send($email);
+            return $this->redirectToRoute('app_login');
+        // ...
+        }
+    }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
     {
         $errors=null;
         return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
     }
+    #[Route('/user/ForgotPassword', name: 'app_ForgotPassword')]
+    public function indexforgotpass(): Response
+    {
+        return $this->render('user/forgotPassword.html.twig');
+    }
 
     #[Route('/user/{id}', name: 'app_user')]
     public function index($id): Response
     {
-        return $this->render('user/index.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'creator' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'creator' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'creator' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'categories' => ['Cardio','Resistance','Yoga','Whole Body','Circuit Training','HIIT','Stretching']) );
+        return $this->render('user/index.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'creator' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'creator' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'creator' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'userinfo'=> $this->getUser()) );
     }
 }
