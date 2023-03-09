@@ -790,7 +790,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
             $reponse->getIdFeedback();
             $feedback->setStatus(1);
             $EM->persist($reponse);
-
+            $EM->flush();
 
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
