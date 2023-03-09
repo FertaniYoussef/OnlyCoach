@@ -87,6 +87,14 @@ public function findAllByCategory(int $id): array
         ->getResult();
 
 }
+public function findById($id)
+{
+    return $this->createQueryBuilder('c')
+        ->where('c.id = :id')
+        ->setParameter('id', $id)
+        ->getQuery()
+        ->getOneOrNullResult();
+}
 }
 //public function getcoachByCategory($id)  {
  //   $qb= $this->createQueryBuilder('s')

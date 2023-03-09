@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Reponses {% endblock %}
+
+{% block body %}
+    <table class="table w-full border-collapse border border-gray-300">
+        <thead class="bg-gray-200">
+        <tr>
+            <th class="px-4 py-2 text-left">Id</th>
+            <th class="px-4 py-2 text-left">texte</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for regime in reponses %}
+            <tr>
+                <td class="border px-4 py-2">{{ regime.id }}</td>
+                <td class="border px-4 py-2">{{ regime.texte }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7" class="border px-4 py-2">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_retour }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4 inline-block">Retour</a>
+{% endblock %}

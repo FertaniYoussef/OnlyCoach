@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Repository\CoachRepository;
 use App\Form\UserType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,58 +73,58 @@ class UserController extends AbstractController
     public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
     {
         $user = $this->getUser();
-        if ($request->getMethod() === 'POST'){
+        if ($request->getMethod() === 'POST') {
             $request->request->all();
             $inputs = $request->request->all();
             $target_dir = "./images/"; // update if needed with coach/user name
             $target_file = $target_dir . basename($_FILES["user-photo"]["name"]);
             move_uploaded_file($_FILES["user-photo"]["tmp_name"], $target_file);
-        if ($_FILES["user-photo"]["name"])
-            $user->setPicture($target_file);
-        else
-            $user->setPicture($user->getPicture());
+            if ($_FILES["user-photo"]["name"])
+                $user->setPicture($target_file);
+            else
+                $user->setPicture($user->getPicture());
 
-        if ($inputs["first-name"])
-            $user->setPrenom($inputs["first-name"]);
-        else
-            $user->setPrenom($user->getPrenom());
+            if ($inputs["first-name"])
+                $user->setPrenom($inputs["first-name"]);
+            else
+                $user->setPrenom($user->getPrenom());
 
-        if ($inputs["last-name"])
-            $user->setNom($inputs["last-name"]);
-        else
-            $user->setNom($user->getNom()); 
+            if ($inputs["last-name"])
+                $user->setNom($inputs["last-name"]);
+            else
+                $user->setNom($user->getNom());
 
-        if ($inputs["phone"])
-            $user->setPhone($inputs["phone"]);
-        else
-            $user->setPhone($user->getPhone()); 
-             
-        if ($inputs["about"])
-            $user->setdescription($inputs["about"]);
-        else
-            $user->setdescription($user->getdescription());
-        if ($inputs["oldPassword"]){
-            $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $inputs["newPassword"]
-            );
-            $user->setPassword($hashedPassword);
-        }
-        else
-        $user->setPassword($user->getPassword());  
-        $errors = $validator->validate($user);
-        if (count($errors) > 0) {
-            return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
-        }
-        $em = $doctrine->getManager();
-        $em->flush();
-        $em->clear();
+            if ($inputs["phone"])
+                $user->setPhone($inputs["phone"]);
+            else
+                $user->setPhone($user->getPhone());
+
+            if ($inputs["about"])
+                $user->setdescription($inputs["about"]);
+            else
+                $user->setdescription($user->getdescription());
+            if ($inputs["oldPassword"]) {
+                $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $inputs["newPassword"]
+                );
+                $user->setPassword($hashedPassword);
+            } else
+                $user->setPassword($user->getPassword());
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                return $this->render('user/settings.html.twig', array('userinfo' => $this->getUser(), 'errors' => $errors));
+            }
+            $em = $doctrine->getManager();
+            $em->flush();
+            $em->clear();
 
 
-            return $this->redirectToRoute('app_settings',array('userinfo'=>$this->getUser()));
+            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser()));
         }
     }
+
     #[Route('/email', name: 'app_email')]
     public function sendEmail(Request $request,MailerInterface $mailer,UserRepository $repo): Response
     {
@@ -131,6 +132,7 @@ class UserController extends AbstractController
             $request->request->all();
             $inputs = $request->request->all();
             $user=$repo->findBy(['email' => $inputs["email"]]);
+
             $email = (new TemplatedEmail())
             ->from('aziz.rezgui@esprit.tn')
             ->to($inputs["email"])
@@ -159,9 +161,18 @@ class UserController extends AbstractController
         return $this->render('user/forgotPassword.html.twig');
     }
 
+
     #[Route('/user/{id}', name: 'app_user')]
-    public function index($id): Response
+    public function index($id,CoachRepository $coachRepository): Response
     {
-        return $this->render('user/index.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'creator' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'creator' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'creator' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'userinfo'=> $this->getUser()) );
+    $coach = $coachRepository->find($id);
+    
+    dump($coach);    
+        return $this->render('user/index.html.twig', array(
+        'coach' => $coach
+        
+    ));
     }
-}
+
+    }
+
