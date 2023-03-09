@@ -396,7 +396,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $coach->setPrix($inputs['coach-price']);
         $coach->setDescription($inputs['coach-description']);
         $target_dir = "./images/"; // update if needed with coach/user name
-        $target_file = $target_dir . basename($_FILES["coach-picture"]["name"]);
+        $target_file = basename($_FILES["coach-picture"]["name"]);
         move_uploaded_file($_FILES["coach-picture"]["tmp_name"], $target_file);
         $coach->setPicture($target_file);
         $user->setPicture($target_file);
@@ -421,7 +421,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
                     }
                 return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
             }
-            $em = $doctrine->getManager();
+            
 
             $em->flush();
             $em->clear();
