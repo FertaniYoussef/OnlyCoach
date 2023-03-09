@@ -22,6 +22,7 @@ use App\Repository\CommentaireRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
+use Doctrine\Persistence\ManagerRegistry;
 
 class CoursesController extends AbstractController
 {
@@ -52,7 +53,7 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/courses/{id}', name: 'app_course')]
-    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep, EntityManagerInterface $EM, HttpFoundationRequest $request): Response
+    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep, ManagerRegistry $doctrine, EntityManagerInterface $EM, HttpFoundationRequest $request): Response
     {
 
         $user = $this->getUser();
@@ -61,6 +62,10 @@ class CoursesController extends AbstractController
         $coachId = $coach->getId();
         $abonnement = $abonRep->findAbonnementByAdherentAndCoach($user->getId(), $coachId);
         $adherent = $adRep->findAdherentByCourseId($user, $id);
+
+        $cours->setNbvues($cours->getNbvues() + 1);
+        $doctrine->getManager()->flush();
+
 
         $course = $repository->find($id);
         $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $id]);
@@ -80,7 +85,7 @@ class CoursesController extends AbstractController
             $Commentaires = $EM->getRepository(Commentaire::class)->findBy(['idCoures' => $slug]);
             $this->removeBadWords($Commentaire);
         }
-        return $this->render('courses/course.html.twig', array('f' => $form->createView(), 'Commentaires' => $Commentaires,'course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent,'userinfo' => $user));
+        return $this->render('courses/course.html.twig', array('f' => $form->createView(), 'Commentaires' => $Commentaires,'course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent, 'user' => $user));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
@@ -94,10 +99,3 @@ class CoursesController extends AbstractController
         return $this->render('courses/filterCategoryCourses.html.twig',array('slug' => $slug,'courses' => $cours,'userinfo' => $user, 'categories' => $categorieRepository->findAll()));
     }
 }
-
-
-
-
-
-
-

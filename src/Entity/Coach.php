@@ -1,19 +1,14 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
 use App\Repository\CoachRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * Coach
- *
- * @ORM\Table(name="coach", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_3F596DCC79F37AE5", columns={"id_user_id"})}, indexes={@ORM\Index(name="IDX_3F596DCCBCF5E72D", columns={"categorie_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: CoachRepository::class)]
 class Coach
 {
     /**
@@ -23,23 +18,43 @@ class Coach
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
 /**
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: true)]
+    
+    
     private ?string $Nom = null;
+
+    
 
     /**
      * @Groups({"coach_list"})
      */
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(length: 255, nullable: false)]
+   
+    
     private ?string $Prenom = null;
 
+
+    /*
+    @Assert\NotBlank
+    */
     /**
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $Picture = null;
+
+
+
+
+    /*
+    @Assert\NotBlank
+    */
+
+
 
     /**
      * @Groups({"coach_list"})
@@ -59,10 +74,14 @@ class Coach
     #[ORM\Column(nullable: true)]
     private ?float $Rating = null;
 
+
     /**
      * @Groups({"coach_list"})
      */
     #[ORM\OneToOne(inversedBy: 'coach', cascade: ['persist', 'remove'])]
+    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
+
+
     private ?User $id_user = null;
 
     /**
@@ -74,7 +93,10 @@ class Coach
     /**
      * @Groups({"coach_list"})
      */
-    #[ORM\ManyToOne(inversedBy: 'id_coach')]
+    #[ORM\ManyToOne(inversedBy: 'id_coach', cascade: ['persist', 'remove']) ]
+    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
+    
+
     private ?Categorie $categorie = null;
 
     /**
@@ -92,8 +114,8 @@ class Coach
     public function __construct()
     {
         $this->id_abonnement = new ArrayCollection();
-        $this->cours = new ArrayCollection();
     }
+
 
     public function getId(): ?int
     {
@@ -134,7 +156,6 @@ class Coach
 
         return $this;
     }
-
     public function getDescription(): ?string
     {
         return $this->Description;
@@ -249,11 +270,13 @@ class Coach
 
 
 
+    public function __toString() {
+        return $this->id;
+    }
 
 
-    /**
-     * @return Collection<int, Cours>
-     */
+     
+     
     public function getCours(): Collection
     {
         return $this->cours;
@@ -280,7 +303,5 @@ class Coach
 
         return $this;
     }
-    public function __toString() {
-        return (string)$this->id;
-    }
+    */
 }
