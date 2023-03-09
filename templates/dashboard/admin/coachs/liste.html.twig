@@ -1,0 +1,8 @@
+{% block body %}
+    <h1>Liste des coachs</h1>
+    <ul>
+        {% for coach in coaches %}
+            <li>{{ coach.nom }} - {{ coach.prenom }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

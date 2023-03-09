@@ -25,6 +25,9 @@ class Abonnement
     #[ORM\Column(nullable: true)]
     private ?float $Prix = null;
 
+    #[ORM\Column(nullable: false)]
+    private bool $isFav = false;
+
     #[ORM\ManyToOne(inversedBy: 'id_abonnement')]
     private ?Coach $coach = null;
 
@@ -48,6 +51,18 @@ class Abonnement
         return $this;
     }
 
+    public function isisFav():bool
+    {
+        return $this->isFav;
+    }
+
+    public function setisFav(bool $isFav): self
+    {
+        $this->isFav = $isFav;
+
+        return $this;
+    }
+
     public function getDateFin(): ?\DateTimeInterface
     {
         return $this->date_fin;
@@ -59,6 +74,8 @@ class Abonnement
 
         return $this;
     }
+
+
  /*    public function isExpired(): bool
     {
         return $this->date_fin <= new \DateTime();

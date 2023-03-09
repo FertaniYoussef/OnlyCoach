@@ -12,6 +12,7 @@ use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
 use App\Repository\AbonnementRepository;
 use App\Repository\AdherentsRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 class CoursesController extends AbstractController
 {
@@ -29,7 +30,7 @@ class CoursesController extends AbstractController
 
 
     #[Route('/courses/{id}', name: 'app_course')]
-    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep): Response
+    public function indexCourse(CoursRepository $repository, int $id, AbonnementRepository $abonRep, AdherentsRepository $adRep, ManagerRegistry $doctrine): Response
     {
         $user = $this->getUser();
         $cours = $repository->find($id);
@@ -38,8 +39,12 @@ class CoursesController extends AbstractController
         $abonnement = $abonRep->findAbonnementByAdherentAndCoach($user->getId(), $coachId);
         $adherent = $adRep->findAdherentByCourseId($user, $id);
 
+        $cours->setNbvues($cours->getNbvues() + 1);
+        $doctrine->getManager()->flush();
+
+
         $course = $repository->find($id);
-        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent,'userinfo' => $user));
+        return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent, 'user' => $user));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]
