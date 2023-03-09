@@ -72,6 +72,7 @@ class UserController extends AbstractController
     #[Route('/user/settings/modify', name: 'app_settings_modify')]
     public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
     {
+        $match=null;
         $user = $this->getUser();
         if ($request->getMethod() === 'POST') {
             $request->request->all();
@@ -105,11 +106,13 @@ class UserController extends AbstractController
                 $user->setdescription($user->getdescription());
             if ($inputs["oldPassword"]) {
                 $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $inputs["newPassword"]
-                );
-                $user->setPassword($hashedPassword);
+                if($match==true){
+                    $hashedPassword = $passwordHasher->hashPassword(
+                        $user,
+                        $inputs["newPassword"]
+                    );
+                    $user->setPassword($hashedPassword);
+                }
             } else
                 $user->setPassword($user->getPassword());
             $errors = $validator->validate($user);
@@ -121,7 +124,7 @@ class UserController extends AbstractController
             $em->clear();
 
 
-            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser()));
+            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser(),'passwordmatch'=>$match));
         }
     }
 
@@ -132,22 +135,24 @@ class UserController extends AbstractController
             $request->request->all();
             $inputs = $request->request->all();
             $user=$repo->findBy(['email' => $inputs["email"]]);
-
-            $email = (new TemplatedEmail())
-            ->from('aziz.rezgui@esprit.tn')
-            ->to($inputs["email"])
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->htmlTemplate('mailer/mailer.html.twig')
-            ->context([
-                'pass' => $user[0]->getPassword(),
-            ]);
-            $mailer->send($email);
-            return $this->redirectToRoute('app_login');
+            if($user){
+                $email = (new TemplatedEmail())
+                ->from('aziz.rezgui@esprit.tn')
+                ->to($inputs["email"])
+                //->cc('cc@example.com')
+                //->bcc('bcc@example.com')
+                //->replyTo('fabien@example.com')
+                //->priority(Email::PRIORITY_HIGH)
+                ->htmlTemplate('mailer/mailer.html.twig')
+                ->context([
+                    'pass' => $user[0]->getPassword(),
+                ]);
+                $mailer->send($email);
+                return $this->redirectToRoute('app_login');
+            }
         // ...
         }
+        return $this->render('user/forgotPassword.html.twig');
     }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
@@ -173,6 +178,9 @@ class UserController extends AbstractController
         
     ));
     }
-
+    #[Route('/banned', name: 'app_banned')]
+    public function bannedindex(): Response
+    {
+        return $this->render('banned/banned.html.twig');
     }
-
+}
