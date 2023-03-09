@@ -119,4 +119,51 @@ class Feedback implements JsonSerializable
 
         return $this;
     }
+
+    public function getReponse(): ?Reponse
+    {
+        return $this->reponse;
+    }
+
+    public function setReponse(?Reponse $reponse): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($reponse === null && $this->reponse !== null) {
+            $this->reponse->setIdFeedback(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($reponse !== null && $reponse->getIdFeedback() !== $this) {
+            $reponse->setIdFeedback($this);
+        }
+
+        $this->reponse = $reponse;
+
+        return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return array(
+            'id' => $this->id,
+            'user' => $this->user,
+            'sujet' => $this->Sujet,
+            'email' => $this->email,
+            'description' => $this->description,
+            'dateFeedback' => $this->date_feedback->format("d-m-Y"),
+            'status' => $this->status
+
+        );
+    }
+
+    public function constructor($user, $sujet, $email, $description, $dateFeedback, $status)
+    {
+        $this->user = $user;
+        $this->Sujet = $sujet;
+        $this->email = $email;
+        $this->description = $description;
+        $this->date_feedback = $dateFeedback;
+        $this->status = $status;
+
+    }
 }

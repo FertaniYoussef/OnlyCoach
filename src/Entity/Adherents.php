@@ -2,52 +2,26 @@
 
 namespace App\Entity;
 
+use App\Repository\AdherentsRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Adherents
- *
- * @ORM\Table(name="adherents", indexes={@ORM\Index(name="IDX_562C7DA3A76ED395", columns={"user_id"}), @ORM\Index(name="IDX_562C7DA37ECF78B0", columns={"cours_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: AdherentsRepository::class)]
 class Adherents
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date", type="date", nullable=true)
-     */
-    private $date;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date = null;
 
-    /**
-     * @var \Cours
-     *
-     * @ORM\ManyToOne(targetEntity="Cours")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cours_id", referencedColumnName="id")
-     * })
-     */
-    private $cours;
+    #[ORM\ManyToOne(inversedBy: 'id_adherent')]
+    private ?User $user = null;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    private $user;
+    #[ORM\ManyToOne(inversedBy: 'id_adherents')]
+    private ?Cours $cours = null;
 
     public function getId(): ?int
     {
@@ -66,18 +40,6 @@ class Adherents
         return $this;
     }
 
-    public function getCours(): ?Cours
-    {
-        return $this->cours;
-    }
-
-    public function setCours(?Cours $cours): self
-    {
-        $this->cours = $cours;
-
-        return $this;
-    }
-
     public function getUser(): ?User
     {
         return $this->user;
@@ -90,5 +52,15 @@ class Adherents
         return $this;
     }
 
+    public function getCours(): ?Cours
+    {
+        return $this->cours;
+    }
 
+    public function setCours(?Cours $cours): self
+    {
+        $this->cours = $cours;
+
+        return $this;
+    }
 }

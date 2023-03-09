@@ -2,51 +2,25 @@
 
 namespace App\Entity;
 
+use App\Repository\RatingRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Rating
- *
- * @ORM\Table(name="rating", indexes={@ORM\Index(name="IDX_D8892622A76ED395", columns={"user_id"}), @ORM\Index(name="IDX_D88926227ECF78B0", columns={"cours_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: RatingRepository::class)]
 class Rating
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="note", type="integer", nullable=true)
-     */
-    private $note;
+    #[ORM\Column(nullable: true)]
+    private ?int $Note = null;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    private $user;
+    #[ORM\ManyToOne(inversedBy: 'id_rating')]
+    private ?User $user = null;
 
-    /**
-     * @var \Cours
-     *
-     * @ORM\ManyToOne(targetEntity="Cours")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cours_id", referencedColumnName="id")
-     * })
-     */
-    private $cours;
+    #[ORM\ManyToOne(inversedBy: 'id_rating')]
+    private ?Cours $cours = null;
 
     public function getId(): ?int
     {
@@ -55,12 +29,12 @@ class Rating
 
     public function getNote(): ?int
     {
-        return $this->note;
+        return $this->Note;
     }
 
-    public function setNote(?int $note): self
+    public function setNote(?int $Note): self
     {
-        $this->note = $note;
+        $this->Note = $Note;
 
         return $this;
     }
@@ -88,6 +62,4 @@ class Rating
 
         return $this;
     }
-
-
 }

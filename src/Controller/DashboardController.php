@@ -36,16 +36,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use DateTime;
-use App\EntityManagerInterface;
-
-use App\Entity\User;
 use App\Repository\OffreRepository;
 use Doctrine\ORM\EntityManagerInterface as ORMEntityManagerInterface;
 
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Component\Serializer\SerializerInterface;

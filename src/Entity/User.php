@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $Description = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: true)]    
     #[Assert\Length(8)]
     private ?int $Phone = null;
 
@@ -96,7 +96,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->email;
     }
-
+ 
 
     public function setEmail(string $email): self
     {
@@ -109,7 +109,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->Phone;
     }
-
+ 
 
     public function setPhone(int $Phone): self
     {
@@ -122,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->Description;
     }
-
+ 
 
     public function setDescription(string $Description): self
     {
