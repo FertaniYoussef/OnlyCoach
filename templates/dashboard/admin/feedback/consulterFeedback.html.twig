@@ -260,9 +260,25 @@
             <div class="mt-8 relative">
                 <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
-                    {{form(form)}}
+                    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                    <div class="mb-4">
+                        {{ form_label(form.texte, 'Texte', {'label_attr': {'class': 'block text-gray-700 font-bold mb-2'}}) }}
+                        {{ form_widget(form.texte, {'attr': {'class': 'form-input mt-1 block w-full'}}) }}
+                        {{ form_errors(form.texte, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <button type="submit" name="save" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Enregistrer
+                        </button>
+                        <button type="submit" name="delete" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                            Supprimer
+                        </button>
+                    </div>
+                    {{ form_end(form) }}
+                    <link rel="stylesheet" href="{{ asset('build/tailwind.css') }}">
                 </div>
             </div>
+
 
 
 

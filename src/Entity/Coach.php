@@ -276,7 +276,6 @@ class Coach
 
 
      
-     
     public function getCours(): Collection
     {
         return $this->cours;
@@ -303,5 +302,5 @@ class Coach
 
         return $this;
     }
-    */
+    
 }
