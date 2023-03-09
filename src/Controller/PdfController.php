@@ -65,7 +65,7 @@ class PdfController extends AbstractController
         return $response;
     }
     #[Route('/admin/dashboard/pdf', name: 'app_coach_pdf')]
-    public function index()
+    public function adminpdf()
     {
         // Configure Dompdf according to your needs
         $pdfOptions = new Options();
