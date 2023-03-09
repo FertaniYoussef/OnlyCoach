@@ -24,12 +24,12 @@
                         <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
                         <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
                         <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                        <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                        <a href="{{ path('app_contact') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
                     </div>
 
 
                 </div>
-                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                              <div class="hidden sm:ml-6 sm:flex sm:items-center">
 
                     <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                         <span class="sr-only">View notifications</span>
@@ -38,13 +38,24 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                         </svg>
                     </button>
+                    <a href="{{ path('app_coach_fav_home' ) }}">
+                   <div class="relative ml-3">
+                    <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <span class="sr-only">View notifications</span>
+                        <!-- Heroicon name: outline/bell -->
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+</svg>
+                    </button>
+                    </a>
+                    </div>
 
                     <!-- Profile dropdown -->
                     <div class="relative ml-3">
                         <div>
                             <button type="button" class="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                                 <span class="sr-only">Open user menu</span>
-                                <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                                <img class="h-8 w-8 rounded-full" src="{{asset(userinfo.getpicture())}}" alt="">
                             </button>
                         </div>
 
@@ -62,7 +73,7 @@
                             <!-- Active: "bg-gray-100", Not Active: "" -->
                             <a href="{{ path('app_settings') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
                             <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-1">Calendar</a>
-                            <a href="{{ path('app_login') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                            <a href="{{ path('app_logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
                         </div>
                     </div>
                 </div>
@@ -180,9 +191,9 @@
                     <form class="mt-4 border-t border-gray-200">
                         <h3 class="sr-only">Categories</h3>
                         <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-                            {% for cat in categories %}
-                                <a href="{{ path('app_courses_category', {'slug' : cat}) }}"><li class=" block hover:bg-gray-100 rounded-sm p-2 hover:cursor-pointer text-gray-800 mb-4" id="{{ cat }}" >
-                                        {{ cat }}
+                           {% for cat in categories %}
+                               <li class=" block hover:bg-gray-100 rounded-sm p-2 hover:cursor-pointer text-gray-800 mb-4"  >
+                                        {{ cat.type }}
                                     </li></a>
                             {% endfor %}
                         </ul>
@@ -239,7 +250,7 @@
                                 <div id="PopularCourses" class="grid grid-cols-3 gap-x-5 md:grid-cols-3 gap-y-5 md:gap-y-10 md:gap-x-5 pt-7">
                                     <!-- Make it dynamic later -->
                                     {% for course in popular %}
-                                        <a href="{{ path('app_course', {'slug' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
+                                        <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
                                                 <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black  shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
                                                 <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
                                                 <h1 class="text-xs text-gray-500 pt-1">{{ course.coach }}</h1>

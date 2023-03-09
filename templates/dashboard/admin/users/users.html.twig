@@ -192,6 +192,17 @@
 
                         Feedback
                     </a>
+                    <a href="{{ path('app_categorie_dashboard_index') }}"
+                           class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-4 w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
+  
+</svg>
+
+
+                            Category
+                        </a>
 
                 </div>
             </nav>
@@ -225,15 +236,15 @@
                             <!-- Profile -->
                             <div class="flex items-center">
                                 <img class="hidden h-16 w-16 rounded-full sm:block"
-                                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                     src="{{asset(userinfo.getpicture())}}"
                                      alt="">
                                 <div>
                                     <div class="flex items-center">
                                         <img class="h-16 w-16 rounded-full sm:hidden"
-                                             src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
+                                             src="{{asset(userinfo.getpicture())}}"
                                              alt="">
                                         <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                            Welcome, Username here</h1>
+                                            Welcome, {{userinfo.getNom()}} here</h1>
                                     </div>
                                     <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                         <dt class="sr-only">Account status</dt>
@@ -285,6 +296,7 @@
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Email</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Delete</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ban</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
@@ -294,7 +306,7 @@
                                                                 <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                     <div class="flex items-center">
                                                                         <div class="h-10 w-10 flex-shrink-0">
-                                                                            <img class="h-10 w-10 rounded-full" src="/images/coach2.jpg{# <-- fasakh l coach2.jpg (dummy) lien image ici #}" alt="">
+                                                                            <img class="h-10 w-10 rounded-full" src="{{asset(u.picture)}}" alt="">
                                                                         </div>
                                                                         <div class="ml-4">
                                                                             <div class="font-medium text-gray-900">{# Prenom ici #}{{u.Prenom}} {{u.Nom}}</div>
@@ -310,6 +322,15 @@
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                     <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersremove',{'id':u.id}) }}">Delete</a></div>
                                                                 </td>
+                                                                {% if u.roles[0] == "ROLE_BANNED" %}
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersunban',{'id':u.id}) }}">UnBan</a></div>
+                                                                </td>
+                                                                {% else %}
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersban',{'id':u.id}) }}">Ban</a></div>
+                                                                </td>
+                                                                {% endif %}
                                                             </tr>
                                                             {% endfor %}
                                                         <!-- Rendre cette partie dynamique avec twig -->

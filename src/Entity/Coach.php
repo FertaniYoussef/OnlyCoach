@@ -1,87 +1,121 @@
 <?php
 
 namespace App\Entity;
-
+use Symfony\Component\Validator\Constraints as Assert;
+use App\Repository\CoachRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
-/**
- * Coach
- *
- * @ORM\Table(name="coach", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_3F596DCC79F37AE5", columns={"id_user_id"})}, indexes={@ORM\Index(name="IDX_3F596DCCBCF5E72D", columns={"categorie_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: CoachRepository::class)]
 class Coach
 {
     /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Groups({"coach_list"})
      */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+/**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+
+
+    private ?string $Nom = null;
+
+
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="nom", type="string", length=255, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $nom;
+    #[ORM\Column(length: 255, nullable: false)]
+
+
+    private ?string $Prenom = null;
+
+
+    /*
+    @Assert\NotBlank
+    */
+    /**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Picture = null;
+
+
+
+
+    /*
+    @Assert\NotBlank
+    */
+
+
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="prenom", type="string", length=255, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $prenom;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Description = null;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="picture", type="string", length=255, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $picture;
+    #[ORM\Column(nullable: true)]
+    private ?float $Prix = null;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $description;
+    #[ORM\Column(nullable: true)]
+    private ?float $Rating = null;
+
 
     /**
-     * @var float|null
-     *
-     * @ORM\Column(name="prix", type="float", precision=10, scale=0, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $prix;
+    #[ORM\OneToOne(inversedBy: 'coach', cascade: ['remove'])]
+    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
+
+
+    private ?User $id_user = null;
 
     /**
-     * @var float|null
-     *
-     * @ORM\Column(name="rating", type="float", precision=10, scale=0, nullable=true)
+     * @Groups({"coach_list"})
      */
-    private $rating;
+    #[ORM\OneToOne(mappedBy: 'id_coach', cascade: ['persist', 'remove'])]
+    private ?Offre $offre = null;
 
     /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_user_id", referencedColumnName="id")
-     * })
+     * @Groups({"coach_list"})
      */
-    private $idUser;
+    #[ORM\ManyToOne(inversedBy: 'id_coach', cascade: ['persist', 'remove']) ]
+    #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
+
+
+    private ?Categorie $categorie = null;
 
     /**
-     * @var \Categorie
-     *
-     * @ORM\ManyToOne(targetEntity="Categorie")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="categorie_id", referencedColumnName="id")
-     * })
+     * @Groups({"coach_list"})
      */
-    private $categorie;
+    #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class,cascade: ['persist', 'remove'])]
+    private Collection $id_abonnement;
+
+    /**
+     * @Groups({"coach_list"})
+     */
+    #[ORM\OneToMany(mappedBy: 'IdCoach', targetEntity: Cours::class,cascade: ['persist', 'remove'])]
+    private Collection $cours;
+
+    public function __construct()
+    {
+        $this->id_abonnement = new ArrayCollection();
+    }
+
 
     public function getId(): ?int
     {
@@ -90,84 +124,104 @@ class Coach
 
     public function getNom(): ?string
     {
-        return $this->nom;
+        return $this->Nom;
     }
 
-    public function setNom(?string $nom): self
+    public function setNom(?string $Nom): self
     {
-        $this->nom = $nom;
+        $this->Nom = $Nom;
 
         return $this;
     }
 
     public function getPrenom(): ?string
     {
-        return $this->prenom;
+        return $this->Prenom;
     }
 
-    public function setPrenom(?string $prenom): self
+    public function setPrenom(?string $Prenom): self
     {
-        $this->prenom = $prenom;
-
+        $this->Prenom = $Prenom;
         return $this;
     }
 
     public function getPicture(): ?string
     {
-        return $this->picture;
+        return $this->Picture;
     }
 
-    public function setPicture(?string $picture): self
+    public function setPicture(?string $Picture): self
     {
-        $this->picture = $picture;
+        $this->Picture = $Picture;
 
         return $this;
     }
-
     public function getDescription(): ?string
     {
-        return $this->description;
+        return $this->Description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(?string $Description): self
     {
-        $this->description = $description;
+        $this->Description = $Description;
 
         return $this;
     }
 
     public function getPrix(): ?float
     {
-        return $this->prix;
+        return $this->Prix;
     }
 
-    public function setPrix(?float $prix): self
+    public function setPrix(?float $Prix): self
     {
-        $this->prix = $prix;
+        $this->Prix = $Prix;
 
         return $this;
     }
 
     public function getRating(): ?float
     {
-        return $this->rating;
+        return $this->Rating;
     }
 
-    public function setRating(?float $rating): self
+    public function setRating(?float $Rating): self
     {
-        $this->rating = $rating;
+        $this->Rating = $Rating;
 
         return $this;
     }
 
     public function getIdUser(): ?User
     {
-        return $this->idUser;
+        return $this->id_user;
     }
 
-    public function setIdUser(?User $idUser): self
+    public function setIdUser(?User $id_user): self
     {
-        $this->idUser = $idUser;
+        $this->id_user = $id_user;
+
+        return $this;
+    }
+
+    public function getOffre(): ?Offre
+    {
+        return $this->offre;
+    }
+
+    public function setOffre(?Offre $offre): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($offre === null && $this->offre !== null) {
+            $this->offre->setIdCoach(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($offre !== null && $offre->getIdCoach() !== $this) {
+            $offre->setIdCoach($this);
+        }
+
+        $this->offre = $offre;
 
         return $this;
     }
@@ -184,8 +238,69 @@ class Coach
         return $this;
     }
 
-    public function __toString()
+    /**
+     * @return Collection<int, Abonnement>
+     */
+    public function getIdAbonnement(): Collection
     {
-        return (string)$this->id;
+        return $this->id_abonnement;
     }
+
+    public function addIdAbonnement(Abonnement $idAbonnement): self
+    {
+        if (!$this->id_abonnement->contains($idAbonnement)) {
+            $this->id_abonnement->add($idAbonnement);
+            $idAbonnement->setCoach($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdAbonnement(Abonnement $idAbonnement): self
+    {
+        if ($this->id_abonnement->removeElement($idAbonnement)) {
+            // set the owning side to null (unless already changed)
+            if ($idAbonnement->getCoach() === $this) {
+                $idAbonnement->setCoach(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+    public function __toString() {
+        return $this->id;
+    }
+
+
+
+    public function getCours(): Collection
+    {
+        return $this->cours;
+    }
+
+    public function addCour(Cours $cour): self
+    {
+        if (!$this->cours->contains($cour)) {
+            $this->cours->add($cour);
+            $cour->setIdCoach($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCour(Cours $cour): self
+    {
+        if ($this->cours->removeElement($cour)) {
+            // set the owning side to null (unless already changed)
+            if ($cour->getIdCoach() === $this) {
+                $cour->setIdCoach(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

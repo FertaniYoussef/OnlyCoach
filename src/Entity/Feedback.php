@@ -2,70 +2,46 @@
 
 namespace App\Entity;
 
+use App\Repository\FeedbackRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Feedback
- *
- * @ORM\Table(name="feedback", indexes={@ORM\Index(name="IDX_D2294458A76ED395", columns={"user_id"})})
- * @ORM\Entity
- */
-class Feedback
+#[ORM\Entity(repositoryClass: FeedbackRepository::class)]
+class Feedback implements JsonSerializable
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="sujet", type="string", length=255, nullable=true)
-     */
-    private $sujet;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Veuillez Preciser le sujet !")]
+    private ?string $Sujet ;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="email", type="string", length=255, nullable=true)
-     */
-    private $email;
+    #[ORM\Column(length: 255)]
+   // #[Assert\Email(message:"The email '{{ value }}' is not a valid email ")]
+    private ?string $email ;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="description", type="string", length=255, nullable=true)
-     */
-    private $description;
 
-    /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_feedback", type="date", nullable=true)
-     */
-    private $dateFeedback;
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 10, max: 255,
+     minMessage: 'Ta description  doit avoir {{ limit }} characters minimum',
+     maxMessage: 'Ta description  doit avoir  {{ limit }} characters maximum',)]
+    private ?string $description ;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="status", type="integer", nullable=true)
-     */
-    private $status;
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_feedback = null;
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    private $user;
+    #[ORM\Column(nullable: true)]
+    private ?int $status ;
+
+    #[ORM\ManyToOne(inversedBy: 'id_feedback')]
+    private ?User $user = null;
+
+    #[ORM\OneToOne(mappedBy: 'id_feedback', cascade: ['persist', 'remove'])]
+    private ?Reponse $reponse = null;
 
     public function getId(): ?int
     {
@@ -74,12 +50,12 @@ class Feedback
 
     public function getSujet(): ?string
     {
-        return $this->sujet;
+        return $this->Sujet;
     }
 
-    public function setSujet(?string $sujet): self
+    public function setSujet(?string $Sujet): self
     {
-        $this->sujet = $sujet;
+        $this->Sujet = $Sujet;
 
         return $this;
     }
@@ -110,12 +86,12 @@ class Feedback
 
     public function getDateFeedback(): ?\DateTimeInterface
     {
-        return $this->dateFeedback;
+        return $this->date_feedback;
     }
 
-    public function setDateFeedback(?\DateTimeInterface $dateFeedback): self
+    public function setDateFeedback(?\DateTimeInterface $date_feedback): self
     {
-        $this->dateFeedback = $dateFeedback;
+        $this->date_feedback = $date_feedback;
 
         return $this;
     }
@@ -143,6 +119,4 @@ class Feedback
 
         return $this;
     }
-
-
 }

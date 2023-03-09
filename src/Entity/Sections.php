@@ -2,55 +2,38 @@
 
 namespace App\Entity;
 
+use App\Repository\SectionsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * Sections
- *
- * @ORM\Table(name="sections", indexes={@ORM\Index(name="IDX_2B9643987ECF78B0", columns={"cours_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: SectionsRepository::class)]
 class Sections
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="index_section", type="integer", nullable=true)
-     */
-    private $indexSection;
+    #[ORM\Column(nullable: true)]
+    private ?int $Index_section = null;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="titre", type="string", length=255, nullable=true)
-     */
-    private $titre;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $Titre = null;
 
-    /**
-     * @var int|null
-     *
-     * @ORM\Column(name="nbresources", type="integer", nullable=true)
-     */
-    private $nbresources;
+    #[ORM\Column(nullable: true)]
+    private ?int $nbresources = null;
 
-    /**
-     * @var \Cours
-     *
-     * @ORM\ManyToOne(targetEntity="Cours")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="cours_id", referencedColumnName="id")
-     * })
-     */
-    private $cours;
+    #[ORM\ManyToOne(inversedBy: 'id_sections'),]
+    private ?Cours $cours = null;
+
+    #[ORM\OneToMany(mappedBy: 'sections', targetEntity: Ressources::class, cascade: ['persist', 'remove'])]
+    private Collection $id_ressources;
+
+    public function __construct()
+    {
+        $this->id_ressources = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,24 +42,24 @@ class Sections
 
     public function getIndexSection(): ?int
     {
-        return $this->indexSection;
+        return $this->Index_section;
     }
 
-    public function setIndexSection(?int $indexSection): self
+    public function setIndexSection(?int $Index_section): self
     {
-        $this->indexSection = $indexSection;
+        $this->Index_section = $Index_section;
 
         return $this;
     }
 
     public function getTitre(): ?string
     {
-        return $this->titre;
+        return $this->Titre;
     }
 
-    public function setTitre(?string $titre): self
+    public function setTitre(?string $Titre): self
     {
-        $this->titre = $titre;
+        $this->Titre = $Titre;
 
         return $this;
     }
@@ -105,5 +88,33 @@ class Sections
         return $this;
     }
 
+    /**
+     * @return Collection<int, Ressources>
+     */
+    public function getIdRessources(): Collection
+    {
+        return $this->id_ressources;
+    }
 
+    public function addIdRessource(Ressources $idRessource): self
+    {
+        if (!$this->id_ressources->contains($idRessource)) {
+            $this->id_ressources->add($idRessource);
+            $idRessource->setSections($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIdRessource(Ressources $idRessource): self
+    {
+        if ($this->id_ressources->removeElement($idRessource)) {
+            // set the owning side to null (unless already changed)
+            if ($idRessource->getSections() === $this) {
+                $idRessource->setSections(null);
+            }
+        }
+
+        return $this;
+    }
 }

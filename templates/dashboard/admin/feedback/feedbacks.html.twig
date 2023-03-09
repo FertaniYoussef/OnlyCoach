@@ -192,6 +192,17 @@
 
                         Feedback
                     </a>
+                    <a href="{{ path('app_categorie_dashboard_index') }}"
+                           class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md">
+
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="mr-4 w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75a4.5 4.5 0 01-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 11-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 016.336-4.486l-3.276 3.276a3.004 3.004 0 002.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852z" />
+  
+</svg>
+
+
+                            Category
+                        </a>
 
                 </div>
             </nav>
@@ -233,7 +244,7 @@
                                              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2.6&w=256&h=256&q=80"
                                              alt="">
                                         <h1 class="ml-3 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:leading-9">
-                                            Welcome, Username here</h1>
+                                            Welcome, {{userinfo.getNom()}} here</h1>
                                     </div>
                                     <dl class="mt-6 flex flex-col sm:ml-3 sm:mt-1 sm:flex-row sm:flex-wrap">
                                         <dt class="sr-only">Account status</dt>
@@ -264,16 +275,28 @@
 
                             <div id="courses" class="w-full pt-7">
                                 <!-- Make it dynamic later -->
-
+                                <div id="google_translate_element"></div>
+                                <script type="text/javascript">
+                                    function googleTranslateElementInit() {
+                                        new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                                    }
+                                </script>
 
                                 <!-- WIP -->
                                 <div class="px-4 sm:px-6 ">
                                     <div class="sm:flex sm:items-center">
                                         <div class="sm:flex-auto">
                                             <h1 class="text-xl font-semibold text-gray-900">Feedbacks</h1>
-                                            <p class="mt-2 text-sm text-gray-700">A list of all the feedbacks found.</p>
                                         </div>
                                     </div>
+
+
+                                    <form action="{{ path('feedback_search') }}" method="get" class="flex items-center">
+
+                                        <input type="text" id="q" name="q" value="{{ app.request.query.get('q') }}" class="border border-gray-400 rounded py-2 px-3 mr-2 leading-tight focus:outline-none focus:shadow-outline">
+                                        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Rechercher</button>
+                                    </form>
+
                                     <div class="mt-8 flex flex-col">
                                         <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                                             <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -281,43 +304,70 @@
                                                     <table class="min-w-full divide-y divide-gray-300">
                                                         <thead class="bg-gray-50">
                                                         <tr>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id Reclamation</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Id User</th>
+                                                            <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Email user</th>
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Sujet</th>
-                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Description</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date Feedback</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Consulter</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Supprimer</th>
                                                         </tr>
                                                         </thead>
+
                                                         <tbody class="divide-y divide-gray-200 bg-white">
                                                         <!-- Rendre cette partie dynamique avec twig (for "esm" in el lista eli jebtha mel controlleur)-->
-                                                        <tr>
+
+                                                        <div class="my-4">
+                                                            <a href="{{ path('feedbacks_list', {'sort': 'date_asc'}) }}" class="mr-4 text-sm font-medium text-gray-500 hover:text-gray-700">Tri par date asc</a>
+                                                            <a href="{{ path('feedbacks_list', {'sort': 'date_desc'}) }}" class="text-sm font-medium text-gray-500 hover:text-gray-700">Tri par date desc</a>
+                                                        </div>
+
+                                                            {% for s in  Feedback %}
+                                                                <tr>
+                                                            <div id="feedback-results"></div>
                                                             <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm sm:pl-6">
                                                                 <div class="flex items-center">
                                                                     <div>
-                                                                        <div class="font-medium text-gray-900">{# id coach ici #}Id user</div>
+                                                                        <div class="font-medium text-gray-900">{# id rec ici #}{{ s.id }}</div>
                                                                     </div>
                                                                 </div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Nom ici #}Sujet</div>
+                                                                <div class="text-gray-900">{{ s.user.id}}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Email ici #}Email</div>
+                                                                <div class="text-gray-900">{{ s.email }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# date  ici #}Date feedback</div>
+                                                                <div class="text-gray-900">{{ s.sujet }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-gray-900">{# Status fin ici #}Status</div>
+                                                                <div class="text-gray-900">{{ s.description }}</div>
                                                             </td>
                                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                                <div class="text-sky-600"><a href="{{ path('app_dashboard_adminConsulterFeedback',{id: 1}) }}">Consulter</a></div>
+                                                                <div class="text-gray-900">{{ s.DateFeedback|date('d-m-Y') }}</div>
+                                                            </td>
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-gray-900">{{ s.status }}</div>
+                                                            </td>
+
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-blue-800"><a href="{{  path('app_dashboard_adminConsulterFeedback',{id:s.id})}}">consulter</a></div>
+                                                            </td>
+
+                                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                <div class="text-red-600"><a href="{{  path('app_dashboard_admin_removeFeedbacks',{id:s.id})}}">Delete</a></div>
                                                             </td>
                                                         </tr>
-                                                        <!-- Rendre cette partie dynamique avec twig -->
-                                                        </tbody>
+
+
+                                                        {% endfor %}
+
+
                                                     </table>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -327,15 +377,14 @@
                                 <!-- WIP -->
 
                             </div>
-
                             <!-- More items... -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
+
 
 
         </main>
+
     </div>
 </div>
 

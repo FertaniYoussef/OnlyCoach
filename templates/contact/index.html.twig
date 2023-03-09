@@ -30,13 +30,20 @@
             </div>
             <div class="hidden sm:ml-6 sm:flex sm:items-center">
 
-                <button type="button" class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                <button type="button" data-modal-target="popup-modal" data-modal-toggle="popup-modal"  class="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                     <span class="sr-only">View notifications</span>
+
                     <!-- Heroicon name: outline/bell -->
                     <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
                     </svg>
+
                 </button>
+
+
+
+
+
 
                 <!-- Profile dropdown -->
                 <div class="relative ml-3">
@@ -47,9 +54,10 @@
                         </button>
                     </div>
 
+
+
                     <!--
                       Dropdown menu, show/hide based on menu state.
-
                       Entering: "transition ease-out duration-200"
                         From: "transform opacity-0 scale-95"
                         To: "transform opacity-100 scale-100"
@@ -71,9 +79,7 @@
                     <span class="sr-only">Open main menu</span>
                     <!--
                       Icon when menu is closed.
-
                       Heroicon name: outline/bars-3
-
                       Menu open: "hidden", Menu closed: "block"
                     -->
                     <svg id="mobileMenuClosedIcon" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -81,9 +87,7 @@
                     </svg>
                     <!--
                       Icon when menu is open.
-
                       Heroicon name: outline/x-mark
-
                       Menu open: "block", Menu closed: "hidden"
                     -->
                     <svg id="mobileMenuOpenIcon" class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -156,30 +160,57 @@
                 <p class="mt-4 text-lg leading-6 text-gray-500"></p>
             </div>
             <div class="mt-12">
-                <form action="#" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
+                <form action="{{path('app_contact')}}" method="POST" class="grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-8">
                     <div class="sm:col-span-2">
                         <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
                         <div class="mt-1">
-                            <input id="subject" name="sujet" type="text" autocomplete="subject" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500">
+                            <input id="subject" name="sujet" type="text" autocomplete="subject" placeholder="Entrer votre sujet" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500">
                         </div>
                     </div>
-                    <div class="sm:col-span-2">
-                        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                        <div class="mt-1">
-                            <textarea id="message" name="message" rows="4" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
-                        </div>
+            </div>
+
+                <div class="sm:col-span-2">
+                    <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+                    <div class="mt-1">
+                        <textarea id="message" name="message" rows="4" placeholder="Entrer votre description" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
                     </div>
 
-                    <div class="sm:col-span-2">
-                        <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Let's talk</button>
-                    </div>
-                </form>
+                </div>
+
+          {% if errors %}
+                <ul>
+                    {% for error in errors %}
+                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            <strong class="font-bold">fais attention!</strong>
+                            <span class="block sm:inline"> {{ error.message }}</span>
+                        </div>
+                    {% endfor %}
+                </ul>
+
+          {% endif %}
+
+            <div class="sm:col-span-2">
+                    <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Envoyer</button>
+                </div>
+
+
+            <!--  affichage Reponse -->
+
+            <div class="sm:col-span-2">
+                <a href="{{ path('afficher') }}" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Afficher Les Reponses</a>
             </div>
+
+
+            </form>
+
         </div>
     </div>
+</div>
 
 
-    <!-- Debut Footer -->
+
+
+<!-- Debut Footer -->
 <footer class="bg-black absolute w-full bottom-0 left-0 lg:block hidden">
     <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
 
@@ -194,7 +225,6 @@
     // Large screens starts here
     const userprofile = document.getElementById('user-menu-button')
     const profilemenu = document.getElementById('menu')
-
     function showMenu() {
         profilemenu.classList.remove('hidden')
         profilemenu.classList.add('block')
@@ -203,81 +233,59 @@
         profilemenu.classList.remove('block')
         profilemenu.classList.add('hidden')
     }
-
     userprofile.addEventListener('click', () => {
         profilemenu.classList.contains('hidden') ? showMenu() : hideMenu()
+
     })
     // Large screens ends here
-
     // mobile starts here
-
     const mobilebutton = document.getElementById('mobile-button')
     const mobilemenu = document.getElementById('mobile-menu')
-
     function showMobileMenu() {
         const OpenIcon = document.getElementById('mobileMenuOpenIcon')
         const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
-
         OpenIcon.classList.remove('hidden');
         OpenIcon.classList.add('block')
-
         ClosedIcon.classList.remove('block')
         ClosedIcon.classList.add('hidden')
-
         mobilemenu.classList.remove('hidden')
         mobilemenu.classList.add('block')
     }
-
     function hideMobileMenu() {
         const OpenIcon = document.getElementById('mobileMenuOpenIcon')
         const ClosedIcon = document.getElementById('mobileMenuClosedIcon')
-
         OpenIcon.classList.remove('block');
         OpenIcon.classList.add('hidden')
-
         ClosedIcon.classList.remove('hidden')
         ClosedIcon.classList.add('block')
-
         mobilemenu.classList.remove('block')
         mobilemenu.classList.add('hidden')
     }
-
     mobilebutton.addEventListener('click', () => {
         mobilemenu.classList.contains('hidden') ? showMobileMenu() : hideMobileMenu()
     })
-
     // filter button for mobile
-
     const filterButton = document.getElementById('filterButton')
     const filterDialog = document.getElementById('filterDialog')
     const closeFilterButton = document.getElementById('closeFilterButton')
-
     function showFilters() {
         filterDialog.classList.remove('hidden')
         filterDialog.classList.add('block')
     }
-
     function hideFilters() {
         filterDialog.classList.remove('block')
         filterDialog.classList.add('hidden')
     }
-
     filterButton.addEventListener('click', () => {
         showFilters()
     })
-
     closeFilterButton.addEventListener('click', () => {
         hideFilters()
     })
-
-
     // filter button for mobile ends here
-
     // mobile ends here
 
 </script>
 
 </body>
 </html>
-
-
