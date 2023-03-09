@@ -597,7 +597,6 @@ class DashboardController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Offre Added Successfully !');
-            'offres' => $offres
         }
         return $this->JsonReponse($offre);
         }

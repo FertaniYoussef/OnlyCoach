@@ -90,6 +90,14 @@ class Offre
      */
     private $dateFin;
 
+        /**
+     * @Assert\Type(type="float")
+     * @var float|null
+     *
+     * @ORM\Column(name="prix_fin", type="float", precision=10, scale=0, nullable=true)
+     */
+    private $prixFin;
+
     /**
      * @var \Coach
      *
@@ -127,6 +135,18 @@ class Offre
     public function setPrix(?float $prix): self
     {
         $this->prix = $prix;
+
+        return $this;
+    }
+
+    public function getPrixFin(): ?float
+    {
+        return $this->prixFin;
+    }
+
+    public function setPrixFin(?float $prix): self
+    {
+        $this->prixFin = $prix;
 
         return $this;
     }
