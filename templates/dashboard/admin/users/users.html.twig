@@ -296,6 +296,7 @@
                                                             <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Email</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
                                                             <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Delete</th>
+                                                            <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Ban</th>
                                                         </tr>
                                                         </thead>
                                                         <tbody class="divide-y divide-gray-200 bg-white">
@@ -321,6 +322,15 @@
                                                                 <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                                     <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersremove',{'id':u.id}) }}">Delete</a></div>
                                                                 </td>
+                                                                {% if u.roles[0] == "ROLE_BANNED" %}
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersunban',{'id':u.id}) }}">UnBan</a></div>
+                                                                </td>
+                                                                {% else %}
+                                                                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                                    <div class="text-red-600"><a href="{{ path('app_dashboard_adminUsersban',{'id':u.id}) }}">Ban</a></div>
+                                                                </td>
+                                                                {% endif %}
                                                             </tr>
                                                             {% endfor %}
                                                         <!-- Rendre cette partie dynamique avec twig -->

@@ -557,11 +557,16 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
             $coachproxy=$abonnement->getCoach();
             $entityManager->initializeObject($coachproxy);
            
-            $Nom = $coachproxy->getNom() . ' ' . $coachproxy->getPrenom();
+            $Nom = $coachproxy->getNom();
+            $Prenom= $coachproxy->getPrenom();
             $ammount = $abonnement->getPrix();
+
             $date=$abonnement->getDateDeb()->format('d/m/y');;
             $payements[]=array(
+                'id' => $abonnement->getId(),
+                'id_coach'=>$coachproxy->getId(),
                 'Nom' => $Nom,
+                'Prenom' => $Prenom,
                 'ammount' => $ammount,
                 'date' => $date
             );
@@ -606,6 +611,25 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $users= $repository->find($id);
         $em = $doctrine->getManager();
         $em->remove($users);
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
+    #[Route('/admin/dashboard/users/ban/{id}', name: 'app_dashboard_adminUsersban')]
+    public function usersban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $users->setRoles(["ROLE_BANNED"]);
+        $em = $doctrine->getManager();
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
+    #[Route('/admin/dashboard/users/unban/{id}', name: 'app_dashboard_adminUsersunban')]
+    public function usersunban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $roles=$users->getRoles()[1];
+        $users->setRoles([$roles]);
+        $em = $doctrine->getManager();
         $em->flush();
         return  $this->redirectToRoute('app_dashboard_adminUsers');
     }

@@ -306,17 +306,14 @@
                                         <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
                                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                              aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                  clip-rule="evenodd"/>
+                                            
                                         </svg>
                                         <span class="sr-only"> Increased by </span>
-                                        122
+                                       
                                     </p>
                                     <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Total inscrits</span></a>
+                                           <span class="sr-only"> Total inscrits</span></a>
                                         </div>
                                     </div>
                                 </dd>
@@ -342,17 +339,14 @@
                                         <svg class="h-5 w-5 flex-shrink-0 self-center text-green-500"
                                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                              aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 17a.75.75 0 01-.75-.75V5.612L5.29 9.77a.75.75 0 01-1.08-1.04l5.25-5.5a.75.75 0 011.08 0l5.25 5.5a.75.75 0 11-1.08 1.04l-3.96-4.158V16.25A.75.75 0 0110 17z"
-                                                  clip-rule="evenodd"/>
+                                            
                                         </svg>
                                         <span class="sr-only"> Increased by </span>
-                                        5.4%
+                                        
                                     </p>
                                     <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Avg. Open Rate stats</span></a>
+                                            
                                         </div>
                                     </div>
                                 </dd>
@@ -378,17 +372,12 @@
                                         <svg class="h-5 w-5 flex-shrink-0 self-center text-red-500"
                                              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                              aria-hidden="true">
-                                            <path fill-rule="evenodd"
-                                                  d="M10 3a.75.75 0 01.75.75v10.638l3.96-4.158a.75.75 0 111.08 1.04l-5.25 5.5a.75.75 0 01-1.08 0l-5.25-5.5a.75.75 0 111.08-1.04l3.96 4.158V3.75A.75.75 0 0110 3z"
-                                                  clip-rule="evenodd"/>
+                                            
                                         </svg>
-                                        <span class="sr-only"> Decreased by </span>
-                                        3.2%
-                                    </p>
+                                        
                                     <div class="absolute inset-x-0 bottom-0 bg-gray-50 px-4 py-4 sm:px-6">
                                         <div class="text-sm">
-                                            <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500"> View
-                                                all<span class="sr-only"> Avg. Click Rate stats</span></a>
+                                         
                                         </div>
                                     </div>
                                 </dd>
@@ -476,7 +465,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
                                 {% for payement in payements %}
-                                <tr class="bg-white">
+                                <tr class="bg-white hover:animate-pulse	">
                                     <td class="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                         <div class="flex">
                                             <a href="#" class="group inline-flex space-x-2 truncate text-sm">
@@ -488,8 +477,8 @@
                                                           d="M1 4a1 1 0 011-1h16a1 1 0 011 1v8a1 1 0 01-1 1H2a1 1 0 01-1-1V4zm12 4a3 3 0 11-6 0 3 3 0 016 0zM4 9a1 1 0 100-2 1 1 0 000 2zm13-1a1 1 0 11-2 0 1 1 0 012 0zM1.75 14.5a.75.75 0 000 1.5c4.417 0 8.693.603 12.749 1.73 1.111.309 2.251-.512 2.251-1.696v-.784a.75.75 0 00-1.5 0v.784a.272.272 0 01-.35.25A49.043 49.043 0 001.75 14.5z"
                                                           clip-rule="evenodd"/>
                                                 </svg>
-                                                <p class="truncate text-gray-500 group-hover:text-gray-900">Payment to
-                                                    {{payement.Nom}}</p>
+                                                <a href="{{ path('app_pdf' ,{'coachid':payement.id_coach,'Nom': payement.Nom, 'Prenom': payement.Prenom,'ammount':payement.ammount,'date':payement.date}) }}" class="truncate text-gray-500 group-hover:text-gray-900">Payment to
+                                                    {{payement.Nom}} {{payement.Prenom}}</a>
                                             </a>
                                         </div>
                                     </td>

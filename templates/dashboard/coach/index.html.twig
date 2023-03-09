@@ -195,7 +195,7 @@
 
 
                     <a href="{{ path('app_dashboard_listCourses') }}"
-                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md" id="course-tab"> 
+                       class="text-cyan-100 hover:text-white hover:bg-cyan-600 group flex items-center px-2 py-2 text-sm leading-6 font-medium rounded-md" id="course-tab">
                         <!-- Heroicon name: outline/credit-card -->
                         <svg class="mr-4 h-6 w-6 flex-shrink-0 text-cyan-200" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75L16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z" />
@@ -414,7 +414,7 @@
                     </svg>
                     <span class="flex flex-col truncate text-sm text-gray-500">
                       <span class="truncate">Payment to {{user.nom}} {{user.prenom}}</span>
-                      
+
                     </span>
                   </span>
                     <!-- Heroicon name: mini/chevron-right -->
@@ -459,10 +459,11 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
                                 {% for abonnement in abonnements %}
-                                <tr class="bg-white">
+                                <tr class="bg-white hover:animate-pulse">
                                     <td class="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                         <div class="flex">
-                                            <a class="group inline-flex space-x-2 truncate text-sm hover:cursor-crosshair">
+                                          <a href="{{ path('app_coach_pdf' ,{'coachid':coach.id,'Nom': user.Nom, 'Prenom': user.Prenom,'ammount':abonnement.prix,'date':abonnement.datedeb}) }}" class="group inline-flex space-x-2 truncate text-sm">
+
                                                 <!-- Heroicon name: mini/banknotes -->
                                                 <svg class="h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                      xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -478,7 +479,7 @@
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
                                         <span class="font-medium text-gray-900">${{abonnement.prix}}</span>
-                                        
+
                                     </td>
                                     <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">success</span>
@@ -496,7 +497,7 @@
                                  aria-label="Pagination">
                                 <div class="hidden sm:block">
                                     <p class="text-sm text-gray-700">
-                                        Showing 
+                                        Showing
                                         <span class="font-medium">{{abonnements|length}}</span>
                                         result(s)
                                     </p>
@@ -525,11 +526,11 @@
                             <div class="bg-sky-700 py-6 px-4 sm:px-6">
                                 <div class="flex items-center justify-between">
                                  <div class="flex items-center">
-                                      
+
                                           <h2 class="text-lg font-medium text-white" id="slide-over-title">
                                             {{user.nom}} {{user.prenom}}</h1>
                                     </div>
-                              
+
                                     <div class="ml-3 flex h-7 items-center">
                                         <button onClick="closeSlide()" type="button"
                                                 class="rounded-md bg-sky-700 text-sky-200 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
@@ -561,7 +562,7 @@
                                         <div>
                                             <label for="coach-prename" class="block text-sm font-medium text-gray-900">Coach prename</label>
                                             <div class="mt-1">
-                                                <input type="text" name="coach-prename" id="coach-prename" Default="{{user.prenom}}" 
+                                                <input type="text" name="coach-prename" id="coach-prename" Default="{{user.prenom}}"
                                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                             </div>
                                         </div>
@@ -595,7 +596,7 @@
                                                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                                             </div>
                                         </div>
-                                      
+
 
                                     </div>
 
@@ -913,11 +914,11 @@ closeSlide= () => {
             coachDescription = document.getElementById('coach-description');
             coachDescription.classList.remove('border-red-500');
             coachDescription.classList.remove('border-2');
-        }  
+        }
          if (data['coach-picture'].name === '') {
             alert('Coach picture is required');
             return;
-        }  
+        }
          if (data['coach-price'] === "") {
             coachPrice = document.getElementById('coach-price');
             coachPrice.classList.add('border-red-500');
@@ -928,7 +929,7 @@ closeSlide= () => {
             coachPrice = document.getElementById('coach-price');
             coachPrice.classList.remove('border-red-500');
             coachPrice.classList.remove('border-2');
-        }  
+        }
              const spinicon = document.getElementById('spinicon');
         spinicon.classList.add('animate-spin');
         const coachContainer = document.getElementById('coachcontainer');
@@ -941,7 +942,7 @@ closeSlide= () => {
             form.submit()
         }, 2500)
 
-   // 
+   //
 
     })
 
@@ -982,7 +983,7 @@ closeSlide= () => {
             coursename = document.getElementById('course-name');
             coursename.classList.remove('border-red-500');
             coursename.classList.remove('border-2');
-        } 
+        }
 
        if (data['course-description'] === '') {
             courseDescription = document.getElementById('course-description');
@@ -994,12 +995,12 @@ closeSlide= () => {
             courseDescription = document.getElementById('course-description');
             courseDescription.classList.remove('border-red-500');
             courseDescription.classList.remove('border-2');
-        }  
+        }
 
        if (data['course-background'].name === '') {
             alert('Course background is required');
             return;
-        }  
+        }
 
         // validate grouped sections
         for (let i = 0; i < groupedSections.length; i++) {
@@ -1054,7 +1055,7 @@ closeSlide= () => {
             form.submit()
         }, 2500)
 
-   // 
+   //
 
 
 

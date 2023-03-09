@@ -23,9 +23,9 @@ class CoursesController extends AbstractController
     }
 
     #[Route('/courses/popular', name: 'app_courses_popular')]
-    public function indexPopular(): Response
+    public function indexPopular(CategorieRepository $categorieRepository,CoursRepository $repository): Response
     {
-        return $this->render('courses/popularCourses.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'coach' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'coach' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'coach' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'categories' => ['Cardio','Resistance','Yoga','Whole Body','Circuit Training','HIIT','Stretching'],'userinfo'=>$this->getUser()) );
+        return $this->render('courses/popularCourses.html.twig', array('popular'=>$repository,'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()) );
     }
 
 
