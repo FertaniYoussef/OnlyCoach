@@ -23,18 +23,18 @@ class Coach
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: true)]
-    
-    
+
+
     private ?string $Nom = null;
 
-    
+
 
     /**
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: false)]
-   
-    
+
+
     private ?string $Prenom = null;
 
 
@@ -95,7 +95,7 @@ class Coach
      */
     #[ORM\ManyToOne(inversedBy: 'id_coach', cascade: ['persist', 'remove']) ]
     #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
-    
+
 
     private ?Categorie $categorie = null;
 
@@ -275,7 +275,7 @@ class Coach
     }
 
 
-     
+
     public function getCours(): Collection
     {
         return $this->cours;

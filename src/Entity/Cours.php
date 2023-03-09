@@ -40,6 +40,7 @@ class Cours
     private Collection $id_adherents;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Rating::class)]
+    
     private Collection $id_rating;
 
     #[ORM\OneToMany(mappedBy: 'cours', targetEntity: Sections::class, cascade: ['persist', 'remove'])]

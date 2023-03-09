@@ -3,45 +3,45 @@
 namespace App\Entity;
 
 use App\Repository\FeedbackRepository;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FeedbackRepository::class)]
-class Feedback
+class Feedback implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message:"sujet is required")]
-    private ?string $Sujet = null;
+    #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message:"Veuillez Preciser le sujet !")]
+    private ?string $Sujet ;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Email(message:"The email '{{ value }}' is not a valid email ")]
-    private ?string $email = null;
+    #[ORM\Column(length: 255)]
+   // #[Assert\Email(message:"The email '{{ value }}' is not a valid email ")]
+    private ?string $email ;
 
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message:"description is required")]
-    #[Assert\Length(
-      min : 10,
-      max : 250,
-      minMessage: "Le message  est trop court",
-      maxMessage:"Le message est trop long",
-    )]
-    private ?string $description = null;
+    #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 10, max: 255,
+     minMessage: 'Ta description  doit avoir {{ limit }} characters minimum',
+     maxMessage: 'Ta description  doit avoir  {{ limit }} characters maximum',)]
+    private ?string $description ;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_feedback = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $status = null;
+    private ?int $status ;
 
     #[ORM\ManyToOne(inversedBy: 'id_feedback')]
     private ?User $user = null;
+
+    #[ORM\OneToOne(mappedBy: 'id_feedback', cascade: ['persist', 'remove'])]
+    private ?Reponse $reponse = null;
 
     public function getId(): ?int
     {
@@ -118,5 +118,52 @@ class Feedback
         $this->user = $user;
 
         return $this;
+    }
+
+    public function getReponse(): ?Reponse
+    {
+        return $this->reponse;
+    }
+
+    public function setReponse(?Reponse $reponse): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($reponse === null && $this->reponse !== null) {
+            $this->reponse->setIdFeedback(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($reponse !== null && $reponse->getIdFeedback() !== $this) {
+            $reponse->setIdFeedback($this);
+        }
+
+        $this->reponse = $reponse;
+
+        return $this;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return array(
+            'id' => $this->id,
+            'user' => $this->user,
+            'sujet' => $this->Sujet,
+            'email' => $this->email,
+            'description' => $this->description,
+            'dateFeedback' => $this->date_feedback->format("d-m-Y"),
+            'status' => $this->status
+
+        );
+    }
+
+    public function constructor($user, $sujet, $email, $description, $dateFeedback, $status)
+    {
+        $this->user = $user;
+        $this->Sujet = $sujet;
+        $this->email = $email;
+        $this->description = $description;
+        $this->date_feedback = $dateFeedback;
+        $this->status = $status;
+
     }
 }

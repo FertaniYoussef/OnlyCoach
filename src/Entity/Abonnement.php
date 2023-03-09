@@ -34,6 +34,7 @@ class Abonnement
     #[ORM\ManyToOne(inversedBy: 'id_abonnement')]
     private ?User $user = null;
 
+
     public function getId(): ?int
     {
         return $this->id;
@@ -126,4 +127,6 @@ class Abonnement
 
         return $this;
     }
+
+
 }

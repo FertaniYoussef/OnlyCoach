@@ -39,7 +39,7 @@ class AdherentsRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByCourse($value): array 
+    public function findByCourse($value): array
     {
         return $this ->createQueryBuilder('a')
         ->leftJoin('a.user', 'u')
