@@ -64,7 +64,8 @@ class PdfController extends AbstractController
         ]);
         return $response;
     }
-    #[Route('/coach/dashboard/generateinvoice/?', name: 'app_coach_pdf')]
+
+    #[Route('/coach/dashboard/generateinvoice/?', name: 'app_coach_invoice_pdf')]
     public function coach_pdf(Request $request,ManagerRegistry $doctrine,CoachRepository $coachrepo,UserRepository $userrepo): Response
     {   
 
