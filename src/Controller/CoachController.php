@@ -52,9 +52,7 @@ class CoachController extends AbstractController
             ->getQuery();
 
         $coaches = $query->getResult();
-        return $this->render('coach/fav.html.twig', [
-            'coaches' => $coaches,'userinfo'=>$this->getUser(),'abon'=>$abon
-        ]);
+        return $this->redirectToRoute('app_coach_fav_home');
     }
 
 

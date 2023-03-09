@@ -273,9 +273,8 @@
                                         {% else %}
                                         {% for course in popular %}
                                             <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
-                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
+                                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[25rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
                                                     <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
-                                                    <h1 class="text-xs text-gray-500 pt-1">{{course.IdCoach}} {{course.IdCoach}}</h1>
                                                    {# {% if course.totalratings > 10 %} #}
                                                         <div class="flex items-center">
                                                             <span class="text-amber-600 text-sm font-medium">rating goes here</span>

@@ -51,8 +51,8 @@ class AdherentsRepository extends ServiceEntityRepository
     // find adherent where adherent id and course id
     public function findAdherentByCourseId($adherentId, $courseId)
     {
-        return $this->createQueryBuilder('a,u')
-        ->select('a.date', 'u.Nom', 'u.Prenom')
+        return $this->createQueryBuilder('a')
+        ->select('a.date')
             ->andWhere('a.user = :adherentId')
             ->andWhere('a.cours = :courseId')
             ->setParameter('adherentId', $adherentId)
