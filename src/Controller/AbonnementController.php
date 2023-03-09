@@ -76,7 +76,7 @@ class AbonnementController extends AbstractController
             $user->removeIdAbonnement($abonnement);
             $adherent=$adhrepo->findOneBy(['user'=>$user]);
             $em = $doctrine->getManager();
-            $em->remove($abonnement);
+          
             $em->remove($adherent);
             $em->flush();
             $cours = $coursRepo->FindBy(array(), array('nbVues' => 'DESC'), 3, 0);

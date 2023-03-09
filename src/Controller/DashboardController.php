@@ -404,7 +404,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $coach->setPrix($inputs['coach-price']);
         $coach->setDescription($inputs['coach-description']);
         $target_dir = "./images/"; // update if needed with coach/user name
-        $target_file = $target_dir . basename($_FILES["coach-picture"]["name"]);
+        $target_file = basename($_FILES["coach-picture"]["name"]);
         move_uploaded_file($_FILES["coach-picture"]["tmp_name"], $target_file);
         $coach->setPicture($target_file);
         $user->setPicture($target_file);
@@ -429,7 +429,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
                     }
                 return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
             }
-            $em = $doctrine->getManager();
+            
 
             $em->flush();
             $em->clear();
@@ -542,15 +542,30 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
     // Partie admin
 
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
-    public function adminIndex(Request $request,ManagerRegistry $doctrine): Response
-
-    {
+    public function adminIndex(Request $request,ManagerRegistry $doctrine,AbonnementRepository $rep): Response
+    
+    { 
 
         $entityManager = $doctrine->getManager();
 
          // Récupérer le nombre de coachs inscrits
          $coachsInscrits = $entityManager->getRepository(Coach::class)->count([]);
-
+         $abonnements = $rep->findAll();
+         $payements=[];
+        foreach ($abonnements as $abonnement) {
+          
+            $coachproxy=$abonnement->getCoach();
+            $entityManager->initializeObject($coachproxy);
+           
+            $Nom = $coachproxy->getNom() . ' ' . $coachproxy->getPrenom();
+            $ammount = $abonnement->getPrix();
+            $date=$abonnement->getDateDeb()->format('d/m/y');;
+            $payements[]=array(
+                'Nom' => $Nom,
+                'ammount' => $ammount,
+                'date' => $date
+            );
+        }
          // Récupérer le nombre de tous les users inscrits
          $inscrits = $entityManager->getRepository(User::class)->count([]);
          $abonnesInscrits = $inscrits-$coachsInscrits;
@@ -560,6 +575,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         return $this->render('dashboard/admin/index.html.twig', [
             'userinfo' => $this->getUser(),
             'coachsInscrits' => $coachsInscrits,
+            'payements' => $payements,
             'inscrits'=> $inscrits,
             'abonnesInscrits' => $abonnesInscrits,
 
