@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSerializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -369,6 +369,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
 
         return $this;
     }
+    public function __toString() {
+        return $this->id;
+    }
 
     public function jsonSerialize(): array
     {
@@ -381,8 +384,5 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, \JsonSe
     public function constructor($nom)
     {
         $this->Nom = $nom;
-    }
-    public function __toString() {
-        return $this->id;
     }
 }
