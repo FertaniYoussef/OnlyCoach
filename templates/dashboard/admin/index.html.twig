@@ -464,6 +464,7 @@
                                 </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200 bg-white">
+                                {% for payement in payements %}
                                 <tr class="bg-white">
                                     <td class="w-full max-w-0 whitespace-nowrap px-6 py-4 text-sm text-gray-900">
                                         <div class="flex">
@@ -477,22 +478,22 @@
                                                           clip-rule="evenodd"/>
                                                 </svg>
                                                 <p class="truncate text-gray-500 group-hover:text-gray-900">Payment to
-                                                    Molly Sanders</p>
+                                                    {{payement.Nom}}</p>
                                             </a>
                                         </div>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                        <span class="font-medium text-gray-900">$20,000</span>
+                                        <span class="font-medium text-gray-900">${{payement.ammount}}</span>
                                         USD
                                     </td>
                                     <td class="hidden whitespace-nowrap px-6 py-4 text-sm text-gray-500 md:block">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 capitalize">success</span>
                                     </td>
                                     <td class="whitespace-nowrap px-6 py-4 text-right text-sm text-gray-500">
-                                        <time datetime="2020-07-11">July 11, 2020</time>
+                                        <time datetime="2020-07-11">{{payement.date}}</time>
                                     </td>
                                 </tr>
-
+    {% endfor %}
                                 <!-- More transactions... -->
                                 </tbody>
                             </table>
@@ -501,17 +502,12 @@
                                  aria-label="Pagination">
                                 <div class="hidden sm:block">
                                     <p class="text-sm text-gray-700">
-                                        Showing
-                                        <span class="font-medium">18</span>
-                                        results
+                                        Showing 
+                                        <span class="font-medium">{{payements|length}}</span>
+                                        result(s)
                                     </p>
                                 </div>
-                                <div class="flex flex-1 justify-between sm:justify-end">
-                                    <a href="#"
-                                       class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Previous</a>
-                                    <a href="#"
-                                       class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">Next</a>
-                                </div>
+                            
                             </nav>
                         </div>
                     </div>

@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Feedback;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\ORM\Tools\Pagination\Paginator;
 /**
  * @extends ServiceEntityRepository<Feedback>
  *
@@ -16,9 +16,22 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class FeedbackRepository extends ServiceEntityRepository
 {
+
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Feedback::class);
+    }
+    /**
+     * @return Reclamations[]
+     */
+    public function findBySujet($sujet)
+    {
+        return $this->createQueryBuilder('Feedback')
+            ->andWhere('Feedback.Sujet LIKE :Sujet  ')
+            ->setParameter('Sujet', '%'.$sujet.'%')
+            ->getQuery()
+            ->getResult();
     }
 
     public function save(Feedback $entity, bool $flush = false): void
@@ -63,4 +76,6 @@ class FeedbackRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+
 }

@@ -372,4 +372,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString() {
         return $this->id;
     }
+
+    public function jsonSerialize(): array
+    {
+        return array(
+            'id' => $this->id,
+            'nom' => $this->Nom
+        );
+    }
+
+    public function constructor($nom)
+    {
+        $this->Nom = $nom;
+    }
 }

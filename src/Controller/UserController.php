@@ -13,7 +13,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 
 class UserController extends AbstractController
 {
@@ -70,56 +73,80 @@ class UserController extends AbstractController
     public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
     {
         $user = $this->getUser();
-        if ($request->getMethod() === 'POST'){
+        if ($request->getMethod() === 'POST') {
             $request->request->all();
             $inputs = $request->request->all();
             $target_dir = "./images/"; // update if needed with coach/user name
             $target_file = $target_dir . basename($_FILES["user-photo"]["name"]);
             move_uploaded_file($_FILES["user-photo"]["tmp_name"], $target_file);
-        if ($_FILES["user-photo"]["name"])
-            $user->setPicture($target_file);
-        else
-            $user->setPicture($user->getPicture());
+            if ($_FILES["user-photo"]["name"])
+                $user->setPicture($target_file);
+            else
+                $user->setPicture($user->getPicture());
 
-        if ($inputs["first-name"])
-            $user->setPrenom($inputs["first-name"]);
-        else
-            $user->setPrenom($user->getPrenom());
+            if ($inputs["first-name"])
+                $user->setPrenom($inputs["first-name"]);
+            else
+                $user->setPrenom($user->getPrenom());
 
-        if ($inputs["last-name"])
-            $user->setNom($inputs["last-name"]);
-        else
-            $user->setNom($user->getNom()); 
+            if ($inputs["last-name"])
+                $user->setNom($inputs["last-name"]);
+            else
+                $user->setNom($user->getNom());
 
-        if ($inputs["phone"])
-            $user->setPhone($inputs["phone"]);
-        else
-            $user->setPhone($user->getPhone()); 
-             
-        if ($inputs["about"])
-            $user->setdescription($inputs["about"]);
-        else
-            $user->setdescription($user->getdescription());
-        if ($inputs["oldPassword"]){
-            $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $inputs["newPassword"]
-            );
-            $user->setPassword($hashedPassword);
+            if ($inputs["phone"])
+                $user->setPhone($inputs["phone"]);
+            else
+                $user->setPhone($user->getPhone());
+
+            if ($inputs["about"])
+                $user->setdescription($inputs["about"]);
+            else
+                $user->setdescription($user->getdescription());
+            if ($inputs["oldPassword"]) {
+                $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
+                $hashedPassword = $passwordHasher->hashPassword(
+                    $user,
+                    $inputs["newPassword"]
+                );
+                $user->setPassword($hashedPassword);
+            } else
+                $user->setPassword($user->getPassword());
+            $errors = $validator->validate($user);
+            if (count($errors) > 0) {
+                return $this->render('user/settings.html.twig', array('userinfo' => $this->getUser(), 'errors' => $errors));
+            }
+            $em = $doctrine->getManager();
+            $em->flush();
+            $em->clear();
+
+
+            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser()));
         }
-        else
-        $user->setPassword($user->getPassword());  
-        $errors = $validator->validate($user);
-        if (count($errors) > 0) {
-            return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
-        }
-        $em = $doctrine->getManager();
-        $em->flush();
-        $em->clear();
+    }
 
+    #[Route('/email', name: 'app_email')]
+    public function sendEmail(Request $request,MailerInterface $mailer,UserRepository $repo): Response
+    {
+        if ($request->getMethod() === 'POST'){
+            $request->request->all();
+            $inputs = $request->request->all();
+            $user=$repo->findBy(['email' => $inputs["email"]]);
 
-            return $this->redirectToRoute('app_settings',array('userinfo'=>$this->getUser()));
+            $email = (new TemplatedEmail())
+            ->from('aziz.rezgui@esprit.tn')
+            ->to($inputs["email"])
+            //->cc('cc@example.com')
+            //->bcc('bcc@example.com')
+            //->replyTo('fabien@example.com')
+            //->priority(Email::PRIORITY_HIGH)
+            ->htmlTemplate('mailer/mailer.html.twig')
+            ->context([
+                'pass' => $user[0]->getPassword(),
+            ]);
+            $mailer->send($email);
+            return $this->redirectToRoute('app_login');
+        // ...
         }
     }
     #[Route('/user/settings', name: 'app_settings')]
@@ -127,6 +154,11 @@ class UserController extends AbstractController
     {
         $errors=null;
         return $this->render('user/settings.html.twig',array('userinfo'=>$this->getUser(),'errors' => $errors));
+    }
+    #[Route('/user/ForgotPassword', name: 'app_ForgotPassword')]
+    public function indexforgotpass(): Response
+    {
+        return $this->render('user/forgotPassword.html.twig');
     }
 
 

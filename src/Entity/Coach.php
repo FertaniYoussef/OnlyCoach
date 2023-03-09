@@ -274,8 +274,7 @@ class Coach
         return $this->id;
     }
 
-    /*
-      @return Collection<int, Cours>
+
      
     public function getCours(): Collection
     {
@@ -303,5 +302,5 @@ class Coach
 
         return $this;
     }
-    */
+    
 }

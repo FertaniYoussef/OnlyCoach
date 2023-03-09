@@ -3,6 +3,7 @@
 namespace App\Controller;
 use App\Entity\User;
 use App\Entity\Cours;
+use App\Entity\Reponse;
 use App\Entity\Ressources;
 use App\Entity\Sections;
 use App\Entity\Coach;
@@ -11,17 +12,23 @@ use App\Entity\Feedback;
 use App\Form\CoachType;
 use App\Form\OfferType;
 use App\Form\FeedbackType;
+use App\Form\ReponseType;
 use App\Repository\CoursRepository;
 use App\Repository\FeedbackRepository;
+use App\Repository\ReponseRepository;
 use App\Repository\RessourcesRepository;
 use App\Repository\SectionsRepository;
 use App\Repository\CoachRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Adherents;
 use App\Repository\AdherentsRepository;
 use App\Repository\AbonnementRepository;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -197,7 +204,8 @@ class DashboardController extends AbstractController
     {
         $course = $repository->find($id);
         $adherents=$adhrepo->findByCourse($course);
-       
+
+
 
 
         $users=[];
@@ -207,10 +215,10 @@ class DashboardController extends AbstractController
 
             $entityManager->initializeObject($userProxy);
             $Nom = $userProxy->getNom() . ' ' . $userProxy->getPrenom();
-        
+
             $adherentDate = $adherent->getDate()->format('d/m/y');
             $users[]=array(
-         
+
                 'Nom' => $Nom,
                 'Date' =>  $adherentDate,
             );
@@ -220,7 +228,7 @@ class DashboardController extends AbstractController
         $resources = $resourceRepository->findBy(array('sections' => $sections));
         dump($sections);
         dump($resources);
-    
+
         return $this->render('dashboard/coach/course.html.twig', ['users'=>$users,'course' => $course, 'sections' => $sections, 'resources' => $resources,'userinfo' => $this->getUser(),]);
     }
 
@@ -340,7 +348,7 @@ class DashboardController extends AbstractController
 
         return $this->render('dashboard/coach/modify.html.twig', ['course' => $course, 'sections' => $sections, 'resources' => $resources,'user' => $this->getUser(),]);
     }
-    
+
     #[Route('/coach/dashboard/api/addCourse', name: 'app_dashboard_addCourseApi')]
     public function AddCourseApi(ManagerRegistry $doctrine, CoursRepository $repository) {
 
@@ -380,7 +388,7 @@ class DashboardController extends AbstractController
 #[Route('/coach/dashboard/modifycoach', name: 'app_dashboard_modifycoach')]
 public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRepository $repository,UserRepository $userrepo,ValidatorInterface $validator)
 {
- 
+
     if ($request->getMethod() === 'POST') {
         $inputs = $request->request->all();
       $user= $this->getUser();
@@ -388,7 +396,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
       $user->setPrenom($inputs['coach-prename']);
       $user->setDescription($inputs['coach-description']);
 
-        
+
 
         $coach = $repository->findOneBy(['id_user' => $user]);
         $coach->setNom($inputs['coach-name']);
@@ -396,7 +404,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $coach->setPrix($inputs['coach-price']);
         $coach->setDescription($inputs['coach-description']);
         $target_dir = "./images/"; // update if needed with coach/user name
-        $target_file = $target_dir . basename($_FILES["coach-picture"]["name"]);
+        $target_file = basename($_FILES["coach-picture"]["name"]);
         move_uploaded_file($_FILES["coach-picture"]["tmp_name"], $target_file);
         $coach->setPicture($target_file);
         $user->setPicture($target_file);
@@ -421,7 +429,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
                     }
                 return $this->redirectToRoute('app_dashboard', ['errors' => $errorString]);
             }
-            $em = $doctrine->getManager();
+            
 
             $em->flush();
             $em->clear();
@@ -429,7 +437,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         }
         return $this->redirectToRoute('app_login');
 
-    
+
 }
     #[Route('/coach/dashboard/addCourse', name: 'app_dashboard_addcourse')]
     public function AddCourse(Request $request, ManagerRegistry $doctrine, ValidatorInterface $validator, CoachRepository $repository)
@@ -534,7 +542,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
     // Partie admin
 
     #[Route('/admin/dashboard', name: 'app_dashboard_adminIndex')]
-    public function adminIndex(Request $request,ManagerRegistry $doctrine): Response
+    public function adminIndex(Request $request,ManagerRegistry $doctrine,AbonnementRepository $rep): Response
     
     { 
 
@@ -542,19 +550,35 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
 
          // Récupérer le nombre de coachs inscrits
          $coachsInscrits = $entityManager->getRepository(Coach::class)->count([]);
-
+         $abonnements = $rep->findAll();
+         $payements=[];
+        foreach ($abonnements as $abonnement) {
+          
+            $coachproxy=$abonnement->getCoach();
+            $entityManager->initializeObject($coachproxy);
+           
+            $Nom = $coachproxy->getNom() . ' ' . $coachproxy->getPrenom();
+            $ammount = $abonnement->getPrix();
+            $date=$abonnement->getDateDeb()->format('d/m/y');;
+            $payements[]=array(
+                'Nom' => $Nom,
+                'ammount' => $ammount,
+                'date' => $date
+            );
+        }
          // Récupérer le nombre de tous les users inscrits
          $inscrits = $entityManager->getRepository(User::class)->count([]);
          $abonnesInscrits = $inscrits-$coachsInscrits;
- 
+
          // Retourner les résultats dans une vue Twig
-        
+
         return $this->render('dashboard/admin/index.html.twig', [
             'userinfo' => $this->getUser(),
             'coachsInscrits' => $coachsInscrits,
+            'payements' => $payements,
             'inscrits'=> $inscrits,
             'abonnesInscrits' => $abonnesInscrits,
-            
+
         ]);
     }
 
@@ -629,7 +653,7 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
             'userinfo' => $this->getUser()
         ]);
     }
-    
+
 
     #[Route('/admin/dashboard/coachs/delete/{id}', name: 'app_dashboard_adminCoachsDelete')]
     public function deleteCoach(Request $request,ManagerRegistry $doctrine, CoachRepository $repository, UserRepository $userRepo, int $id): Response
@@ -743,45 +767,55 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
 
     // Partie feedbacks
 
+
     #[Route('/admin/dashboard/feedbacks', name: 'app_dashboard_adminFeedbacks')]
     public function feedbacks(Request $request,FeedbackRepository $repository): Response
     {
         $Feedback=$repository->findAll();
         return $this->render('dashboard/admin/feedback/feedbacks.html.twig',[
-            'Feedback' => $Feedback,
-            'userinfo'=>$this->getUser()
+            'Feedback' => $Feedback,'userinfo' => $this->getUser(),
+
         ]);
     }
 
-   /* #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
-    public function consulterFeedback(Request $request,int $id): Response
+   #[Route('/admin/dashboard/feedback/consulter/{id}', name: 'app_dashboard_adminConsulterFeedback')]
+    public function consulterFeedback(Request $request,$id,Feedback $feedback,EntityManagerInterface $EM,ManagerRegistry $doctrine,ReponseRepository $repository): Response
     {
-        $feedback = new Feedback();
-        $form = $this->createForm(FeedbackType::class, $feedback);
-
+        $reponse = new Reponse();
+        $form = $this->createForm(ReponseType::class, $reponse);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // ajouter reponse
+            $reponse->getIdFeedback();
+            $feedback->setStatus(1);
+            $EM->persist($reponse);
+
 
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->getClickedButton() && 'delete' === $form->getClickedButton()->getName()) {
+            // supprimer reponse
+            $reponse= $repository->find($id);
+            $em = $doctrine->getManager();
+            $em->remove($reponse);
+            $em->flush();
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
         return $this->render('dashboard/admin/feedback/consulterFeedback.html.twig', [
-            'form' => $form->createView(),
+            'form' => $form->createView(),'userinfo' => $this->getUser(),
         ]);
 
-    }*/
-    #[Route("/admin/dashboard/feedbacks/consulter_stat/{id}",name:"consulter_stat")]
+    }
+   /* #[Route("/admin/dashboard/feedbacks/consulter_stat/{id}",name:"consulter_stat")]
     public function consulter(Feedback $feedback, ManagerRegistry $doctrine)
     {
         $feedback->setStatus(1);
         $em = $doctrine->getManager();
         $em->flush();
         return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
-    }
+    }*/
     #[Route('/admin/dashboard/feedbacks/remove/{id}', name: 'app_dashboard_admin_removeFeedbacks')]
     public function removeFeedback(ManagerRegistry $doctrine,$id,FeedbackRepository $repository)
     {
@@ -796,6 +830,45 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
         return  $this->redirectToRoute("app_dashboard_adminFeedbacks");
     }
 
+    /**
+     * @Route("/admin/dashboard/feedbacks/search", name="feedback_search", methods={"GET"})
+     */
+    public function search(Request $request,EntityManagerInterface $entityManager)
+    {
+        $query = $request->query->get('q');
+
+        $repository = $entityManager->getRepository(Feedback::class);
+
+        if (is_numeric($query)) {
+            $results = $repository->findBy(['id' => $query]);
+        } else {
+            $results = $repository->findBy(['Sujet' => $query]);
+        }
+
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
+            'Feedback' => $results, 'userinfo'=>$this->getUser(),
+        ]);
+    }
+
+
+    /**
+     * @Route("/feedbacks/{sort}", name="feedbacks_list", defaults={"sort"="date_desc"})
+     */
+    public function listFeedbacks(EntityManagerInterface $entityManager, string $sort = 'date_desc'): Response
+    {
+        $feedbacksRepository = $entityManager->getRepository(Feedback::class);
+
+        $queryBuilder = $feedbacksRepository->createQueryBuilder('f')
+            ->orderBy('f.date_feedback', ($sort === 'date_asc') ? 'ASC' : 'DESC');
+
+        $feedbacks = $queryBuilder->getQuery()->getResult();
+
+        return $this->render('dashboard/admin/feedback/feedbacks.html.twig', [
+            'Feedback' => $feedbacks,
+            'sort' => $sort,
+             'userinfo'=>$this->getUser(),
+        ]);
+    }
 
 
     // fin partie admin
