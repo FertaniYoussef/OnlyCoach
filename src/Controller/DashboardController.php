@@ -609,6 +609,25 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $em->flush();
         return  $this->redirectToRoute('app_dashboard_adminUsers');
     }
+    #[Route('/admin/dashboard/users/ban/{id}', name: 'app_dashboard_adminUsersban')]
+    public function usersban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $users->setRoles(["ROLE_BANNED"]);
+        $em = $doctrine->getManager();
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
+    #[Route('/admin/dashboard/users/unban/{id}', name: 'app_dashboard_adminUsersunban')]
+    public function usersunban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $roles=$users->getRoles()[1];
+        $users->setRoles([$roles]);
+        $em = $doctrine->getManager();
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
 
 
     // Partie coachs

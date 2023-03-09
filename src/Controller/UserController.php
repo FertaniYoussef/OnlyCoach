@@ -71,6 +71,7 @@ class UserController extends AbstractController
     #[Route('/user/settings/modify', name: 'app_settings_modify')]
     public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
     {
+        $match=null;
         $user = $this->getUser();
         if ($request->getMethod() === 'POST') {
             $request->request->all();
@@ -104,11 +105,13 @@ class UserController extends AbstractController
                 $user->setdescription($user->getdescription());
             if ($inputs["oldPassword"]) {
                 $match = $passwordHasher->isPasswordValid($user, $inputs["oldPassword"]);
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $inputs["newPassword"]
-                );
-                $user->setPassword($hashedPassword);
+                if($match==true){
+                    $hashedPassword = $passwordHasher->hashPassword(
+                        $user,
+                        $inputs["newPassword"]
+                    );
+                    $user->setPassword($hashedPassword);
+                }
             } else
                 $user->setPassword($user->getPassword());
             $errors = $validator->validate($user);
@@ -120,7 +123,7 @@ class UserController extends AbstractController
             $em->clear();
 
 
-            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser()));
+            return $this->redirectToRoute('app_settings', array('userinfo' => $this->getUser(),'passwordmatch'=>$match));
         }
     }
 
@@ -164,5 +167,10 @@ class UserController extends AbstractController
     public function index($id): Response
     {
         return $this->render('user/index.html.twig', array('popular' => [['id' => '1', 'title' => 'Get started with Stretching. - Learn the basics in less than 24 Hours!', 'creator' => 'Amrou Ghribi', 'background' => 'StretchingImage.jpg', 'rating' => 4.3, 'totalratings' => 1098],['id' => '2', 'title' => 'Get started with Yoga. - Learn the basics in less than 24 Hours!', 'creator' => 'Aziz Rezgui', 'background' => 'YogaImage.jpg', 'rating' => 3.7, 'totalratings' => 6782],['id' => '3', 'title' => 'Get started with Resistance. - Learn the basics in less than 24 Hours!', 'creator' => 'Fatma Masmoudi', 'background' => 'ResistanceImage.jpg', 'rating' => 3.2, 'totalratings' => 4]], 'userinfo'=> $this->getUser()) );
+    }
+    #[Route('/banned', name: 'app_banned')]
+    public function bannedindex(): Response
+    {
+        return $this->render('banned/banned.html.twig');
     }
 }
