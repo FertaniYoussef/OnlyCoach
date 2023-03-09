@@ -78,7 +78,7 @@ class Coach
     /**
      * @Groups({"coach_list"})
      */
-    #[ORM\OneToOne(inversedBy: 'coach', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'coach', cascade: ['remove'])]
     #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
 
 
@@ -102,7 +102,7 @@ class Coach
     /**
      * @Groups({"coach_list"})
      */
-    #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class)]
+    #[ORM\OneToMany(mappedBy: 'coach', targetEntity: Abonnement::class,cascade: ['persist', 'remove'])]
     private Collection $id_abonnement;
 
     /**
