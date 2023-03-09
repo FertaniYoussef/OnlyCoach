@@ -134,22 +134,24 @@ class UserController extends AbstractController
             $request->request->all();
             $inputs = $request->request->all();
             $user=$repo->findBy(['email' => $inputs["email"]]);
-
-            $email = (new TemplatedEmail())
-            ->from('aziz.rezgui@esprit.tn')
-            ->to($inputs["email"])
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
-            ->htmlTemplate('mailer/mailer.html.twig')
-            ->context([
-                'pass' => $user[0]->getPassword(),
-            ]);
-            $mailer->send($email);
-            return $this->redirectToRoute('app_login');
+            if($user){
+                $email = (new TemplatedEmail())
+                ->from('aziz.rezgui@esprit.tn')
+                ->to($inputs["email"])
+                //->cc('cc@example.com')
+                //->bcc('bcc@example.com')
+                //->replyTo('fabien@example.com')
+                //->priority(Email::PRIORITY_HIGH)
+                ->htmlTemplate('mailer/mailer.html.twig')
+                ->context([
+                    'pass' => $user[0]->getPassword(),
+                ]);
+                $mailer->send($email);
+                return $this->redirectToRoute('app_login');
+            }
         // ...
         }
+        return $this->render('user/forgotPassword.html.twig');
     }
     #[Route('/user/settings', name: 'app_settings')]
     public function indexsettings(): Response
