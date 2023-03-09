@@ -1,0 +1,12 @@
+{
+    "config": {
+        "allow-plugins": {
+            "symfony/flex": true,
+            "symfony/runtime": true
+        }
+    },
+    "require": {
+        "knplabs/knp-paginator-bundle": "^6.1",
+        "dompdf/dompdf": "^2.0"
+    }
+}
