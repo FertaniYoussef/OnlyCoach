@@ -46,7 +46,7 @@ class AbonnementController extends AbstractController
         $subscription->setDateFin($endDate);
         $subscription->setUser($user);
         $subscription->setCoach($coach);
-        $subscription->setPrix ($coach -> getPrix() * 1.1);
+        $subscription->setPrix ($coach -> getPrix());
         $user-> addIdAbonnement($subscription);
         $coach->addIdAbonnement($subscription);
 
@@ -230,7 +230,7 @@ public function subscribeToCoach_api(Request $request, $coachId,UserRepository $
     $subscription->setDateFin($endDate);
     $subscription->setUser($user);
     $subscription->setCoach($coach);
-    $subscription->setPrix ($coach -> getPrix() * 1.1);
+    $subscription->setPrix ($coach -> getPrix());
 
 
 

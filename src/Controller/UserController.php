@@ -6,8 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use App\Entity\Coach;
 use App\Repository\UserRepository;
 use App\Repository\CoachRepository;
+use App\Repository\CoursRepository;
+use App\Repository\AbonnementRepository;
 use App\Form\UserType;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
@@ -168,13 +171,16 @@ class UserController extends AbstractController
 
 
     #[Route('/user/{id}', name: 'app_user')]
-    public function index($id,CoachRepository $coachRepository): Response
+    public function index($id,CoachRepository $coachRepository, CoursRepository $rep, AbonnementRepository $repoAbo): Response
     {
-    $coach = $coachRepository->find($id);
+        $coach = $coachRepository->find($id);
+        $cours = $rep->findBy(['IdCoach' => $coach->getId()]);
+        $abonnements = $repoAbo->findBy(['coach' => $coach]);
     
-    dump($coach);    
         return $this->render('user/index.html.twig', array(
-        'coach' => $coach
+        'coach' => $coach,
+        'cours' => $cours,
+        'subscribers' => $abonnements,
         
     ));
     }
