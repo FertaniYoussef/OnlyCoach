@@ -25,7 +25,7 @@ class CoursesController extends AbstractController
     #[Route('/courses/popular', name: 'app_courses_popular')]
     public function indexPopular(CategorieRepository $categorieRepository,CoursRepository $repository): Response
     {
-        return $this->render('courses/popularCourses.html.twig', array('popular'=>$repository,'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()) );
+        return $this->render('courses/popularCourses.html.twig', array('popular'=>$repository->findAll(),'categories' => $categorieRepository->findAll(),'userinfo'=>$this->getUser()) );
     }
 
 
