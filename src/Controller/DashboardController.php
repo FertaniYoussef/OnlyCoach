@@ -538,7 +538,39 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
 
     // Fin partie coach
 
-
+    #[Route('/api/coach/dashboard/courses/{id}/adherents', name: 'api_dashboard_getadherents')]
+    public function getadherentsAPI(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id,AdherentsRepository $adhrepo,UserRepository $userrepo,ManagerRegistry $doctrine): JsonResponse
+    {
+        $course = $repository->find($id);
+        $adherents=$adhrepo->findByCourse($course);
+       
+        $users=[];
+        $entityManager = $doctrine->getManager();
+        foreach($adherents as $adherent) {
+            $userProxy= $adherent->getUser();
+    
+            $entityManager->initializeObject($userProxy);
+            $Nom = $userProxy->getNom() . ' ' . $userProxy->getPrenom();
+        
+            $adherentDate = $adherent->getDate()->format('d/m/y');
+            $users[]=array(
+         
+                'Nom' => $Nom,
+                'Date' =>  $adherentDate,
+            );
+    
+        }
+        $sections = $course->getIdSections()->getValues();
+        $resources = $resourceRepository->findBy(array('sections' => $sections));
+    
+        $data = [
+            'users' => $users,
+        ];
+      
+    
+    
+        return $this->json($data,200,[]);
+    }
 
     // Partie admin
 
