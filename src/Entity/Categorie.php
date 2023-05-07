@@ -99,4 +99,17 @@ class Categorie
         'type' => $this->getType(),
     ];
 }
+public function jsonSerialize(): array
+{
+    return array(
+        'id' => $this->id,
+        'type' => $this->Type
+
+    );
+}
+
+public function constructor($type)
+{
+    $this->Type = $type;
+}
 }
