@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CoachRepository::class)]
-class Coach
+class Coach  implements \JsonSerializable
 {
     /**
      * @Groups({"coach_list"})
