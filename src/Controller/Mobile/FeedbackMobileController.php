@@ -22,10 +22,11 @@ class FeedbackMobileController extends AbstractController
     /**
      * @Route("", methods={"GET"})
      */
-    public function index(FeedbackRepository $feedbackRepository): Response
+    public function index(FeedbackRepository $feedbackRepository,UserRepository $userRepository): Response
     {
         $feedbacks = $feedbackRepository->findAll();
-
+       
+     
         if ($feedbacks) {
             return new JsonResponse($feedbacks, 200);
         } else {

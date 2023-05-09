@@ -52,6 +52,7 @@ security:
         - { path: ^/coachs,     roles: ROLE_USER }
         - { path: ^/courses,     roles: ROLE_USER }
         - { path: ^/coach/dashboard/api/course/,     roles: ROLE_USER }
+        - { path: ^/coach/dashboard/api/courses/,     roles: PUBLIC_ACCESS }
         - { path: ^/coach/dashboard,     roles: ROLE_COACH }
         - { path: ^/abonnement,     roles: ROLE_USER }
         - { path: ^/,          roles: PUBLIC_ACCESS }

@@ -8,50 +8,74 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use App\Form\UserType;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Doctrine\Persistence\ManagerRegistry;
 
 class UserMobileController extends AbstractController
 {
-    #[Route('/mobile/login', name: 'app_mobile_login')]
-    public function login(AuthenticationUtils $authenticationUtils): Response
-    {
-        // get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-        // last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-        return $this->render('login/index.html.twig', [
-            'last_username' => $lastUsername,
-            'error'         => $error,
-            ]);
+    #[Route('/mobile/login', name: 'api_login')]
+    public function Login(Request $request, UserRepository $repository,SerializerInterface $serializer){
+        $email = $request->query->get("email");
+        $password = $request->query->get("password");
+
+        $user = $repository->findOneBy(['email'=>$email]);
+        if($user){
+            if(password_verify($password,$user->getPassword())){
+                $serializer = new Serializer([new ObjectNormalizer()]);
+                $formatted = $serializer->normalize($user);
+                return new JsonResponse($formatted);
+            }
+            else{
+                return new Response("password not found");
+            }
+        }
+        else{
+            return new Response("user not found");
+        }
     }
     
     #[Route('/mobile/inscription', name: 'User_mobile_inscription')]
-    public function AddUser(UserRepository $repository, ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator,SerializerInterface $serializer)
-    {
-            $jsonRecu = $request->getContent();
-            $inputs = $serializer->deserialize($jsonRecu, User::class, 'json');
-            $user = new User();
-            $plaintextPassword = $inputs->getPassword();
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $plaintextPassword
-            );
-            $role = $user->getRoles();
-            $user->setRoles($role);
-            $user->setPassword($hashedPassword);
-            $user->setPicture('images\defaultuser.png');
-            $user->setEmail($inputs->getEmail());
-            $user->setNom($inputs->getPrenom());
-            $user->setPrenom($inputs->getNom());
+    public function Register(UserRepository $repository ,ManagerRegistry $doctrine, Request $request,UserPasswordHasherInterface $passwordHasher,SerializerInterface $serializer)
+    {   
+        $email = $request->query->get("email");
+        $password = $request->query->get("password");
+        $nom = $request->query->get("nom");
+        $prenom = $request->query->get("prenom");
+        $user = new User();
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $password
+        );
+        
+        if(!filter_var($email, FILTER_VALIDATE_EMAIL)){
+            return new Response("email invalid.");
+        }
+
+
+        
+        $user->setRoles(['ROLE_USER']);
+        $user->setEmail($email);
+        //$user->setNom("aziz");
+        //$user->setPrenom("aziz");
+        $user->setNom($nom);
+        $user->setPrenom($prenom);
+        $user->setPassword($hashedPassword);
+        try{
+            
             $repository->add($user, true);
-            return  $this->json('Creation avec succes', 201, []);
+
+            return new JsonResponse("account is created", 200);
+        }catch(\Exception $ex){
+            return new Response("execption".$ex->getMessage());
+        }
     }
     #[Route('/mobile/logout', name: 'app_logout', methods: ['GET'])]
     public function logout()
@@ -59,6 +83,23 @@ class UserMobileController extends AbstractController
         // controller can be blank: it will never be called!
         throw new \Exception('Don\'t forget to activate logout in security.yaml');
     }
+
+
+    #[Route('/api/getPasswordByEmail', name: 'api_password')]
+    public function getPasswordByEmail(Request $request,UserRepository $repository){
+
+        $email = $request->get('email');
+        $user = $repository->findOneBy(['email'=>$email]);
+        if($user){
+            $password = $user->getPassword();
+            $serializer = new Serializer([new ObjectNormalizer()]);
+            $formatted = $serializer->normalize($password);
+            return new JsonResponse($formatted);
+        }
+        return new Response("user not found");
+    }
+
+
     #[Route('/mobile/user/settings/modify', name: 'app_settings_mobile_modify')]
     public function indexsettingsmodify(Request $request,UserRepository $repository, ManagerRegistry $doctrine,UserPasswordHasherInterface $passwordHasher,ValidatorInterface $validator): Response
     {

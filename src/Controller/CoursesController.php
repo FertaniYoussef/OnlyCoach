@@ -12,7 +12,9 @@ use App\Repository\CategorieRepository;
 use App\Repository\CoursRepository;
 use App\Repository\AbonnementRepository;
 use App\Repository\AdherentsRepository;
+use App\Repository\UserRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Serializer\Serializer;
 
 class CoursesController extends AbstractController
 {
@@ -45,6 +47,25 @@ class CoursesController extends AbstractController
 
         $course = $repository->find($id);
         return $this->render('courses/course.html.twig', array('course' => $course, 'abonnement' => $abonnement, 'adherent' => $adherent, 'user' => $user));
+    }
+
+    #[Route('/api/courses/{id}/{idU}', name: 'api_course')]
+    public function apiCourse(CoursRepository $repository, int $id,int $idU, AbonnementRepository $abonRep, AdherentsRepository $adRep, ManagerRegistry $doctrine, UserRepository $userRep): Response
+    {
+        $user = $userRep->find($idU);
+        $cours = $repository->find($id);
+        $coach = $cours->getIdCoach();
+        $coachId = $coach->getId();
+        $abonnement = $abonRep->findAbonnementByAdherentAndCoach($user->getId(), $coachId);
+        $adherent = $adRep->findAdherentByCourseId($user, $id);
+
+        $cours->setNbvues($cours->getNbvues() + 1);
+        $doctrine->getManager()->flush();
+
+
+
+
+        return $this->json(array('abonnement' => (bool)$abonnement, 'adherent' => (bool)$adherent));
     }
 
     #[Route('/courses/category/{slug}', name: 'app_courses_category')]

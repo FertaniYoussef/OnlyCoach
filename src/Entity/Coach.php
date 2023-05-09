@@ -7,9 +7,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use jsonSerializable;
+
 
 #[ORM\Entity(repositoryClass: CoachRepository::class)]
-class Coach
+class Coach implements \JsonSerializable
 {
     /**
      * @Groups({"coach_list"})
@@ -301,6 +303,34 @@ class Coach
         }
 
         return $this;
+    }
+    public function jsonSerialize(): array
+    {
+        return array(
+            'id' => $this->id,
+            'user' => $this->id_user,
+            'categorie' => $this->categorie,
+            'nom' => $this->Nom,
+            'prenom' => $this->Prenom,
+            'image' => $this->Picture,
+            'description' => $this->Description,
+            'prix' => $this->Prix,
+            'rating' => $this->Rating
+
+        );
+    }
+
+    public function constructor($user, $categorie, $nom, $prenom, $image, $description, $prix, $rating)
+    {
+        $this->id_user = $user;
+        $this->categorie = $categorie;
+        $this->Nom = $nom;
+        $this->Prenom = $prenom;
+        $this->Picture = $image;
+        $this->Description = $description;
+        $this->Prix = $prix;
+        $this->Rating = $rating;
+
     }
 
 }

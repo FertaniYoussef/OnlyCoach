@@ -169,22 +169,29 @@ class DashboardController extends AbstractController
     }
 
     // make an api that returns a json response
-    #[Route('/coach/dashboard/api/courses', name: 'app_dashboard_api_courses')]
+    #[Route('mobile/coach/dashboard/api/courses', name: 'app_dashboard_api_courses')]
     public function apiCourses(Request $request, CoursRepository $repository): Response
     {
         $courses = $repository->findAll();
         // loop through the courses and each time append it to an array with json format
         $coursesArray = [];
+        dump($courses);
         foreach ($courses as $course) {
+            $coach = $course->getIdCoach();
+            $coachId = $coach->getId();
             $coursesArray[] = [
                 'id' => $course->getId(),
                 'title' => $course->getTitre(),
                 'description' => $course->getDescription(),
                 'image' => $course->getCoursPhoto(),
                 'date' => $course->getDateCreation(),
+                'coachId' => $coachId,
+                'coachNom' => $coach->getNom(),
+                'coachPrenom' => $coach->getPrenom(),
+                'coachUserId' => $coach->getIdUser()->getId(),
             ];
         }
-        return $this->json($coursesArray);
+        return new JsonResponse($coursesArray,200);
     }
 
     #[Route('/coach/dashboard/courses', name: 'app_dashboard_listCourses')]
