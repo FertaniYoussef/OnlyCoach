@@ -15,7 +15,7 @@ use JsonSerializable;
 #[ApiResource]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface,\JsonSerializable
+class User implements UserInterface, PasswordAuthenticatedUserInterface,JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
