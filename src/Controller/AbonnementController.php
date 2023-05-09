@@ -76,8 +76,9 @@ class AbonnementController extends AbstractController
             $user->removeIdAbonnement($abonnement);
             $adherent=$adhrepo->findOneBy(['user'=>$user]);
             $em = $doctrine->getManager();
-          
+          if ($adherent){
             $em->remove($adherent);
+          }
             $em->flush();
             $cours = $coursRepo->FindBy(array(), array('nbVues' => 'DESC'), 3, 0);
 
@@ -217,7 +218,7 @@ public function checkoutapi(Request $request, $coachId,CoachRepository $coachrep
 public function subscribeToCoach_api(Request $request, $coachId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
 {
 
-    $user = $userrepo->find(10);
+    $user = $userrepo->find(210);
   $coach =$coachrepo->find($coachId);
     if (!$coach) {
         return $this->json('Coach not found',404,[]);
