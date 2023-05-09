@@ -8,9 +8,7 @@
     {% endblock %}
 </head>
 <body class="bg-slate-50">
-
 <!-- Navigation -->
-
 <nav class="bg-gradient-to-b from-teal-600/10 to-slate-50 " >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
@@ -21,9 +19,9 @@
                 </div>
                 <div class="hidden ml-12 sm:flex space-x-8">
                     <!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
-                    <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Popular</a>
+                    <a href="{{ path('app_courses_popular') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Popular</a>
                     <a href="{{ path('app_coach') }}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Coachs</a>
-                    <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Contact</a>
+                    <a href="#" class="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900">Contact</a>
                 </div>
 
 
@@ -169,7 +167,7 @@
                     </div>
             </div>
 
-                <div class="sm:col-span-2">
+                <div class="sm:col-span-2 mt-2">
                     <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
                     <div class="mt-1">
                         <textarea id="message" name="message" rows="4" placeholder="Entrer votre description" class="block w-full rounded-md border-gray-300 py-3 px-4 shadow-sm focus:border-orange-500 focus:ring-orange-500"></textarea>
@@ -189,7 +187,7 @@
 
           {% endif %}
 
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-2 my-4">
                     <button type="submit" class="inline-flex w-full items-center justify-center rounded-md border border-transparent bg-orange-600 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2">Envoyer</button>
                 </div>
 

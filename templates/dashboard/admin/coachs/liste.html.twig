@@ -1,8 +1,22 @@
-{% block body %}
-    <h1>Liste des coachs</h1>
+<html class="h-full bg-white">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+</head>
+    <body>
+    
+    <h1>Liste des coachs </h1>
+<div id="container">
     <ul>
+
         {% for coach in coaches %}
             <li>{{ coach.nom }} - {{ coach.prenom }}</li>
         {% endfor %}
     </ul>
-{% endblock %}
+    </div>
+    </body>
+
+    </html>

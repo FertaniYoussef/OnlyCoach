@@ -29,6 +29,8 @@ class MainController extends AbstractController
                 return $this->redirectToRoute('app_dashboard');
             }elseif($user->getRoles()[0]=="ROLE_ADMIN"){
                 {return $this->redirectToRoute("app_dashboard_adminIndex");}
+            }elseif($user->getRoles()[0]=="ROLE_BANNED"){
+                {return $this->redirectToRoute("app_banned");}
             }
         }
         else{

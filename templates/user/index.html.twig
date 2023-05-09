@@ -9,7 +9,11 @@
 </head>
 <body>
 <!-- Navigation -->
+{#<div id="offercontainer" class="w-full h-auto bg-red-600 flex flex-col justify-center items-center py-2 space-y-1 ">
+<p class="text-sm text-white">Subscribe to Amrou Ghribi now for <span class="line-through">$9.99</span> <span class="text-lg font-bold text-white">4.99$</span></p>
+<button class="text-black text-xs py-1 px-3 bg-white rounded-full hover:scale-105 duration-100 transition-all">Subscribe now &rarr;</button>
 
+</div> #}
 <nav class="bg-gradient-to-b from-teal-600/10 to-slate-50 " >
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 justify-between">
@@ -105,9 +109,10 @@
         <div class="border-t border-gray-200 pt-4 pb-3">
             <div class="flex items-center px-4">
                 <div class="flex-shrink-0">
-                    <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                    <img class="h-10 w-10 rounded-full" src="{{asset(coach.picture)}}" alt="">
                 </div>
                 <div class="ml-3">
+
                     <div class="text-base font-medium text-gray-800">Amrou Ghribi</div>
                 </div>
                 <button type="button" class="ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
@@ -139,10 +144,10 @@
                 <div class="flex flex-col-reverse">
                     <div class="mt-4">
                         <div id="Coach" class="flex flex-col items-center space-y-4">
-                            <canvas class="w-28 h-28  rounded-full bg-black bg-[url('../../public/images/coach1.jpg')] bg-cover shadow-xl"></canvas>
+                            <canvas class="w-28 h-28  rounded-full bg-black bg-cover shadow-xl" style="background-image: url('/images/{{ coach.picture }}')"></canvas>
                             <div id="personalInformation" class="flex flex-col items-center">
-                                <h1 class="text-lg font-semibold"></h1>
-                                <h1 class="text-gray-800 text-sm"></h1>
+                                <h1 class="text-lg font-semibold">{{coach.nom}} {{coach.prenom}}</h1>
+                                <h1 class="text-gray-800 text-sm">{{coach.categorie}}</h1>
                             </div>
                         </div>
                     </div>
@@ -151,18 +156,18 @@
 
 
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-1">
-                    <button type="button" class="flex w-48 mx-auto items-center justify-center rounded-full border border-[2px] border-orange-600  py-3 px-3 text-sm font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 transition sm:hover:scale-105 duration-200 delay-150">Subscribe for $9.99</button>
+                    <a href="{{path('subscribe_coach',{'coachId':coach.id})}}"><button type="button" class="flex w-48 mx-auto items-center justify-center rounded-full  border-[2px] border-orange-600  py-3 px-3 text-sm font-bold text-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-gray-50 transition sm:hover:scale-105 duration-200 delay-150">Subscribe for ${{coach.prix}}</button></a>
                 </div>
 
 
 
                 <div class="mt-10 pt-10 flex flex-row items-center justify-center space-x-10">
                     <div class="flex flex-col items-center">
-                    <h1 class="text-2xl font-extrabold tracking-tight text-teal-600">18972</h1>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-teal-600">{{subscribers|length}}</h1>
                     <h1 class="text-sm text-gray-700 mb-10">Subscribers</h1>
                     </div>
                     <div class="flex flex-col items-center">
-                        <h1 class="text-2xl font-extrabold tracking-tight text-teal-600">6</h1>
+                        <h1 class="text-2xl font-extrabold tracking-tight text-teal-600">{{cours|length}}</h1>
                         <h1 class="text-sm text-gray-700 mb-10">Courses</h1>
                     </div>
                 </div>
@@ -179,20 +184,13 @@
             <!-- Product image -->
             <div class="lg:col-span-7 lg:row-end-1">
                 <div class="mt-10">
-                    <h1 class="text-xl font-bold mb-10 text-gray-800">My popular courses</h1>
+                    <h1 class="text-xl font-bold mb-10 text-gray-800">My courses</h1>
                     <div id="courses" class="grid grid-cols-3  lg:grid-cols-4 gap-x-5 gap-y-5">
-                        {% for course in popular %}
-                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
-                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
+                        {% for course in cours %}
+                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.titre }}" class="group">
+                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-cover sm:group-hover:brightness-[90%]" style="background-image: url('/images/{{ course.coursphoto }}')"></div>
+                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.titre }}</h1>
                                     {# if course.totalratings > 10 #}
-                                        <div class="flex items-center">
-                                            <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
-                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {# endfor #}
-                                            <span class="text-xs text-gray-400 ml-1">(2,432)</span>
-                                        </div>
                                     {# else #}
                                         <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
                                             <span class="text-xs text-white font-medium uppercase ">new</span>
@@ -203,49 +201,6 @@
                     </div>
                 </div>
 
-                <div class="mt-10">
-                    <h1 class="text-xl font-bold mb-10 text-gray-800">My courses</h1>
-                    <div id="courses" class="grid grid-cols-3  lg:grid-cols-4 gap-x-5 gap-y-5">
-                        {% for course in popular %}
-                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
-                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                    {# if course.totalratings > 10 #}
-                                        <div class="flex items-center">
-                                            <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
-                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {# endfor #}
-                                            <span class="text-xs text-gray-400 ml-1">(2,432)</span>
-                                        </div>
-                                    {# else #}
-                                        <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
-                                            <span class="text-xs text-white font-medium uppercase ">new</span>
-                                        </div>
-                                    {# endif #}
-                                </div></a>
-                        {% endfor %}
-
-                        {% for course in popular %}
-                            <a href="{{ path('app_course', {'id' : course.id}) }}"><div id="CourseContainer" name="{{ course.title }}" class="group">
-                                    <div class="flex flex-col justify-between py-3 px-4 w-full h-[10rem] bg-black shadow-lg rounded-sm  brightness-[95%] bg-[url('../../public/images/{{ course.background }}')] bg-cover sm:group-hover:brightness-[90%]"></div>
-                                    <h1 class="text-md font-semibold pt-2 leading-5 text-ellipsis">{{ course.title }}</h1>
-                                    {# if course.totalratings > 10 #}
-                                        <div class="flex items-center">
-                                            <span class="text-amber-600 text-sm font-medium">{{ course.rating }}</span>
-                                            {#for i in range(1, course.rating|round(0, 'floor')) #}
-                                                <span id="stars" class="text-amber-400 ml-1">&starf;</span>
-                                            {# endfor #}
-                                            <span class="text-xs text-gray-400 ml-1">(2,432)</span>
-                                        </div>
-                                    {# else #}
-                                        <div class="w-12 h-5 bg-amber-400 flex items-center justify-center mt-1">
-                                            <span class="text-xs text-white font-medium uppercase ">new</span>
-                                        </div>
-                                    {# endif #}
-                                </div></a>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
         </div>
@@ -253,10 +208,10 @@
 </div>
 
 <!-- Debut Footer -->
-<footer class="bg-white">
+<footer class="bg-black">
     <div class="mx-auto max-w-7xl py-12 px-6 md:flex md:items-center md:justify-center lg:px-8">
 
-        <div class="mt-8 md:order-1 md:mt-0">
+        <div class="mt-8 md:order-1 md:mt-0 ">
             <p class="text-center text-xs leading-5 text-gray-500">&copy; 2023 OnlyCoach, Inc. All rights reserved.</p>
         </div>
     </div>

@@ -19,19 +19,7 @@ class ReponseType extends AbstractType
 
 
 
-            ->add('save', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary',
-                ]
-            ])
-
-
-
-            ->add('delete', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn btn-primary',
-                ]
-            ])
+           
 
         ;
 

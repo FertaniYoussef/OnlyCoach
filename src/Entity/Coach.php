@@ -23,18 +23,18 @@ class Coach  implements \JsonSerializable
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: true)]
-    
-    
+
+
     private ?string $Nom = null;
 
-    
+
 
     /**
      * @Groups({"coach_list"})
      */
     #[ORM\Column(length: 255, nullable: false)]
-   
-    
+
+
     private ?string $Prenom = null;
 
 
@@ -95,7 +95,7 @@ class Coach  implements \JsonSerializable
      */
     #[ORM\ManyToOne(inversedBy: 'id_coach', cascade: ['persist', 'remove']) ]
     #[Assert\NotBlank(message:'Ce champ est obligatoire ')]
-    
+
 
     private ?Categorie $categorie = null;
 
@@ -275,7 +275,7 @@ class Coach  implements \JsonSerializable
     }
 
 
-     
+
     public function getCours(): Collection
     {
         return $this->cours;
@@ -302,32 +302,5 @@ class Coach  implements \JsonSerializable
 
         return $this;
     }
-    public function jsonSerialize(): array
-    {
-        return array(
-            'id' => $this->id,
-            'user' => $this->id_user,
-            'categorie' => $this->categorie,
-            'nom' => $this->Nom,
-            'prenom' => $this->Prenom,
-            'image' => $this->Picture,
-            'description' => $this->Description,
-            'prix' => $this->Prix,
-            'rating' => $this->Rating
 
-        );
-    }
-
-    public function constructor($user, $categorie, $nom, $prenom, $image, $description, $prix, $rating)
-    {
-        $this->id_user = $user;
-        $this->categorie = $categorie;
-        $this->Nom = $nom;
-        $this->Prenom = $prenom;
-        $this->Picture = $image;
-        $this->Description = $description;
-        $this->Prix = $prix;
-        $this->Rating = $rating;
-
-    }
 }

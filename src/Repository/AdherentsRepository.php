@@ -39,7 +39,7 @@ class AdherentsRepository extends ServiceEntityRepository
         }
     }
 
-    public function findByCourse($value): array 
+    public function findByCourse($value): array
     {
         return $this ->createQueryBuilder('a')
         ->leftJoin('a.user', 'u')
@@ -52,7 +52,7 @@ class AdherentsRepository extends ServiceEntityRepository
     public function findAdherentByCourseId($adherentId, $courseId)
     {
         return $this->createQueryBuilder('a')
-     
+        ->select('a.date')
             ->andWhere('a.user = :adherentId')
             ->andWhere('a.cours = :courseId')
             ->setParameter('adherentId', $adherentId)

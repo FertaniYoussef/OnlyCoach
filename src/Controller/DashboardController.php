@@ -39,7 +39,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Component\Serializer\SerializerInterface;
-
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Encoder\XmlEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -537,7 +538,39 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
 
     // Fin partie coach
 
-
+    #[Route('/api/coach/dashboard/courses/{id}/adherents', name: 'api_dashboard_getadherents')]
+    public function getadherentsAPI(Request $request, CoursRepository $repository, SectionsRepository $sectionRepository,RessourcesRepository $resourceRepository, int $id,AdherentsRepository $adhrepo,UserRepository $userrepo,ManagerRegistry $doctrine): JsonResponse
+    {
+        $course = $repository->find($id);
+        $adherents=$adhrepo->findByCourse($course);
+       
+        $users=[];
+        $entityManager = $doctrine->getManager();
+        foreach($adherents as $adherent) {
+            $userProxy= $adherent->getUser();
+    
+            $entityManager->initializeObject($userProxy);
+            $Nom = $userProxy->getNom() . ' ' . $userProxy->getPrenom();
+        
+            $adherentDate = $adherent->getDate()->format('d/m/y');
+            $users[]=array(
+         
+                'Nom' => $Nom,
+                'Date' =>  $adherentDate,
+            );
+    
+        }
+        $sections = $course->getIdSections()->getValues();
+        $resources = $resourceRepository->findBy(array('sections' => $sections));
+    
+        $data = [
+            'users' => $users,
+        ];
+      
+    
+    
+        return $this->json($data,200,[]);
+    }
 
     // Partie admin
 
@@ -557,11 +590,16 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
             $coachproxy=$abonnement->getCoach();
             $entityManager->initializeObject($coachproxy);
            
-            $Nom = $coachproxy->getNom() . ' ' . $coachproxy->getPrenom();
+            $Nom = $coachproxy->getNom();
+            $Prenom= $coachproxy->getPrenom();
             $ammount = $abonnement->getPrix();
+
             $date=$abonnement->getDateDeb()->format('d/m/y');;
             $payements[]=array(
+                'id' => $abonnement->getId(),
+                'id_coach'=>$coachproxy->getId(),
                 'Nom' => $Nom,
+                'Prenom' => $Prenom,
                 'ammount' => $ammount,
                 'date' => $date
             );
@@ -606,6 +644,25 @@ public function modifyCoach(Request $request, ManagerRegistry $doctrine, CoachRe
         $users= $repository->find($id);
         $em = $doctrine->getManager();
         $em->remove($users);
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
+    #[Route('/admin/dashboard/users/ban/{id}', name: 'app_dashboard_adminUsersban')]
+    public function usersban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $users->setRoles(["ROLE_BANNED"]);
+        $em = $doctrine->getManager();
+        $em->flush();
+        return  $this->redirectToRoute('app_dashboard_adminUsers');
+    }
+    #[Route('/admin/dashboard/users/unban/{id}', name: 'app_dashboard_adminUsersunban')]
+    public function usersunban(ManagerRegistry $doctrine,$id,UserRepository $repository)
+    {
+        $users= $repository->find($id);
+        $roles=$users->getRoles()[1];
+        $users->setRoles([$roles]);
+        $em = $doctrine->getManager();
         $em->flush();
         return  $this->redirectToRoute('app_dashboard_adminUsers');
     }
@@ -706,18 +763,30 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
     // Récupérer la liste des coachs depuis la base de données
     $coachRepository = $doctrine->getRepository(Coach::class);
     $coaches = $coachRepository->findAll();
+    $pdfOptions = new Options();
+    $pdfOptions->set('defaultFont', 'Arial');
+    $pdfOptions->set('isRemoteEnabled',true);    
 
+    $dompdf = new Dompdf($pdfOptions);
     // Générer le contenu HTML de la liste des coachs
     $html = $this->renderView('dashboard/admin/coachs/liste.html.twig', ['coaches' => $coaches]);
 
     // Générer le PDF à partir du contenu HTML
-    $pdfContent = $pdf->getOutputFromHtml($html);
+    $dompdf->loadHtml($html);
 
+
+
+    $dompdf->setPaper('A4', 'portrait');
+
+    $dompdf->render();
+   $output = $dompdf->output();
+   $filename = 'coach-list.pdf';
     // Retourner le PDF en réponse HTTP
-    return new PdfResponse(
-        $pdfContent,
-        'coach-list.pdf'
-    );
+    $response = new Response($output, 200, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . $filename . '"'
+    ]);
+    return $response;
 
 }
 
@@ -790,7 +859,7 @@ public function generatePdfList(Pdf $pdf ,ManagerRegistry $doctrine)
             $reponse->getIdFeedback();
             $feedback->setStatus(1);
             $EM->persist($reponse);
-
+            $EM->flush();
 
             return $this->redirectToRoute('app_dashboard_adminFeedbacks');
         }
