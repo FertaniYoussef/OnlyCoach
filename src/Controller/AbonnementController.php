@@ -244,6 +244,39 @@ public function subscribeToCoach_api(Request $request, $coachId,UserRepository $
         return $this->json("okay",200,[]);
 
 }
+
+    #[Route('api/abonnement/{coachId}/{userId}/checkout/success', name:'success_api')]
+    public function subscribeToCoachWithUser_api(Request $request, $coachId,$userId,UserRepository $userrepo,CoachRepository $coachrepo,AbonnementRepository $abbrepo,ManagerRegistry $doctrine)
+    {
+
+        $user = $userrepo->find($userId);
+        $coach =$coachrepo->find($coachId);
+        if (!$coach) {
+            return $this->json('Coach not found',404,[]);
+        }
+
+        $subscription = new Abonnement();
+        $subscription->setDateDeb(new \DateTime());
+        $endDate = (new \DateTime())->modify('+30 days');
+
+        $subscription->setDateFin($endDate);
+        $subscription->setUser($user);
+        $subscription->setCoach($coach);
+        $subscription->setPrix ($coach -> getPrix());
+
+
+
+
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($subscription);
+        $entityManager->flush();
+
+
+
+        return $this->json("okay",200,[]);
+
+    }
+
 #[Route('api/abonnement/{coachId}/checkout/failed', name: 'failure_api')]
 public function failedPayment_api(Request $request, $coachId, CoachRepository $coachrepo): Response
 {

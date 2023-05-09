@@ -244,7 +244,7 @@
                                     
                                 {% for coach in coaches %}
                                         <div id="CoachContainer" class="flex flex-col items-center">
-                                        <div class="w-20 h-20 rounded-full" style="background-image: url('/images/{{ coach.picture }}'); background-size: cover;"></div>
+                                         <a href="{{path('app_user',{'id':coach.id})}}"><div class="w-20 h-20 rounded-full" style="background-image: url('/images/{{ coach.picture }}'); background-size: cover;"></div></a>
                                         <div id="CoachInformation" class="flex flex-col items-center -space-y-1">
                                          <span class="text-md pt-2">{{ coach.nom }} {{ coach.prenom }}</span>
                                        
